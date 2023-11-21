@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SuperDoc.Customer.Repositories\SuperDoc.Customer.Repositories.csproj" />
+    <ProjectReference Include="..\SuperDoc.Shared\SuperDoc.Shared.csproj" />
   </ItemGroup>
 
 </Project>
