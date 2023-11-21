@@ -45,7 +45,6 @@ export function DetailsHeader({ caseId }) {
   )
 }
 
-
 type CustomRoute = {
   path: string;
   name: string;
