@@ -1,12 +1,12 @@
-import { List, ListItem } from "@/common/list";
-import { DetailsHeader } from "./header/details-header";
+import { List, ListItem } from "@/common/list/list";
+import { DetailsBanner } from "./(header)/details-banner";
+import Link from "next/link";
 
-
-export default function DetailsLayout({ id, children }: any) {
+export default function DetailsLayout({ params, children }: { params: { id: any }, children: any }) {
   return (
     <div className='detail-layout h-full gap-4'>
-      <DetailsHeader caseId={id} />
-      <div className='detail-layout-sidebar p-4 bg-neutral-100'> <DetailsSidebar caseId={id} /></div>
+      <DetailsBanner caseId={params.id} />
+      <div className='detail-layout-sidebar p-4 bg-neutral-100'><DetailsSidebar caseId={params.id} /></div>
       <div className="detail-layout-content">
         {children}
       </div>
@@ -21,7 +21,7 @@ export function DetailsSidebar({ caseId }) {
       {routes.map((item) => (
         <li key={item.path} className='list-none flex align-middle'>
           <ListItem>
-            {item.name}
+            <Link href={item.path}>{item.name}</Link>
           </ListItem>
         </li>
       ))}
@@ -29,18 +29,17 @@ export function DetailsSidebar({ caseId }) {
   )
 }
 
-
 type CustomRoute = {
   path: string;
   name: string;
 }
 
 export function detailsMenuRoutes(caseId: number): CustomRoute[] {
-  const prefix = `details/${caseId}`
+  const prefix = `/details/${caseId}`
 
   return [
     {
-      name: "Generalt",
+      name: "Dokumenter",
       path: `${prefix}`
     },
     {

@@ -19,7 +19,7 @@ import { faBars } from "@fortawesome/free-solid-svg-icons/faBars";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
-export function DetailsHeader({ caseId }) {
+export function DetailsBanner({ caseId }) {
   const routes = detailsMenuRoutes(caseId);
   const menubar = (
     <Menubar>

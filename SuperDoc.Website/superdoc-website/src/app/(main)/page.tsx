@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { ListLayout } from "@/common/list-layout"
+import { ListLayout } from "@/common/list-layout/list-layout"
 import {
   Table,
   TableBody,
@@ -129,7 +129,6 @@ export default function Home() {
 
 
 export function CaseOverview() {
-
   return (
     <div className="detail-layout">
       <div className="detail-layout-header"></div>
