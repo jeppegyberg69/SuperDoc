@@ -29,5 +29,15 @@ namespace SuperDoc.Customer.Repositories.Users
             superDocContext.Users.Update(user);
             await superDocContext.SaveChangesAsync();
         }
+
+        public async Task<User?> GetUserByIdAsync(Guid userId)
+        {
+            return await superDocContext.Users.FirstOrDefaultAsync(x => x.UserId == userId);
+        }
+
+        public async Task<IEnumerable<User>> GetCaseManagersByIds(IEnumerable<Guid> caseManagerIds)
+        {
+            return await superDocContext.Users.Where(x => x.Role != Roles.User && caseManagerIds.Contains(x.UserId)).ToListAsync();
+        }
     }
 }
