@@ -15,7 +15,6 @@ namespace SuperDoc.Customer.Repositories.Entities.Cases
         [StringLength(256, MinimumLength = 1)]
         public string Title { get; set; } = string.Empty;
 
-
         [StringLength(1024, MinimumLength = 1)]
         public string Description { get; set; } = string.Empty;
 
@@ -29,8 +28,6 @@ namespace SuperDoc.Customer.Repositories.Entities.Cases
         public DateTime DateCreated { get; set; }
 
         public Guid? ResponsibleUserId { get; set; }
-
-
 
         public virtual User? ResponsibleUser { get; set; }
 

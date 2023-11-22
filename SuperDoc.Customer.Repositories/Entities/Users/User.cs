@@ -38,11 +38,11 @@ namespace SuperDoc.Customer.Repositories.Entities.Users
         public bool IsDisabled { get; set; }
 
         public DateTime? LastLogin { get; set; }
+
         public DateTime? DateModified { get; set; }
 
         [Required]
         public DateTime DateCreated { get; set; }
-
 
         public virtual ICollection<Case>? Cases { get; set; }
 
