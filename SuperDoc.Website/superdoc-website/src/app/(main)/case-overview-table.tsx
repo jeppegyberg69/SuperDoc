@@ -1,20 +1,31 @@
 "use client";
 import React from 'react';
-import Image from 'next/image';
 import { ListLayout } from "@/common/list-layout/list-layout"
 import { ColumnDef } from "@tanstack/react-table"
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 import { nameof } from '@/common/nameof/nameof';
 import { DataTable } from '@/components/ui/data-table';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { useForm } from 'react-hook-form';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
 
 export type CaseOverviewTableProps = {};
 
@@ -27,6 +38,12 @@ export type Payment = {
   totalAmount: string,
   paymentMethod: string,
 }
+
+const formSchema = z.object({
+  username: z.string().min(2, {
+    message: "Username must be at least 2 characters.",
+  }),
+})
 
 export const columns: ColumnDef<Payment>[] = [
   {
@@ -41,19 +58,81 @@ export const columns: ColumnDef<Payment>[] = [
     accessorKey: nameof<Payment>('paymentStatus'),
     header: "Payment status",
   },
-]
+];
+
 export function CaseOverviewTable(props: CaseOverviewTableProps) {
-  const d = (
+  const form = useForm()
+  const dataTable = (
     <DataTable
       data={invoices}
       columns={columns}
     />
   )
 
+  const createCaseDialog = () => {
+    const form = useForm<z.infer<typeof formSchema>>({
+      resolver: zodResolver(formSchema),
+      defaultValues: {
+        username: "",
+      },
+    })
+
+    function onSubmit(values: z.infer<typeof formSchema>) {
+      console.log(values)
+    }
+
+    const dialogContent = (
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input placeholder="shadcn" {...field} />
+                </FormControl>
+                <FormDescription>
+                  This is your public display name.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit">Submit</Button>
+        </form>
+      </Form>
+    )
+
+    return (
+      <Dialog>
+        <DialogTrigger className='h-full'>Open</DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Opret sag</DialogTitle>
+            {dialogContent}
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+    )
+  }
+
+
+  const toolbar = (
+    <div className='flex divide-x'>
+      <h1 className="font-semibold text-xl px-2">Sager</h1>
+      <div className='px-2'>
+        {createCaseDialog()}
+      </div>
+    </div>
+  );
+
+
   return (
     <ListLayout
-      toolbar={(<h1 className="font-semibold text-xl">Sager</h1>)}
-      list={d}
+      toolbar={toolbar}
+      list={dataTable}
     />
   )
 }

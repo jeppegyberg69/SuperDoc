@@ -5,8 +5,8 @@ export default function CaseOverview() {
   return (
     <div className="detail-layout">
       <PageHeader />
-      <div className="detail-layout-sidebar"></div>
-      <div className="detail-layout-content">
+      {/* <div className="detail-layout-sidebar"></div> */}
+      <div className="detail-layout-content mx-4">
         <CaseOverviewTable />
       </div>
     </div>

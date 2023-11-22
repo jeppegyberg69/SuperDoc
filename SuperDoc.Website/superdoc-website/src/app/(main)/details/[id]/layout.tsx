@@ -1,5 +1,9 @@
 import { List, ListItem } from "@/common/list/list";
 import { PageHeader } from "@/common/page-layout/page-header";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFileLines } from "@fortawesome/free-solid-svg-icons/faFileLines";
+import { faClockRotateLeft } from "@fortawesome/free-solid-svg-icons/faClockRotateLeft";
+
 import Link from "next/link";
 
 export default function DetailsLayout({ params, children }: { params: { id: any }, children: any }) {
@@ -21,7 +25,13 @@ export function DetailsSidebar({ caseId }) {
       {routes.map((item) => (
         <li key={item.path} className='list-none flex align-middle'>
           <ListItem>
-            <Link href={item.path}>{item.name}</Link>
+            <Link className="w-full flex align-middle justify-center" href={item.path}>
+              {item.icon && (
+                <div className="mx-2">
+                  {item.icon}
+                </div>
+              )} <span className="self-center">{item.name}</span>
+            </Link>
           </ListItem>
         </li>
       ))}
@@ -32,6 +42,7 @@ export function DetailsSidebar({ caseId }) {
 type CustomRoute = {
   path: string;
   name: string;
+  icon?: React.ReactNode
 }
 
 export function detailsMenuRoutes(caseId: number): CustomRoute[] {
@@ -40,11 +51,13 @@ export function detailsMenuRoutes(caseId: number): CustomRoute[] {
   return [
     {
       name: "Dokumenter",
-      path: `${prefix}`
+      path: `${prefix}`,
+      icon: <FontAwesomeIcon icon={faFileLines} />
     },
     {
       name: "Historik",
-      path: `${prefix}/history`
+      path: `${prefix}/history`,
+      icon: <FontAwesomeIcon icon={faClockRotateLeft} />
     },
   ]
 }
