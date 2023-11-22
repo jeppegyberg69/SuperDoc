@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SuperDoc.Shared.Models
+namespace SuperDoc.Shared.Models.Users
 {
     public class LoginDto
     {

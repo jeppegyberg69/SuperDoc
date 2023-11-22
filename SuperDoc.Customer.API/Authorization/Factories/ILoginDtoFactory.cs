@@ -1,4 +1,4 @@
-﻿using SuperDoc.Shared.Models;
+﻿using SuperDoc.Shared.Models.Users;
 
 namespace SuperDoc.Customer.API.Authorization.Factories
 {

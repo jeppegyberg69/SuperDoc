@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SuperDoc.Customer.Repositories.Contexts;
 
@@ -11,9 +12,10 @@ using SuperDoc.Customer.Repositories.Contexts;
 namespace SuperDoc.Customer.Repositories.Migrations
 {
     [DbContext(typeof(SuperDocContext))]
-    partial class SuperDocContextModelSnapshot : ModelSnapshot
+    [Migration("20231121150342_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

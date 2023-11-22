@@ -1,16 +1,20 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using SuperDoc.Customer.Repositories.Entities.Cases;
 using SuperDoc.Customer.Repositories.Entities.Users;
 
 namespace SuperDoc.Customer.Repositories.Contexts
 {
     public class SuperDocContext : DbContext
     {
+        public DbSet<Case> Cases { get => Set<Case>(); }
         public DbSet<User> Users { get => Set<User>(); }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<Case>().HasMany(c => c.CaseManagers).WithMany(u => u.Cases).UsingEntity(x => x.ToTable("CaseUsers"));
+
+            builder.Entity<Case>().HasOne(c => c.ResponsibleUser).WithMany(u => u.ResonsibleCases).OnDelete(DeleteBehavior.SetNull);
         }
 
         public SuperDocContext(DbContextOptions<SuperDocContext> contextOptions) : base(contextOptions)

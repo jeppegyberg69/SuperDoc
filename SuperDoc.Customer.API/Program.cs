@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -5,11 +6,13 @@ using Microsoft.IdentityModel.Tokens;
 using SuperDoc.Customer.API.Authorization;
 using SuperDoc.Customer.API.Authorization.Factories;
 using SuperDoc.Customer.API.Swagger;
+using SuperDoc.Customer.Repositories.Cases;
 using SuperDoc.Customer.Repositories.Contexts;
 using SuperDoc.Customer.Repositories.Users;
+using SuperDoc.Customer.Services.Cases;
+using SuperDoc.Customer.Services.Cases.Factories;
 using SuperDoc.Customer.Services.Users;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +47,11 @@ builder.Services.AddScoped<ILoginDtoFactory, LoginDtoFactory>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddScoped<ICaseFactory, CaseFactory>();
+builder.Services.AddScoped<ICaseService, CaseService>();
+builder.Services.AddScoped<ICaseRepository, CaseRepository>();
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
