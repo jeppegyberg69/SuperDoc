@@ -14,11 +14,11 @@ namespace SuperDoc.Customer.Repositories.Entities.Users
         public Guid UserId { get; set; }
 
         [Required]
-        [StringLength(100, MinimumLength = 1)]
+        [StringLength(256, MinimumLength = 1)]
         public string FirstName { get; set; } = string.Empty;
 
         [Required]
-        [StringLength(100, MinimumLength = 1)]
+        [StringLength(256, MinimumLength = 1)]
         public string LastName { get; set; } = string.Empty;
 
         [Required]
@@ -38,11 +38,11 @@ namespace SuperDoc.Customer.Repositories.Entities.Users
         public bool IsDisabled { get; set; }
 
         public DateTime? LastLogin { get; set; }
+
         public DateTime? DateModified { get; set; }
 
         [Required]
         public DateTime DateCreated { get; set; }
-
 
         public virtual ICollection<Case>? Cases { get; set; }
 
