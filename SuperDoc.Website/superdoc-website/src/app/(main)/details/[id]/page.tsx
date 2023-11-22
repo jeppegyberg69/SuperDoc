@@ -1,6 +1,7 @@
 import { List, ListItem } from "@/common/list/list"
 import { ListLayout } from "@/common/list-layout/list-layout"
 import { SplitView } from "@/common/split-view/split-view"
+import { PdfViewer } from "@/common/pdf-viewer/pdf-viewer"
 
 export default function Details({ params }: any) {
 
@@ -23,7 +24,7 @@ export default function Details({ params }: any) {
 					</List>
 				</div>
 			)}
-			right={<></>}
+			right={(<PdfViewer url=""></PdfViewer>)}
 		/>
 	)
 

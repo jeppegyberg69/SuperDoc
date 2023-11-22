@@ -1,12 +1,12 @@
 import { List, ListItem } from "@/common/list/list";
-import { DetailsBanner } from "./(header)/details-banner";
+import { PageHeader } from "@/common/page-layout/page-header";
 import Link from "next/link";
 
 export default function DetailsLayout({ params, children }: { params: { id: any }, children: any }) {
   return (
     <div className='detail-layout h-full gap-4'>
-      <DetailsBanner caseId={params.id} />
-      <div className='detail-layout-sidebar p-4 bg-neutral-100'><DetailsSidebar caseId={params.id} /></div>
+      <PageHeader />
+      <div className='detail-layout-sidebar p-4'><DetailsSidebar caseId={params.id} /></div>
       <div className="detail-layout-content">
         {children}
       </div>

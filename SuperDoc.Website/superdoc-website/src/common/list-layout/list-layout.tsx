@@ -11,7 +11,7 @@ export function ListLayout({ list, toolbar }: ListLayoutProps) {
       <div className='list-layout-toolbar'>
         {toolbar}
       </div>
-      <div className='list-layout-list panel panel-shadow'>
+      <div className='h-full list-layout-list panel panel-shadow'>
         {list}
       </div>
     </div>
