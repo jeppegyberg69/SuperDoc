@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text;
 
-namespace SuperDoc.Shared.Models
+namespace SuperDoc.Shared.Models.Users
 {
     public class TokenDto
     {

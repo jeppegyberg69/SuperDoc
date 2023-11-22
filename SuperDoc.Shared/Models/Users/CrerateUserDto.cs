@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace SuperDoc.Shared.Models
+namespace SuperDoc.Shared.Models.Users
 {
     public class CrerateUserDto
     {

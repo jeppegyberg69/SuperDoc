@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+using SuperDoc.Customer.Repositories.Entities.Cases;
 
 namespace SuperDoc.Customer.Repositories.Entities.Users
 {
@@ -41,5 +42,10 @@ namespace SuperDoc.Customer.Repositories.Entities.Users
 
         [Required]
         public DateTime DateCreated { get; set; }
+
+
+        public virtual ICollection<Case>? Cases { get; set; }
+
+        public virtual ICollection<Case>? ResonsibleCases { get; set; }
     }
 }
