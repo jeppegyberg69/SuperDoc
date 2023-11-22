@@ -30,5 +30,24 @@ namespace SuperDoc.Customer.API.Controllers
 
             return Ok(caseFactory.ConverUsersToCaseManagerDtos(caseManagers));
         }
+
+        [HttpPost]
+        [RequiredRole(Roles.CaseManager, Roles.Admin, Roles.SuperAdmin)]
+        public async Task<IActionResult> CreateOrUpdateCase([FromBody] CreateOrUpdateCaseDto docCase)
+        {
+            if (!(docCase.CaseMangers?.Any() ?? false))
+            {
+                return BadRequest("The must be at least 1 case manager");
+            }
+
+            var errorMessage = await caseService.CreateOrUpdateCaseAsync(docCase);
+
+            if (errorMessage != null)
+            {
+                return BadRequest(errorMessage);
+            }
+
+            return Ok();
+        }
     }
 }
