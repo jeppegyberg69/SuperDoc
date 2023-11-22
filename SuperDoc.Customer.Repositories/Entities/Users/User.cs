@@ -14,11 +14,11 @@ namespace SuperDoc.Customer.Repositories.Entities.Users
         public Guid UserId { get; set; }
 
         [Required]
-        [StringLength(100, MinimumLength = 1)]
+        [StringLength(256, MinimumLength = 1)]
         public string FirstName { get; set; } = string.Empty;
 
         [Required]
-        [StringLength(100, MinimumLength = 1)]
+        [StringLength(256, MinimumLength = 1)]
         public string LastName { get; set; } = string.Empty;
 
         [Required]
