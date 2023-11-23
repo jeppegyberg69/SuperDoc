@@ -20,16 +20,48 @@ namespace SuperDoc.Customer.API.Authorization
             this.loginDtoFactory = loginDtoFactory;
         }
 
-
-        public TokenDto GenerateToken(User user, DateTime validFrom, DateTime validTo)
+        public Guid? GetUserId(IEnumerable<Claim> claims)
         {
+            Guid? userId = null;
+
+            string id = claims.FirstOrDefault(x => x.Type == IdentityData.UserIdClaimName)?.Value ?? string.Empty;
+
+            if (!string.IsNullOrEmpty(id))
+            {
+                userId = Guid.Parse(id);
+            }
+
+            return userId;
+        }
+
+        public bool IsUserInRole(IEnumerable<Claim> claims, Roles role)
+        {
+            string userRole = claims.FirstOrDefault(x => x.Type == IdentityData.UserRoleClaimName)?.Value ?? string.Empty;
+
+            if (!string.IsNullOrEmpty(userRole))
+            {
+                if (userRole == role.ToString())
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+
+        public TokenDto GenerateToken(User user)
+        {
+            DateTime validFrom = DateTime.UtcNow;
+            DateTime validTo = DateTime.UtcNow.AddHours(8);
+
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"]);
 
 
             var claims = new List<Claim>
             {
-                new Claim("userId", user.UserId.ToString()),
+                new Claim(IdentityData.UserIdClaimName, user.UserId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.EmailAddress),
                 new Claim(IdentityData.UserRoleClaimName, user.Role.ToString()),
             };
@@ -47,7 +79,7 @@ namespace SuperDoc.Customer.API.Authorization
 
             SecurityToken token = tokenHandler.CreateToken(tokenDescription);
 
-            return loginDtoFactory.CreateTokenDto(tokenHandler.WriteToken(token), validFrom, validTo);
+            return loginDtoFactory.CreateTokenDto(user, tokenHandler.WriteToken(token), validFrom, validTo);
         }
     }
 }

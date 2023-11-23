@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SuperDoc.Customer.API.Authorization;
 using SuperDoc.Customer.API.Authorization.Identity;
 using SuperDoc.Customer.Repositories.Entities.Users;
 using SuperDoc.Customer.Services.Cases;
@@ -15,15 +16,17 @@ namespace SuperDoc.Customer.API.Controllers
     {
         private readonly ICaseService caseService;
         private readonly ICaseFactory caseFactory;
+        private readonly ILoginService loginService;
 
-        public CaseController(ICaseService caseService, ICaseFactory caseFactory)
+        public CaseController(ICaseService caseService, ICaseFactory caseFactory, ILoginService loginService)
         {
             this.caseService = caseService;
             this.caseFactory = caseFactory;
+            this.loginService = loginService;
         }
 
-        [RequiredRole(Roles.CaseManager, Roles.Admin, Roles.SuperAdmin)]
         [HttpGet]
+        [RequiredRole(Roles.CaseManager, Roles.Admin, Roles.SuperAdmin)]
         public async Task<ActionResult<IEnumerable<CaseManagerDto>>> GetCaseManagers(Guid? caseId)
         {
             var caseManagers = await caseService.GetAllCaseManagersAsync(caseId);
@@ -48,6 +51,26 @@ namespace SuperDoc.Customer.API.Controllers
             }
 
             return Ok();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCases()
+        {
+            Guid? userId = loginService.GetUserId(User.Claims);
+
+            if (userId == null)
+            {
+                return BadRequest("User id is null");
+            }
+
+            if (loginService.IsUserInRole(User.Claims, Roles.SuperAdmin))
+            {
+                userId = null;
+            }
+
+            var cases = await caseService.GetAssignedCasesAsync(userId);
+
+            return Ok(caseFactory.ConverCasesToDtos(cases));
         }
     }
 }
