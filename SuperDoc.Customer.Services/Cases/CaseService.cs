@@ -17,6 +17,17 @@ namespace SuperDoc.Customer.Services.Cases
             this.userRepository = userRepository;
         }
 
+
+        public async Task<IEnumerable<Case>> GetAssignedCasesAsync(Guid? userId)
+        {
+            if (!userId.HasValue)
+            {
+                return await caseRepository.GetAllCasesWithResponsibleUserAndCaseManagersAsync();
+            }
+
+            return await caseRepository.GetAllCasesAUserIsAssignedWithResponsibleUserAndCaseManagers(userId.Value);
+        }
+
         public async Task<IEnumerable<User>> GetAllCaseManagersAsync(Guid? caseId = null)
         {
             return await caseRepository.GetAllCaseManagersAsync(caseId);
