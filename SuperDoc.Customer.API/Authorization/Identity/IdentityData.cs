@@ -2,6 +2,7 @@
 {
     public class IdentityData
     {
+        public const string UserIdClaimName = "userId";
         public const string UserRoleClaimName = "Role";
     }
 }

@@ -7,6 +7,8 @@ namespace SuperDoc.Customer.Repositories.Cases
     {
         Task CreateCase(Case docCase);
         Task<IEnumerable<User>> GetAllCaseManagersAsync(Guid? caseId = null);
+        Task<IEnumerable<Case>> GetAllCasesAUserIsAssignedWithResponsibleUserAndCaseManagers(Guid userId);
+        Task<IEnumerable<Case>> GetAllCasesWithResponsibleUserAndCaseManagersAsync();
         Task<Case?> GetCaseByIdWithCaseManagersAsync(Guid caseId);
         Task UpdateCase(Case docCase);
     }
