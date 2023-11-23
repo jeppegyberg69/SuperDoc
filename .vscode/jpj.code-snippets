@@ -1,0 +1,19 @@
+{
+	"Indsæt blank komponent": {
+		"scope": "typescriptreact",
+		"prefix": "jpjComponent",
+		"body": [
+			"import React from 'react';",
+			"",
+			"export type ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g}Props = {};",
+			"",
+			"export function ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g}(props: ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g}Props) {",
+			"",
+			"  return (",
+			"    <>$0</>",
+			"  );",
+			"}",
+		],
+		"description": "Indsætter en blank page komponent"
+	},
+}

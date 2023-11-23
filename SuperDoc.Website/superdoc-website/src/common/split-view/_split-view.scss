@@ -1,0 +1,22 @@
+.split-view {
+  flex: 1;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 20rem 1fr;
+  grid-template-rows: 1fr;
+  box-sizing: border-box;
+}
+
+.panel {
+  border: 1px solid rgba(22, 21, 19, 0.1);
+  background-color: white;
+  border-radius: 0.375rem;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+}
+
+.panel-shadow {
+  box-shadow: 0px 2px 4px 0px rgba(00, 00, 00, .1) !important;
+}
