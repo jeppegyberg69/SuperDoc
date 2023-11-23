@@ -59,10 +59,7 @@ namespace SuperDoc.Customer.API.Controllers
                     return NotFound();
                 }
 
-                DateTime validFrom = DateTime.UtcNow;
-                DateTime validTo = DateTime.UtcNow.AddHours(8);
-
-                return Ok(loginService.GenerateToken(user, validFrom, validTo));
+                return Ok(loginService.GenerateToken(user));
             }
 
             return BadRequest("Invalid input");

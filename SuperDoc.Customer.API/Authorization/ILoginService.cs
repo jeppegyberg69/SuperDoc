@@ -6,7 +6,7 @@ namespace SuperDoc.Customer.API.Authorization
 {
     public interface ILoginService
     {
-        TokenDto GenerateToken(User user, DateTime validFrom, DateTime validTo);
+        TokenDto GenerateToken(User user);
         Guid? GetUserId(IEnumerable<Claim> claims);
         bool IsUserInRole(IEnumerable<Claim> claims, Roles role);
     }
