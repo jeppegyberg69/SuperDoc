@@ -50,8 +50,11 @@ namespace SuperDoc.Customer.API.Authorization
         }
 
 
-        public TokenDto GenerateToken(User user, DateTime validFrom, DateTime validTo)
+        public TokenDto GenerateToken(User user)
         {
+            DateTime validFrom = DateTime.UtcNow;
+            DateTime validTo = DateTime.UtcNow.AddHours(8);
+
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"]);
 
@@ -76,7 +79,7 @@ namespace SuperDoc.Customer.API.Authorization
 
             SecurityToken token = tokenHandler.CreateToken(tokenDescription);
 
-            return loginDtoFactory.CreateTokenDto(tokenHandler.WriteToken(token), validFrom, validTo);
+            return loginDtoFactory.CreateTokenDto(user, tokenHandler.WriteToken(token), validFrom, validTo);
         }
     }
 }
