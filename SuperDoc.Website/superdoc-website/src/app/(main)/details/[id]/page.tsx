@@ -3,28 +3,17 @@ import { ListLayout } from "@/common/list-layout/list-layout"
 import { SplitView } from "@/common/split-view/split-view"
 import { PdfViewer } from "@/common/pdf-viewer/pdf-viewer"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { DocumentTabs } from "./document-tabs/document-tabs"
 
-export default function Details({ params }: any) {
-
-	const tabBar = (
-		<div className="grid grid-cols-2">
-			<Tabs defaultValue="dokumentvisning" className="h-full w-full">
-				<TabsList>
-					<TabsTrigger value="dokumentvisning">Dokumentvisning</TabsTrigger>
-					<TabsTrigger value="kommentar">Kommentar</TabsTrigger>
-				</TabsList>
-				<TabsContent value="dokumentvisning">
-					<PdfViewer url="https://www.africau.edu/images/default/sample.pdf"></PdfViewer>
-
-				</TabsContent>
-				<TabsContent value="kommentar">
-				</TabsContent>
-			</Tabs>
-			<div></div>
-		</div>
-	)
-
-
+export default function Details({ params }: { params: { id: any } }) {
 
 	const list = (
 		<SplitView
@@ -43,7 +32,7 @@ export default function Details({ params }: any) {
 					</List>
 				</div>
 			)}
-			right={tabBar}
+			right={<DocumentTabs />}
 		/>
 	)
 
