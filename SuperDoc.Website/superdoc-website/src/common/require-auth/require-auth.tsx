@@ -18,11 +18,11 @@ export function RequireAuth(props: RequireAuthProps) {
   }, [])
 
 
-  // useEffect(() => {
-  //   if (!session || isTokenExpired(session)) {
-  //     router.push("/login");
-  //   };
-  // }, [session])
+  useEffect(() => {
+    if (!session || isTokenExpired(session)) {
+      router.push("/login");
+    };
+  }, [session])
 
   return (
     <>
