@@ -24,8 +24,8 @@ export function DocumentTabs(props: DocumentTabsProps) {
         <TabsTrigger value="kommentar">Kommentar</TabsTrigger>
         <div className='h-full w-full flex justify-end mx-4'>
           <DropdownMenu>
-            <DropdownMenuTrigger> <span>Revisioner</span> <FontAwesomeIcon icon={faSortDown} className='!align-top' /> </DropdownMenuTrigger>
-            <DropdownMenuContent className="mx-1">
+            <DropdownMenuTrigger className='rounded-sm px-2 hover:bg-accent/10'> <span>Revisioner</span> <FontAwesomeIcon icon={faSortDown} className='!align-top' /> </DropdownMenuTrigger>
+            <DropdownMenuContent className="mx-1 ">
               {/*NOTE: Mangler webservice til revisioner */}
               {['Revision 1.0', 'Revision 1.2', 'Seneste revision'].map((revision) => {
                 return (

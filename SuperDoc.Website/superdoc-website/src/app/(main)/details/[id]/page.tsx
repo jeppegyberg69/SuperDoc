@@ -21,7 +21,7 @@ export default function Details({ params }: { params: { id: any } }) {
 				<div className="h-full">
 					<List horizontalGridline="enabled">
 						{invoices.map((v) => (
-							<li key={v.id} className="py-4">
+							<li key={v.id} className="py-4 hover:bg-accent/20">
 								<ListItem>
 									<div className="flex flex-col">
 										{v.id}
