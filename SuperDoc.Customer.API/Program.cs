@@ -15,6 +15,7 @@ using SuperDoc.Customer.Services.Users;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 builder.Services.AddAuthentication(x =>
 {
@@ -33,6 +34,17 @@ builder.Services.AddAuthentication(x =>
         ValidAudience = builder.Configuration["JwtSettings:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]))
     };
+});
+
+// Configure cross-origin resource sharing (CORS)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:3000", "https://localhost:3000");
+                          policy.AllowAnyHeader();
+                      });
 });
 
 builder.Services.AddAuthorization();
@@ -65,6 +77,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseCors(MyAllowSpecificOrigins);
 }
 
 app.UseHttpsRedirection();

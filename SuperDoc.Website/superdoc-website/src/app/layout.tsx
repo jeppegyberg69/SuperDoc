@@ -5,6 +5,7 @@ import '../styles/globals.css'
 import 'styles/style.scss'
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import Providers from './providers';
+import { RequireAuth } from '@/common/require-auth/require-auth';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,7 +24,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-          {children}
+          <RequireAuth>
+            {children}
+          </RequireAuth>
         </Providers>
       </body>
     </html>
