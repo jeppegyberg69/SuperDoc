@@ -15,7 +15,10 @@ import {
 import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { login } from '@/services/login-service';
+import { WebserviceResponse, login } from '@/services/login-service';
+import { Session, createSessionFromToken } from '@/models/session/session';
+import { useRouter } from 'next/navigation'
+
 
 const formSchema = z.object({
   email: z.string().min(2, {
@@ -32,6 +35,7 @@ export type LoginFormProps = {
 };
 
 export function LoginForm(props: LoginFormProps) {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -41,76 +45,23 @@ export function LoginForm(props: LoginFormProps) {
   })
 
 
-  // const a = fetch("https://localhost:44304/api/User/Login", {
-  //   method: 'POST',
-  //   body: JSON.stringify({
-  //     email: "dsadsa",
-  //     password: "dsads"
-  //   }),
-  //   headers: {
-  //     "accept": "*/*",
-  //     "cache-control": "no-cache",
-  //     "content-type": "application/json",
-  //     "pragma": "no-cache",
-  //     "Access-Control-Allow-Origin": "*",
-  //     "origin": "*"
-      
-  //   },
-    
-  //   "referrer": "https://localhost:44304/swagger/index.html",
-  //   "referrerPolicy": "strict-origin-when-cross-origin",
-  // });
-
-
-//   fetch("https://localhost:44304/api/User/Login", {
-//   "headers": {
-//     "accept": "*/*",
-//     "cache-control": "no-cache",
-//     "content-type": "application/json",
-//     "pragma": "no-cache",
-//     "sec-ch-ua": "\"Brave\";v=\"119\", \"Chromium\";v=\"119\", \"Not?A_Brand\";v=\"24\"",
-//     "sec-ch-ua-mobile": "?0",
-//     "sec-ch-ua-platform": "\"Windows\""
-//   },
-//   "referrer": "http://localhost:3000/",
-//   "referrerPolicy": "strict-origin-when-cross-origin",
-//   "body": "{\"email\":\"dsadsa\",\"password\":\"dsads\"}",
-//   "method": "POST",
-//   "mode": "cors",
-//   "credentials": "omit"
-// });
-
-
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values)
-    login("dsadsa", "dsa");
-
-    // const a = fetch("https://localhost:44304/api/User/Login", {
-    //   method: 'POST',
-    //   body: "email:dsadsa,password:dsadsa",
-    //   headers: {
-    //     "accept": "*/*",
-    //     "cache-control": "no-cache",
-    //     "content-type": "application/json",
-    //     "pragma": "no-cache",
-    //     "sec-fetch-dest": "empty",
-    //     "sec-fetch-mode": "cors",
-    //     "sec-fetch-site": "same-origin",
-    //     "sec-gpc": "1"
-    //   },
-    //   "referrer": "https://localhost:44304/swagger/index.html",
-    //   "referrerPolicy": "strict-origin-when-cross-origin",
-    //   "mode": "cors",
-    // });
-    // return login("dsadsa", "dsa");
+  const validateAndSubmit = async (values: z.infer<typeof formSchema>) => {
+    const loginResponse = login(values.email, values.password)
+      .then((response) => {
+        if (response) {
+          setLoginResponse(response);
+          router.push("/");
+        }
+      });
   }
+
 
   return (
     <Form
       {...form}
     >
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(validateAndSubmit)}
         className="space-y-8"
       >
         <FormField
@@ -149,4 +100,11 @@ export function LoginForm(props: LoginFormProps) {
       </form>
     </Form>
   );
+}
+
+export function setLoginResponse(response: any) {
+  console.log('setLoginResponse response', response);
+  localStorage.removeItem('jpj_websession');
+  const d = createSessionFromToken(response)
+  localStorage.setItem('jpj_websession', JSON.stringify(d));
 }
