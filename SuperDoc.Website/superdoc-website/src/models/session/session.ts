@@ -3,7 +3,7 @@ export type Session = {
     fullName: string;
     firstName: string;
     lastName: string;
-    email: string;
+    emailAddress: string;
     role: string;
   }
   token: string;
@@ -25,7 +25,7 @@ export function createSessionFromToken(session): Session {
 
     user: {
       role: session.role,
-      email: session.email,
+      emailAddress: session.emailAddress,
       firstName: session.firstName,
       lastName: session.lastName,
       fullName: session.firstName + session.lastName
@@ -33,4 +33,12 @@ export function createSessionFromToken(session): Session {
   }
 
   return newSession;
+}
+
+export function saveInStorage(session: Session) {
+  localStorage.setItem("jpj_websession", JSON.stringify(session));
+}
+
+export function removeFromStorage() {
+  localStorage.removeItem("jpj_websession");
 }

@@ -1,12 +1,49 @@
-'use client'
+'use client';
 
-import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useState } from 'react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
+import * as signals from 'signals';
+import { WebSessionContext, anonymousWebSession, setWebSession as contextSetWebSession, createFromStorage } from '@/common/session-context/session-context';
+import { Session } from '@/models/session/session';
+import { sessionChangedSignal } from '@/services/login-service';
 
-export default function Providers({ children }) {
+export default function CustomQueryClientProvider({ children }) {
   const [queryClient] = useState(() => new QueryClient())
 
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   )
+}
+
+
+export type SessionProviderProps = {
+  children?: any;
+  // webSession: Session;
+  // sessionChangedSignal: signals.Signal<Session>
+};
+
+export function SessionProvider(props: SessionProviderProps) {
+  const contextwebSession = createFromStorage() ?? anonymousWebSession;
+
+  const [webSession, setWebSession] = useState<Session>(() => {
+    contextSetWebSession(contextwebSession);
+    return contextwebSession;
+  });
+
+  useEffect(() => {
+    const webSessionSubscription = sessionChangedSignal?.add(session => {
+      contextSetWebSession(session);
+      setWebSession(session);
+    });
+
+    return () => {
+      webSessionSubscription?.detach();
+    };
+  }, []);
+
+  return (
+    <WebSessionContext.Provider value={webSession}>
+      {props.children}
+    </WebSessionContext.Provider>
+  );
 }

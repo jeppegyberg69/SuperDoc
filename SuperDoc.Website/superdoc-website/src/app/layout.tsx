@@ -4,8 +4,11 @@ import { Inter } from 'next/font/google'
 import '../styles/globals.css'
 import 'styles/style.scss'
 import '@fortawesome/fontawesome-svg-core/styles.css';
-import Providers from './providers';
+
+import CustomQueryClientProvider, { SessionProvider } from './providers';
 import { RequireAuth } from '@/common/require-auth/require-auth';
+import { sessionChangedSignal } from '@/services/login-service';
+import { anonymousWebSession, createFromStorage } from '@/common/session-context/session-context';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,11 +26,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Providers>
-          <RequireAuth>
-            {children}
-          </RequireAuth>
-        </Providers>
+        <SessionProvider>
+          <CustomQueryClientProvider>
+            <RequireAuth>
+              {children}
+            </RequireAuth>
+          </CustomQueryClientProvider>
+        </SessionProvider>
       </body>
     </html>
   )
