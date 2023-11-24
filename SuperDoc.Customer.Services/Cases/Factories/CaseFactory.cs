@@ -55,7 +55,7 @@ namespace SuperDoc.Customer.Services.Cases.Factories
                 Title = docCase.Title,
                 Description = docCase.Description,
                 ResponsibleUser = docCase.ResponsibleUser == null ? new CaseManagerDto() : ConvertUserToCaseManagerDto(docCase.ResponsibleUser),
-                CaseMangers = docCase.CaseManagers != null ? ConverUsersToCaseManagerDtos(docCase.CaseManagers) : new List<CaseManagerDto>()
+                CaseManagers = docCase.CaseManagers != null ? ConverUsersToCaseManagerDtos(docCase.CaseManagers) : new List<CaseManagerDto>()
             };
         }
     }
