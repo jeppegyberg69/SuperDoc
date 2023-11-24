@@ -64,6 +64,24 @@
     --input: 0 0% 14.9%;
     --ring: 0 0% 83.1%;
   }
+
+  @layer base {
+    :root {
+      --text: 80 43% 4%;
+      --background: 86 47% 97%;
+      --primary: 81 57% 46%;
+      --secondary: 81 45% 85%;
+      --accent: 81 46% 45%;
+    }
+
+    .dark {
+      --text: 80 43% 96%;
+      --background: 86 47% 3%;
+      --primary: 81 57% 54%;
+      --secondary: 81 45% 15%;
+      --accent: 81 46% 55%;
+    }
+  }
 }
 
 @layer base {
@@ -83,6 +101,7 @@ body {
   max-height: 100%;
   min-height: 100%;
 }
+
 body {
   background-color: rgb(251, 251, 248);
 }
