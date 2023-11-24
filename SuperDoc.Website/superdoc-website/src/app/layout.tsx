@@ -7,8 +7,6 @@ import '@fortawesome/fontawesome-svg-core/styles.css';
 
 import CustomQueryClientProvider, { SessionProvider } from './providers';
 import { RequireAuth } from '@/common/require-auth/require-auth';
-import { sessionChangedSignal } from '@/services/login-service';
-import { anonymousWebSession, createFromStorage } from '@/common/session-context/session-context';
 
 const inter = Inter({ subsets: ['latin'] })
 

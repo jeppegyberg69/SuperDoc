@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ListLayout } from "@/common/list-layout/list-layout"
 import { ColumnDef } from "@tanstack/react-table"
 import { nameof } from '@/common/nameof/nameof';
@@ -26,6 +26,9 @@ import {
 import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
+import { getCases } from '@/services/case-service';
+import { Case } from '@/models/case';
+import { useIsMounted } from '@/common/hooks/use-is-mounted';
 
 export type CaseOverviewTableProps = {};
 
@@ -45,26 +48,32 @@ const formSchema = z.object({
   }),
 })
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Case>[] = [
   {
-    accessorKey: nameof<Payment>('invoice'),
-    header: "Invoice",
+    accessorKey: nameof<Case>('id'),
+    header: "id",
   },
   {
-    accessorKey: nameof<Payment>('paymentMethod'),
-    header: "Payment method",
-  },
-  {
-    accessorKey: nameof<Payment>('paymentStatus'),
-    header: "Payment status",
+    accessorKey: nameof<Case>('title'),
+    header: "Title",
   },
 ];
 
 export function CaseOverviewTable(props: CaseOverviewTableProps) {
   const form = useForm()
+  const [data, setData] = useState([])
+
+  const isMounted = useIsMounted()
+
+  useEffect(() => {
+    if (isMounted()) {
+      getCases().then((data) => setData(data));
+    }
+  }, [isMounted()])
+
   const dataTable = (
     <DataTable
-      data={invoices}
+      data={data}
       columns={columns}
     />
   )
