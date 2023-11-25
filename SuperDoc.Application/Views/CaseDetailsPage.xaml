@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SuperDoc.Application.Views.CaseDetailsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Shell.TitleView>
+        <Grid ColumnSpacing="10" Padding="0, 0, 15, 0">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Tapped="Page_Tapped"/>
+            </Grid.GestureRecognizers>
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0" Text="Ansættelseskontrakter" FontSize="Large" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" Style="{StaticResource PageHeader}"/>
+
+            <Button x:Name="MoreButton" Grid.Column="1" Text="&#xE825;" Style="{StaticResource ActionButton}" Clicked="MoreButton_Clicked"/>
+        </Grid>
+    </Shell.TitleView>
+
+    <Grid RowSpacing="20" Padding="15">
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Tapped="Page_Tapped"/>
+        </Grid.GestureRecognizers>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!--<RowDefinition Height="*"/>-->
+        </Grid.RowDefinitions>
+
+        <!--<VerticalStackLayout Grid.Row="0">
+            <Label Text="Ansættelseskontrakter" FontSize="20" FontFamily="InterSemiBold"/>
+            <Label Text="Sagsnummer: 1" TextColor="{StaticResource Gray600}" FontSize="Caption"/>
+        </VerticalStackLayout>-->
+        
+        <VerticalStackLayout Grid.Row="1" Spacing="4">
+            <Label Text="Dokumenter" TextColor="{StaticResource Gray600}" Margin="4, 0"/>
+
+            <Border BackgroundColor="{StaticResource White}" Stroke="{StaticResource Gray}" StrokeThickness="1" StrokeShape="RoundRectangle 8, 8, 8, 8" Padding="15">
+                <Grid ColumnSpacing="15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Column="0" Grid.RowSpan="2" BackgroundColor="{StaticResource Gray}" StrokeThickness="0" StrokeShape="RoundRectangle 100" HeightRequest="40" WidthRequest="40" HorizontalOptions="Center" VerticalOptions="Center" Padding="5">
+                        <Label Text="&#xE558;" TextColor="{StaticResource Black}" FontSize="Medium" FontFamily="FluentSystemIconsRegular" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Border>
+
+                    <Label Grid.Column="1" Grid.Row="0" Text="Ansættelseskontrakt Patrick 2023" LineBreakMode="TailTruncation" TextColor="{StaticResource Gray900}" FontSize="Small" FontFamily="InterSemiBold" VerticalOptions="Center"/>
+                    <Label Grid.Column="2" Grid.Row="0" Text="25. Nov" TextColor="{StaticResource Gray400}" FontSize="Caption" FontFamily="InterRegular"/>
+
+                    <Label Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Text="Underskrevet" TextColor="{StaticResource Gray600}" FontSize="Caption" FontFamily="InterRegular"/>
+                </Grid>
+
+                <Border.Shadow>
+                    <Shadow Brush="#212326" Offset="0, 0" Radius="30" Opacity="0.1" />
+                </Border.Shadow>
+            </Border>
+        </VerticalStackLayout>
+
+        <Border x:Name="MoreButtonFlyoutMenu" Grid.RowSpan="2" BackgroundColor="{StaticResource White}" Stroke="{StaticResource Gray}" StrokeThickness="1" HorizontalOptions="End" VerticalOptions="Start" StrokeShape="RoundRectangle 8, 8, 8, 8" Margin="0, -15, 0, 0" IsVisible="False">
+            <VerticalStackLayout WidthRequest="175">
+                <Button x:Name="InformationButton" Text="Oplysninger" Style="{StaticResource FlyoutButton}"/>
+                <Button x:Name="RemarksButton" Text="Bemærkninger" Style="{StaticResource FlyoutButton}"/>
+                <Button x:Name="ActivityButton" Text="Aktiviteter" Style="{StaticResource FlyoutButton}"/>
+            </VerticalStackLayout>
+
+            <Border.Shadow>
+                <Shadow Brush="#212326" Offset="20, 20" Radius="50" Opacity="0.1" />
+            </Border.Shadow>
+        </Border>
+    </Grid>
+</ContentPage>
