@@ -5,23 +5,21 @@ VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Fontend", "Fontend", "{3253BBA4-EF2A-43F3-97E6-0DF748808AA4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Website", "Website", "{ACF8A1A8-0089-409D-BB88-C194CEB67F95}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "App", "App", "{BB23C56D-6FA6-4A41-801B-C8CC63A4034D}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{29DFB0E2-B9C3-4074-9132-1D4B6C5D0CF1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Customer", "Customer", "{62C3DD87-2C9F-4B3E-B6AC-69808050FC9E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TrustedEntity", "TrustedEntity", "{BEE17383-4DCC-474A-A599-FBBFCE2DB543}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperDoc.Shared", "SuperDoc.Shared\SuperDoc.Shared.csproj", "{6CF88287-FE8F-45D2-A7D1-88BE7A87FBAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperDoc.Shared", "SuperDoc.Shared\SuperDoc.Shared.csproj", "{6CF88287-FE8F-45D2-A7D1-88BE7A87FBAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperDoc.Customer.API", "SuperDoc.Customer.API\SuperDoc.Customer.API.csproj", "{5702E80A-A836-4166-B017-A07B7A5C7B68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperDoc.Customer.API", "SuperDoc.Customer.API\SuperDoc.Customer.API.csproj", "{5702E80A-A836-4166-B017-A07B7A5C7B68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperDoc.Customer.Services", "SuperDoc.Customer.Services\SuperDoc.Customer.Services.csproj", "{89739D16-0C4F-4C77-82F0-2697EB1E35AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperDoc.Customer.Services", "SuperDoc.Customer.Services\SuperDoc.Customer.Services.csproj", "{89739D16-0C4F-4C77-82F0-2697EB1E35AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperDoc.Customer.Repositories", "SuperDoc.Customer.Repositories\SuperDoc.Customer.Repositories.csproj", "{9F9BC82C-CFE0-4670-A8DC-81C921F486AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperDoc.Customer.Repositories", "SuperDoc.Customer.Repositories\SuperDoc.Customer.Repositories.csproj", "{9F9BC82C-CFE0-4670-A8DC-81C921F486AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperDoc.Application", "SuperDoc.Application\SuperDoc.Application.csproj", "{745ED06E-2581-4253-A951-ACAA2E42934E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,18 +43,23 @@ Global
 		{9F9BC82C-CFE0-4670-A8DC-81C921F486AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F9BC82C-CFE0-4670-A8DC-81C921F486AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F9BC82C-CFE0-4670-A8DC-81C921F486AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{745ED06E-2581-4253-A951-ACAA2E42934E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{745ED06E-2581-4253-A951-ACAA2E42934E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{745ED06E-2581-4253-A951-ACAA2E42934E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{745ED06E-2581-4253-A951-ACAA2E42934E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{745ED06E-2581-4253-A951-ACAA2E42934E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{745ED06E-2581-4253-A951-ACAA2E42934E}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{ACF8A1A8-0089-409D-BB88-C194CEB67F95} = {3253BBA4-EF2A-43F3-97E6-0DF748808AA4}
-		{BB23C56D-6FA6-4A41-801B-C8CC63A4034D} = {3253BBA4-EF2A-43F3-97E6-0DF748808AA4}
 		{62C3DD87-2C9F-4B3E-B6AC-69808050FC9E} = {29DFB0E2-B9C3-4074-9132-1D4B6C5D0CF1}
 		{BEE17383-4DCC-474A-A599-FBBFCE2DB543} = {29DFB0E2-B9C3-4074-9132-1D4B6C5D0CF1}
 		{5702E80A-A836-4166-B017-A07B7A5C7B68} = {62C3DD87-2C9F-4B3E-B6AC-69808050FC9E}
 		{89739D16-0C4F-4C77-82F0-2697EB1E35AD} = {62C3DD87-2C9F-4B3E-B6AC-69808050FC9E}
 		{9F9BC82C-CFE0-4670-A8DC-81C921F486AF} = {62C3DD87-2C9F-4B3E-B6AC-69808050FC9E}
+		{745ED06E-2581-4253-A951-ACAA2E42934E} = {3253BBA4-EF2A-43F3-97E6-0DF748808AA4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F37F55C9-DBE5-4F46-B9E7-4C197C09CFA5}
