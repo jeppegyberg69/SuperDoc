@@ -49,7 +49,9 @@ namespace SuperDoc.Customer.API.Authorization
             DateTime validTo = DateTime.UtcNow.AddHours(8);
 
             var tokenHandler = new JwtSecurityTokenHandler();
+#nullable disable
             var key = Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"]);
+#nullable enable
 
 
             var claims = new List<Claim>

@@ -13,7 +13,7 @@ namespace SuperDoc.Shared.Models.Cases
         public string Title { get; set; } = string.Empty;
 
 
-        [StringLength(1024, MinimumLength = 1)]
+        [MaxLength(1024)]
         public string Description { get; set; } = string.Empty;
 
         [Required]

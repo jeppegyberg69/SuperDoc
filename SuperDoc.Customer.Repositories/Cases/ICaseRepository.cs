@@ -11,6 +11,7 @@ namespace SuperDoc.Customer.Repositories.Cases
         Task<IEnumerable<Case>> GetAllCasesWithResponsibleUserAndCaseManagersAsync();
         Case? GetCaseByExternalUserIdAndCaseId(Guid externalUserId, Guid caseId);
         Task<Case?> GetCaseByIdAsync(Guid caseId);
+        Task<Case?> GetCaseByIdWithCaseManagersAndResponsibleUserAsync(Guid caseId);
         Task<Case?> GetCaseByIdWithCaseManagersAsync(Guid caseId);
         Task UpdateCase(Case docCase);
     }

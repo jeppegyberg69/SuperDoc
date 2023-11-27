@@ -17,6 +17,8 @@ namespace SuperDoc.Shared.Models.Users
         [Required]
         [EmailAddress]
         public string EmailAddress { get; set; } = string.Empty;
+        public int? PhoneCode { get; set; }
+        public long? PhoneNumber { get; set; }
 
         [StringLength(128, MinimumLength = 8)]
         public string Password { get; set; } = string.Empty;
