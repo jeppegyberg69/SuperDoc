@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SuperDoc.Customer.Repositories.Contexts;
 
@@ -11,9 +12,11 @@ using SuperDoc.Customer.Repositories.Contexts;
 namespace SuperDoc.Customer.Repositories.Migrations
 {
     [DbContext(typeof(SuperDocContext))]
-    partial class SuperDocContextModelSnapshot : ModelSnapshot
+    [Migration("20231123131755_InitSignatures")]
+    partial class InitSignatures
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,7 +87,7 @@ namespace SuperDoc.Customer.Repositories.Migrations
 
                     b.HasIndex("ResponsibleUserId");
 
-                    b.ToTable("Cases", (string)null);
+                    b.ToTable("Cases");
                 });
 
             modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Documents.Document", b =>
@@ -118,13 +121,16 @@ namespace SuperDoc.Customer.Repositories.Migrations
 
                     b.HasIndex("CaseId");
 
-                    b.ToTable("Documents", (string)null);
+                    b.ToTable("Documents");
                 });
 
             modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Documents.DocumentSignature", b =>
                 {
                     b.Property<Guid>("SignatureId")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("DocumentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("PublicKey")
@@ -145,11 +151,13 @@ namespace SuperDoc.Customer.Repositories.Migrations
 
                     b.HasKey("SignatureId");
 
+                    b.HasIndex("DocumentId");
+
                     b.HasIndex("RevisionId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("DocumentSignatories", (string)null);
+                    b.ToTable("DocumentSignatories");
                 });
 
             modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Documents.Revision", b =>
@@ -183,7 +191,7 @@ namespace SuperDoc.Customer.Repositories.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Revision", (string)null);
+                    b.ToTable("Revision");
                 });
 
             modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Users.User", b =>
@@ -234,7 +242,7 @@ namespace SuperDoc.Customer.Repositories.Migrations
                     b.HasIndex("EmailAddress")
                         .IsUnique();
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("CaseUser", b =>
@@ -288,6 +296,12 @@ namespace SuperDoc.Customer.Repositories.Migrations
 
             modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Documents.DocumentSignature", b =>
                 {
+                    b.HasOne("SuperDoc.Customer.Repositories.Entities.Documents.Document", "Document")
+                        .WithMany("DocumentSignatures")
+                        .HasForeignKey("DocumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("SuperDoc.Customer.Repositories.Entities.Documents.Revision", "Revision")
                         .WithMany("DocumentSignatures")
                         .HasForeignKey("RevisionId")
@@ -299,6 +313,8 @@ namespace SuperDoc.Customer.Repositories.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Document");
 
                     b.Navigation("Revision");
 
@@ -322,6 +338,8 @@ namespace SuperDoc.Customer.Repositories.Migrations
 
             modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Documents.Document", b =>
                 {
+                    b.Navigation("DocumentSignatures");
+
                     b.Navigation("Revisions");
                 });
 
