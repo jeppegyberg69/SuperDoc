@@ -19,10 +19,10 @@ namespace SuperDoc.Customer.Services.Cases
         Task<IEnumerable<User>> GetAllCaseManagersAsync(Guid? caseId = null);
 
         /// <summary>
-        ///     Get all cases a user is assigned to. Set userId to null to get all cases in the system.
+        ///     Get all the cases a user has access to.
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<IEnumerable<Case>> GetAssignedCasesAsync(Guid? userId);
+        Task<IEnumerable<Case>> GetAssignedCasesAsync(Guid userId);
     }
 }

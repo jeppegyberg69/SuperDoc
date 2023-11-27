@@ -19,14 +19,31 @@ namespace SuperDoc.Customer.Services.Cases
         }
 
 
-        public async Task<IEnumerable<Case>> GetAssignedCasesAsync(Guid? userId)
+        public async Task<IEnumerable<Case>> GetAssignedCasesAsync(Guid userId)
         {
-            if (!userId.HasValue)
+            User? user = await userRepository.GetUserByIdWithDocumentsAsync(userId);
+
+            if (user == null)
+            {
+                return new List<Case>();
+            }
+
+            if (user.Role == Roles.SuperAdmin)
             {
                 return await caseRepository.GetAllCasesWithResponsibleUserAndCaseManagersAsync();
             }
+            else if (user.Role == Roles.Admin || user.Role == Roles.CaseManager)
+            {
+                return await caseRepository.GetAllCasesAUserIsAssignedToWithResponsibleUserAndCaseManagers(user.UserId);
+            }
+            else
+            {
+#nullable disable
+                List<Guid> caseIds = user.Documents?.Where(x => x.CaseId.HasValue).DistinctBy(x => x.CaseId).Select(x => x.CaseId.Value).ToList() ?? new List<Guid>();
+#nullable enable
 
-            return await caseRepository.GetAllCasesAUserIsAssignedWithResponsibleUserAndCaseManagers(userId.Value);
+                return await caseRepository.GetCasesByIdsWithResponsibleUserAndCaseManagersAsync(caseIds);
+            }
         }
 
         public async Task<IEnumerable<User>> GetAllCaseManagersAsync(Guid? caseId = null)

@@ -57,19 +57,7 @@ namespace SuperDoc.Customer.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCases()
         {
-            Guid? userId = loginService.GetUserId(User.Claims);
-
-            if (userId == null)
-            {
-                return BadRequest("User id is null");
-            }
-
-            if (loginService.IsUserInRole(User.Claims, Roles.SuperAdmin))
-            {
-                userId = null;
-            }
-
-            var cases = await caseService.GetAssignedCasesAsync(userId);
+            var cases = await caseService.GetAssignedCasesAsync(loginService.GetUserId(User.Claims));
 
             return Ok(caseFactory.ConverCasesToDtos(cases));
         }
