@@ -26,6 +26,9 @@ namespace SuperDoc.Customer.Repositories.Entities.Users
         [EmailAddress]
         public string EmailAddress { get; set; } = string.Empty;
 
+        public int? PhoneCode { get; set; }
+        public long? PhoneNumber { get; set; }
+
         [StringLength(128, MinimumLength = 1)]
         public string PasswordHash { get; set; } = string.Empty;
 

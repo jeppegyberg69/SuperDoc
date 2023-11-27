@@ -32,7 +32,7 @@ namespace SuperDoc.Customer.API.Controllers
 
             if (ModelState.IsValid)
             {
-                int result = await userService.AddUserAsync(crerateUserDto.FirstName, crerateUserDto.LastName, crerateUserDto.EmailAddress, crerateUserDto.Password, (Roles)crerateUserDto.Role);
+                int result = await userService.AddUserAsync(crerateUserDto.FirstName, crerateUserDto.LastName, crerateUserDto.EmailAddress, crerateUserDto.PhoneCode, crerateUserDto.PhoneNumber, crerateUserDto.Password, (Roles)crerateUserDto.Role);
 
                 if (result == 1)
                 {

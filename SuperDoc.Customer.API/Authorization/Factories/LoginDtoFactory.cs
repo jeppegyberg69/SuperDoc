@@ -13,6 +13,8 @@ namespace SuperDoc.Customer.API.Authorization.Factories
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 EmailAddress = user.EmailAddress,
+                PhoneCode = user.PhoneCode,
+                PhoneNumber = user.PhoneNumber,
                 Role = user.Role.ToString(),
                 Token = token,
                 ValidFrom = validFrom,
