@@ -39,7 +39,7 @@ function transformGetCases(response: WebserviceResponse): Case[] {
     id: v.caseId,
     title: v.title,
     description: v.description,
-    caseManagers: v.caseMangers.map((cm): CaseManagers => ({ // skal ændres ti "CaseManagers", der er stavefejl i nuværrende webservice
+    caseManagers: v.caseManagers.map((cm): CaseManagers => ({ // skal ændres ti "CaseManagers", der er stavefejl i nuværrende webservice
       id: cm.userId,
       emailAddress: cm.emailAddress,
       firstName: cm.firstName,

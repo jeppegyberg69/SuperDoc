@@ -29,6 +29,7 @@ import * as z from "zod"
 import { getCases } from '@/services/case-service';
 import { Case } from '@/models/case';
 import { useIsMounted } from '@/common/hooks/use-is-mounted';
+import { CreateCaseDialog } from './create-case/create-case-dialog';
 
 export type CaseOverviewTableProps = {};
 
@@ -41,12 +42,6 @@ export type Payment = {
   totalAmount: string,
   paymentMethod: string,
 }
-
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-})
 
 export const columns: ColumnDef<Case>[] = [
   {
@@ -100,7 +95,6 @@ export const columns: ColumnDef<Case>[] = [
 ];
 
 export function CaseOverviewTable(props: CaseOverviewTableProps) {
-  const form = useForm()
   const [data, setData] = useState([])
 
   const isMounted = useIsMounted()
@@ -118,61 +112,11 @@ export function CaseOverviewTable(props: CaseOverviewTableProps) {
     />
   )
 
-  const createCaseDialog = () => {
-    const form = useForm<z.infer<typeof formSchema>>({
-      resolver: zodResolver(formSchema),
-      defaultValues: {
-        username: "",
-      },
-    })
-
-    function onSubmit(values: z.infer<typeof formSchema>) {
-      console.log(values)
-    }
-
-    const dialogContent = (
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input placeholder="shadcn" {...field} />
-                </FormControl>
-                <FormDescription>
-                  This is your public display name.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit">Submit</Button>
-        </form>
-      </Form>
-    )
-
-    return (
-      <Dialog>
-        <DialogTrigger className='h-full'>Open</DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Opret sag</DialogTitle>
-            {dialogContent}
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
-    )
-  }
-
-
   const toolbar = (
     <div className='flex divide-x'>
       <h1 className="font-semibold text-xl px-2">Sager</h1>
       <div className='px-2'>
-        {createCaseDialog()}
+        <CreateCaseDialog />
       </div>
     </div>
   );
