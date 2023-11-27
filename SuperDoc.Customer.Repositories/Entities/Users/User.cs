@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using SuperDoc.Customer.Repositories.Entities.Cases;
+using SuperDoc.Customer.Repositories.Entities.Documents;
 
 namespace SuperDoc.Customer.Repositories.Entities.Users
 {
@@ -47,5 +48,11 @@ namespace SuperDoc.Customer.Repositories.Entities.Users
         public virtual ICollection<Case>? Cases { get; set; }
 
         public virtual ICollection<Case>? ResonsibleCases { get; set; }
+
+        public virtual ICollection<Document>? Documents { get; set; }
+
+        public virtual ICollection<Revision>? Revisions { get; set; }
+
+        public virtual ICollection<DocumentSignature>? DocumentSignatures { get; set; }
     }
 }
