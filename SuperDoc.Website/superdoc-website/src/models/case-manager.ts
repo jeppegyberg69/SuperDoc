@@ -3,6 +3,4 @@ export type CaseManagers = {
   firstName: string;
   lastName: string;
   emailAddress: string;
-
-
 }

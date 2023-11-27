@@ -103,8 +103,7 @@ export function LoginForm(props: LoginFormProps) {
 }
 
 export function setLoginResponse(response: any) {
-  console.log('setLoginResponse response', response);
   localStorage.removeItem('jpj_websession');
-  const d = createSessionFromToken(response)
-  localStorage.setItem('jpj_websession', JSON.stringify(d));
+  const newSession = createSessionFromToken(response)
+  localStorage.setItem('jpj_websession', JSON.stringify(newSession));
 }

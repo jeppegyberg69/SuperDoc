@@ -36,7 +36,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="rounded-md border">
-      <Table>
+      <Table className='case-overview-table'>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -62,7 +62,7 @@ export function DataTable<TData, TValue>({
                 className='cursor-pointer'
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
-                onClick={(e) => {console.log(row);router.push('/details/' + (row.original as any).id)}}
+                onClick={(e) => {router.push('/details/' + (row.original as any).id)}}
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>

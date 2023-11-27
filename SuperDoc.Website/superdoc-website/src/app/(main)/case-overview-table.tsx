@@ -50,13 +50,53 @@ const formSchema = z.object({
 
 export const columns: ColumnDef<Case>[] = [
   {
+    id: "id",
     accessorKey: nameof<Case>('id'),
     header: "id",
+    cell(props) {
+      const data = props.getValue();
+      return (
+        //@ts-ignore
+        <span className='data-column-id'>{data}</span>
+      )
+    },
   },
   {
+    id: "title",
     accessorKey: nameof<Case>('title'),
     header: "Title",
+    cell(props) {
+      const data = props.getValue();
+      return (
+        //@ts-ignore
+        <span className='data-column-title'>{data}</span>
+      )
+    },
   },
+  {
+    accessorKey: nameof<Case>('caseManagers'),
+    header: () => <span className='data-column-casemanagers'>Sagsbehandlere</span>,
+    cell(props) {
+      const caseManagers =
+        props.getValue()
+          //@ts-ignore
+          .map(cm => {
+            const fullName = [cm.firstName, cm.lastName].join(' ')
+            return fullName.split(' ')
+              .map(word => word[0])
+              .filter(v => !!v)
+              .slice(0, 2)
+              .join('');
+          });
+
+      return (
+        <span className='data-column-casemanagers'>{caseManagers.join(',')}</span>
+      )
+    },
+    size: 50
+
+  },
+
 ];
 
 export function CaseOverviewTable(props: CaseOverviewTableProps) {

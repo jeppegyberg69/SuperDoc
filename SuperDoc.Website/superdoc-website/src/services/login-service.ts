@@ -55,13 +55,10 @@ export function login(email: string, password: string): Promise<any> {
       return response;
     })
     .catch((error) => {
-      console.log('dsa',error)
     });
 }
 
 function transformLogin(response) {
-  // console.log('transform login response', response);
-
   return response.data;
 }
 

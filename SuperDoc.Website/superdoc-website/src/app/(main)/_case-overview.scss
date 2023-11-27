@@ -1,0 +1,24 @@
+.case-overview-table {
+
+  // this is a way to decide the sizes of the columns in the DataTable in case-overview. 
+  // There is no immediate way to set the column-width with the use of column definition, so we do it manually by css instead.
+  td {
+    &:has(.data-column-id) {
+      max-width: 50px;
+    }
+
+    &:has(.data-column-title) {}
+
+    &:has(.data-column-casemanagers) {
+      max-width: 50px;
+      text-align: end;
+    }
+  }
+
+  th {
+    &:has(.data-column-casemanagers) {
+      max-width: 30px;
+      text-align: end;
+    }
+  }
+}

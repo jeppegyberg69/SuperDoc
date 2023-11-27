@@ -21,26 +21,20 @@ export function getCases() {
     .then(async (response): Promise<WebserviceResponse> => {
       if (response.ok) {
         const resp = await response.json()
-        console.log(resp);
-
         return {
           status: response.status,
           statusText: response.statusText,
           data: resp// this wont error because we made sure that the response is ok earlier, so response.json is always an actual json value.
-
         }
       }
     })
     .then(transformGetCases)
   // .catch((error) => {
-  //   console.log('dsa', error);
   // });
 }
 
 
 function transformGetCases(response: WebserviceResponse): Case[] {
-  console.log(response);
-
   return response.data.map((v): Case => ({
     id: v.caseId,
     title: v.title,
