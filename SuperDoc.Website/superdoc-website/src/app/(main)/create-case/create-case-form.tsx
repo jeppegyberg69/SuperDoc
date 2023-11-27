@@ -106,7 +106,7 @@ export function CreateCaseForm(props: CreateCaseFormProps) {
             <FormItem>
               <FormLabel>Titel</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input placeholder='Sagstitel' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -120,7 +120,7 @@ export function CreateCaseForm(props: CreateCaseFormProps) {
             <FormItem>
               <FormLabel>Beskrivelse</FormLabel>
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                <Input placeholder="Beskrivelse af sagen" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -141,21 +141,20 @@ export function CreateCaseForm(props: CreateCaseFormProps) {
                         variant="outline"
                         role="combobox"
                         className={cn(
-                          "w-[200px] justify-between",
+                          "w-full justify-between",
                           !field.value && "text-muted-foreground"
                         )}
                       >
-                        {field.value
+                        {field.value?.length > 0
                           ? items.find(
                             (item) => field.value.some(v => item.id === v)
-                          )?.label
-                          : "Select language"}
+                          )?.label + formatCheckboxSelectedValues(field.value)
+                          : "Vælg sagsbehandlere"}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </FormControl>
                   </PopoverTrigger>
                   <PopoverContent className="w-[200px] p-0">
-
                     {items.map((item) => (
                       <FormField
                         key={item.id}
@@ -165,7 +164,7 @@ export function CreateCaseForm(props: CreateCaseFormProps) {
                           return (
                             <FormItem
                               key={item.id}
-                              className="flex flex-row items-start space-x-3 space-y-0"
+                              className="flex flex-row items-start space-x-3 space-y-0 m-2"
                             >
                               <FormControl>
                                 <Checkbox
@@ -189,25 +188,6 @@ export function CreateCaseForm(props: CreateCaseFormProps) {
                         }}
                       />
                     ))}
-
-
-                    {/* {items.map((item) => (
-                      <div>
-                        <Checkbox
-                          checked={field.value?.includes(item.id)}
-                          onCheckedChange={(checked) => {
-                            return checked
-                              ? field.onChange([...field.value, item.id])
-                              : field.onChange(
-                                field.value?.filter(
-                                  (value) => value !== item.id
-                                )
-                              )
-                          }}
-                        />
-                        {item.label}
-                      </div>
-                    ))} */}
                   </PopoverContent>
                 </Popover>
               </FormControl>
@@ -323,4 +303,10 @@ export function CheckboxReactHookFormMultiple() {
       </form>
     </Form>
   )
+}
+
+function formatCheckboxSelectedValues(items: string[]): string {
+  return items.length > 1
+    ? ` [+${items.length - 1}]`
+    : '';
 }
