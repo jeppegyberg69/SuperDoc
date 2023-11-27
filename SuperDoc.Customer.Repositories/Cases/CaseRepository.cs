@@ -21,6 +21,11 @@ namespace SuperDoc.Customer.Repositories.Cases
             return await superDocContext.Cases.FirstOrDefaultAsync(x => x.CaseId == caseId);
         }
 
+        public async Task<IEnumerable<Case>> GetCasesByIdsWithResponsibleUserAndCaseManagersAsync(IEnumerable<Guid> caseIds)
+        {
+            return await superDocContext.Cases.Include(x => x.CaseManagers).Include(x => x.ResponsibleUser).Where(x => caseIds.Contains(x.CaseId)).ToListAsync();
+        }
+
         public async Task<Case?> GetCaseByIdWithCaseManagersAsync(Guid caseId)
         {
             return await superDocContext.Cases.Include(x => x.CaseManagers).FirstOrDefaultAsync(x => x.CaseId == caseId);
@@ -36,7 +41,7 @@ namespace SuperDoc.Customer.Repositories.Cases
             return await superDocContext.Cases.Include(x => x.ResponsibleUser).Include(x => x.CaseManagers).ToListAsync();
         }
 
-        public async Task<IEnumerable<Case>> GetAllCasesAUserIsAssignedWithResponsibleUserAndCaseManagers(Guid userId)
+        public async Task<IEnumerable<Case>> GetAllCasesAUserIsAssignedToWithResponsibleUserAndCaseManagers(Guid userId)
         {
             User? user = await superDocContext.Users.Include(x => x.Cases).FirstOrDefaultAsync(x => x.UserId == userId);
 
