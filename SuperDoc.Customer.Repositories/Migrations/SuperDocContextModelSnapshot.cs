@@ -17,10 +17,10 @@ namespace SuperDoc.Customer.Repositories.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.25")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("CaseUser", b =>
                 {
@@ -35,6 +35,21 @@ namespace SuperDoc.Customer.Repositories.Migrations
                     b.HasIndex("CasesCaseId");
 
                     b.ToTable("CaseUsers", (string)null);
+                });
+
+            modelBuilder.Entity("DocumentUser", b =>
+                {
+                    b.Property<Guid>("DocumentsDocumentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ExternalUsersUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("DocumentsDocumentId", "ExternalUsersUserId");
+
+                    b.HasIndex("ExternalUsersUserId");
+
+                    b.ToTable("DocumentExternalUsers", (string)null);
                 });
 
             modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Cases.Case", b =>
@@ -69,7 +84,106 @@ namespace SuperDoc.Customer.Repositories.Migrations
 
                     b.HasIndex("ResponsibleUserId");
 
-                    b.ToTable("Cases");
+                    b.ToTable("Cases", (string)null);
+                });
+
+            modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Documents.Document", b =>
+                {
+                    b.Property<Guid>("DocumentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CaseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DateCreated")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateModified")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("DocumentId");
+
+                    b.HasIndex("CaseId");
+
+                    b.ToTable("Documents", (string)null);
+                });
+
+            modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Documents.DocumentSignature", b =>
+                {
+                    b.Property<Guid>("SignatureId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PublicKey")
+                        .IsRequired()
+                        .HasMaxLength(392)
+                        .HasColumnType("nvarchar(392)");
+
+                    b.Property<Guid>("RevisionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Signature")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("SignatureId");
+
+                    b.HasIndex("RevisionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("DocumentSignatories", (string)null);
+                });
+
+            modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Documents.Revision", b =>
+                {
+                    b.Property<Guid>("RevisionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateUploaded")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DocumentHash")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<Guid?>("DocumentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("RevisionId");
+
+                    b.HasIndex("DocumentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Revision", (string)null);
                 });
 
             modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Users.User", b =>
@@ -90,8 +204,8 @@ namespace SuperDoc.Customer.Repositories.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("IsDisabled")
                         .HasColumnType("bit");
@@ -104,8 +218,8 @@ namespace SuperDoc.Customer.Repositories.Migrations
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
@@ -120,7 +234,7 @@ namespace SuperDoc.Customer.Repositories.Migrations
                     b.HasIndex("EmailAddress")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("CaseUser", b =>
@@ -138,6 +252,21 @@ namespace SuperDoc.Customer.Repositories.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("DocumentUser", b =>
+                {
+                    b.HasOne("SuperDoc.Customer.Repositories.Entities.Documents.Document", null)
+                        .WithMany()
+                        .HasForeignKey("DocumentsDocumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SuperDoc.Customer.Repositories.Entities.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("ExternalUsersUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Cases.Case", b =>
                 {
                     b.HasOne("SuperDoc.Customer.Repositories.Entities.Users.User", "ResponsibleUser")
@@ -148,9 +277,66 @@ namespace SuperDoc.Customer.Repositories.Migrations
                     b.Navigation("ResponsibleUser");
                 });
 
+            modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Documents.Document", b =>
+                {
+                    b.HasOne("SuperDoc.Customer.Repositories.Entities.Cases.Case", "Case")
+                        .WithMany()
+                        .HasForeignKey("CaseId");
+
+                    b.Navigation("Case");
+                });
+
+            modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Documents.DocumentSignature", b =>
+                {
+                    b.HasOne("SuperDoc.Customer.Repositories.Entities.Documents.Revision", "Revision")
+                        .WithMany("DocumentSignatures")
+                        .HasForeignKey("RevisionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SuperDoc.Customer.Repositories.Entities.Users.User", "User")
+                        .WithMany("DocumentSignatures")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Revision");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Documents.Revision", b =>
+                {
+                    b.HasOne("SuperDoc.Customer.Repositories.Entities.Documents.Document", "Document")
+                        .WithMany("Revisions")
+                        .HasForeignKey("DocumentId");
+
+                    b.HasOne("SuperDoc.Customer.Repositories.Entities.Users.User", "User")
+                        .WithMany("Revisions")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Document");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Documents.Document", b =>
+                {
+                    b.Navigation("Revisions");
+                });
+
+            modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Documents.Revision", b =>
+                {
+                    b.Navigation("DocumentSignatures");
+                });
+
             modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Users.User", b =>
                 {
+                    b.Navigation("DocumentSignatures");
+
                     b.Navigation("ResonsibleCases");
+
+                    b.Navigation("Revisions");
                 });
 #pragma warning restore 612, 618
         }

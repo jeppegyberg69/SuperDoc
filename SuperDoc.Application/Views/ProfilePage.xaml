@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage 
+    x:Class="SuperDoc.Application.Views.ProfilePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Shell.TitleView>
+        <Grid ColumnSpacing="10" Padding="0, 0, 15, 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0" Text="Profil" FontSize="Large" VerticalTextAlignment="Center" Style="{StaticResource PageHeader}"/>
+
+            <Button x:Name="LogoutButton" Grid.Column="1" Text="Log ud" FontSize="Small" FontFamily="InterRegular" WidthRequest="120" Padding="10, 0, 0, 0" Style="{StaticResource ActionButton}" Clicked="LogoutButton_Clicked"/>
+            <Label Grid.Column="1" Text="&#xF15C;" FontSize="Medium" FontFamily="FluentSystemIconsRegular" HorizontalOptions="Start" VerticalOptions="Center" Margin="10, 0"/>
+        </Grid>
+    </Shell.TitleView>
+
+    <Grid RowSpacing="50" Padding="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <VerticalStackLayout Grid.Row="0" Spacing="10" HorizontalOptions="Center" Margin="0, 30, 0, 0">
+            <Border Grid.Row="0" WidthRequest="96" HeightRequest="96" BackgroundColor="{StaticResource Gray}" StrokeThickness="0" StrokeShape="RoundRectangle 100">
+                <Label Text="&#xF5C8;" TextColor="{StaticResource Gray400}" FontSize="64" FontFamily="FluentSystemIconsFilled" HorizontalOptions="Center" VerticalOptions="Center"/>
+            </Border>
+
+            <VerticalStackLayout>
+                <Label Text="Patrick Frost Sørensen" FontSize="Medium" FontFamily="InterSemiBold"/>
+                <Label Text="Sagsbehandler" TextColor="{StaticResource Gray600}" HorizontalTextAlignment="Center"/>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+
+
+        <VerticalStackLayout Grid.Row="1" Spacing="4">
+            <Label Text="Kontaktoplysninger" TextColor="{StaticResource Gray600}" Margin="4, 0"/>
+
+            <Border BackgroundColor="{StaticResource White}" Stroke="{StaticResource Gray}" StrokeThickness="1" StrokeShape="RoundRectangle 8" Padding="0, 15">
+                <VerticalStackLayout Spacing="15">
+                    <FlexLayout Direction="Row" JustifyContent="SpaceBetween" Margin="15, 0">
+                        <Label Text="Email adresse"/>
+                        <Label Text="patrick@frostit.dk" FontFamily="InterSemiBold"/>
+                    </FlexLayout>
+
+                    <Border Stroke="{StaticResource Gray}" StrokeThickness="0.3"/>
+
+                    <FlexLayout Direction="Row" JustifyContent="SpaceBetween" Margin="15, 0">
+                        <Label Text="Mobilnummer"/>
+                        <Label Text="+45 29 80 89 02" FontFamily="InterSemiBold"/>
+                    </FlexLayout>
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

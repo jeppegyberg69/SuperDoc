@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="SuperDoc.Application.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:Views="clr-namespace:SuperDoc.Application.Views"
+    xmlns:CommunityToolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    Shell.FlyoutBehavior="Disabled"
+    Title="SuperDoc">
+
+    <Shell.Behaviors>
+        <CommunityToolkit:StatusBarBehavior StatusBarColor="{StaticResource Background}" StatusBarStyle="DarkContent"/>
+    </Shell.Behaviors>
+
+    <!--<ShellContent Route="Login" ContentTemplate="{DataTemplate views:LoginPage}" />-->
+
+    <TabBar>
+        <Tab Title="Sager">
+            <Tab.Icon>
+                <FontImageSource Glyph="&#xF515;" FontFamily="FluentSystemIconsRegular"/>
+            </Tab.Icon>
+
+            <ShellContent Route="Cases" ContentTemplate="{DataTemplate Views:CasesPage}"/>
+        </Tab>
+
+        <Tab Title="Underskriv">
+            <Tab.Icon>
+                <FontImageSource Glyph="&#xF6DD;" FontFamily="FluentSystemIconsRegular"/>
+            </Tab.Icon>
+
+            <ShellContent Route="LegalDocuments" ContentTemplate="{DataTemplate Views:LegalDocumentsPage}"/>
+        </Tab>
+
+        <Tab Title="Profil">
+            <Tab.Icon>
+                <FontImageSource Glyph="&#xF5BE;" FontFamily="FluentSystemIconsRegular"/>
+            </Tab.Icon>
+
+            <ShellContent Route="Profile" ContentTemplate="{DataTemplate Views:ProfilePage}"/>
+        </Tab>
+    </TabBar>
+</Shell>

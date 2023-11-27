@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using SuperDoc.Customer.Repositories.Entities.Documents;
 using SuperDoc.Customer.Repositories.Entities.Users;
 
 namespace SuperDoc.Customer.Repositories.Entities.Cases
@@ -32,5 +33,6 @@ namespace SuperDoc.Customer.Repositories.Entities.Cases
         public virtual User? ResponsibleUser { get; set; }
 
         public virtual ICollection<User>? CaseManagers { get; set; }
+        public virtual ICollection<Document>? Documents { get; set; }
     }
 }

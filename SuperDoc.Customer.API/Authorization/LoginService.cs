@@ -20,18 +20,11 @@ namespace SuperDoc.Customer.API.Authorization
             this.loginDtoFactory = loginDtoFactory;
         }
 
-        public Guid? GetUserId(IEnumerable<Claim> claims)
+        public Guid GetUserId(IEnumerable<Claim> claims)
         {
-            Guid? userId = null;
-
-            string id = claims.FirstOrDefault(x => x.Type == IdentityData.UserIdClaimName)?.Value ?? string.Empty;
-
-            if (!string.IsNullOrEmpty(id))
-            {
-                userId = Guid.Parse(id);
-            }
-
-            return userId;
+#nullable disable
+            return Guid.Parse(claims.FirstOrDefault(x => x.Type == IdentityData.UserIdClaimName)?.Value ?? null);
+#nullable enable
         }
 
         public bool IsUserInRole(IEnumerable<Claim> claims, Roles role)

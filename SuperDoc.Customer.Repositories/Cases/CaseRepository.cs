@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Data;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using SuperDoc.Customer.Repositories.Contexts;
 using SuperDoc.Customer.Repositories.Entities.Cases;
 using SuperDoc.Customer.Repositories.Entities.Users;
@@ -12,6 +14,11 @@ namespace SuperDoc.Customer.Repositories.Cases
         public CaseRepository(SuperDocContext superDocContext)
         {
             this.superDocContext = superDocContext;
+        }
+
+        public async Task<Case?> GetCaseByIdAsync(Guid caseId)
+        {
+            return await superDocContext.Cases.FirstOrDefaultAsync(x => x.CaseId == caseId);
         }
 
         public async Task<Case?> GetCaseByIdWithCaseManagersAsync(Guid caseId)
@@ -46,6 +53,22 @@ namespace SuperDoc.Customer.Repositories.Cases
             }
 
             return await superDocContext.Users.Where(x => x.Role != Roles.User).ToListAsync();
+        }
+
+        public Case? GetCaseByExternalUserIdAndCaseId(Guid externalUserId, Guid caseId)
+        {
+            string sql = @$"SELECT c.* FROM Cases c
+                INNER JOIN Documents d ON c.CaseId = d.CaseId
+                INNER JOIN DocumentExternalUsers deu ON deu.DocumentsDocumentId = d.DocumentId
+                WHERE c.CaseId = @caseId AND deu.ExternalUsersUserId = @externalUserId";
+
+            var parameters = new[]
+            {
+                new SqlParameter("@caseId", SqlDbType.UniqueIdentifier) { Value = caseId },
+                new SqlParameter("@externalUserId", SqlDbType.UniqueIdentifier) { Value = externalUserId }
+            };
+
+            return superDocContext.Cases.FromSqlRaw(sql, parameters).ToList().FirstOrDefault();
         }
 
         public async Task CreateCase(Case docCase)
