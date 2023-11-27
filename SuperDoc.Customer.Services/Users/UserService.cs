@@ -13,7 +13,7 @@ namespace SuperDoc.Customer.Services.Users
         }
 
 
-        public async Task<int> AddUserAsync(string firstName, string lastName, string email, string password, Roles role)
+        public async Task<int> AddUserAsync(string firstName, string lastName, string email, int? phoneCode, long? phoneNumber, string password, Roles role)
         {
             var user = await userRepository.GetUserByEmailAsync(email);
 
@@ -28,6 +28,8 @@ namespace SuperDoc.Customer.Services.Users
                 FirstName = firstName,
                 LastName = lastName,
                 EmailAddress = email,
+                PhoneCode = phoneCode,
+                PhoneNumber = phoneNumber,
                 Role = role,
                 IsUserSignedUp = true,
                 IsDisabled = false,

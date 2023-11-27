@@ -58,6 +58,12 @@ namespace SuperDoc.Customer.Repositories.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("CaseNumber")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CaseNumber"));
+
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
@@ -226,6 +232,12 @@ namespace SuperDoc.Customer.Repositories.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
+                    b.Property<int?>("PhoneCode")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("PhoneNumber")
+                        .HasColumnType("bigint");
+
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
@@ -280,7 +292,7 @@ namespace SuperDoc.Customer.Repositories.Migrations
             modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Documents.Document", b =>
                 {
                     b.HasOne("SuperDoc.Customer.Repositories.Entities.Cases.Case", "Case")
-                        .WithMany()
+                        .WithMany("Documents")
                         .HasForeignKey("CaseId");
 
                     b.Navigation("Case");
@@ -318,6 +330,11 @@ namespace SuperDoc.Customer.Repositories.Migrations
                     b.Navigation("Document");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Cases.Case", b =>
+                {
+                    b.Navigation("Documents");
                 });
 
             modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Documents.Document", b =>

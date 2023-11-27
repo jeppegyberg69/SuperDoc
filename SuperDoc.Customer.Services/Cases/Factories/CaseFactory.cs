@@ -52,6 +52,7 @@ namespace SuperDoc.Customer.Services.Cases.Factories
             return new CaseDto
             {
                 CaseId = docCase.CaseId,
+                CaseNumber = docCase.CaseNumber,
                 Title = docCase.Title,
                 Description = docCase.Description,
                 ResponsibleUser = docCase.ResponsibleUser == null ? new CaseManagerDto() : ConvertUserToCaseManagerDto(docCase.ResponsibleUser),

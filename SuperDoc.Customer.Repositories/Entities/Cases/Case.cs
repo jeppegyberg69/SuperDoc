@@ -12,6 +12,9 @@ namespace SuperDoc.Customer.Repositories.Entities.Cases
         [Required]
         public Guid CaseId { get; set; }
 
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int CaseNumber { get; set; }
+
         [Required]
         [StringLength(256, MinimumLength = 1)]
         public string Title { get; set; } = string.Empty;

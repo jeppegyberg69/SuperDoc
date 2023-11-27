@@ -12,8 +12,8 @@ using SuperDoc.Customer.Repositories.Contexts;
 namespace SuperDoc.Customer.Repositories.Migrations
 {
     [DbContext(typeof(SuperDocContext))]
-    [Migration("20231123131755_InitSignatures")]
-    partial class InitSignatures
+    [Migration("20231127093443_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -60,6 +60,12 @@ namespace SuperDoc.Customer.Repositories.Migrations
                     b.Property<Guid>("CaseId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("CaseNumber")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CaseNumber"));
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
@@ -130,9 +136,6 @@ namespace SuperDoc.Customer.Repositories.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("DocumentId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("PublicKey")
                         .IsRequired()
                         .HasMaxLength(392)
@@ -150,8 +153,6 @@ namespace SuperDoc.Customer.Repositories.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("SignatureId");
-
-                    b.HasIndex("DocumentId");
 
                     b.HasIndex("RevisionId");
 
@@ -234,6 +235,12 @@ namespace SuperDoc.Customer.Repositories.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
+                    b.Property<int?>("PhoneCode")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("PhoneNumber")
+                        .HasColumnType("bigint");
+
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
@@ -288,7 +295,7 @@ namespace SuperDoc.Customer.Repositories.Migrations
             modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Documents.Document", b =>
                 {
                     b.HasOne("SuperDoc.Customer.Repositories.Entities.Cases.Case", "Case")
-                        .WithMany()
+                        .WithMany("Documents")
                         .HasForeignKey("CaseId");
 
                     b.Navigation("Case");
@@ -296,12 +303,6 @@ namespace SuperDoc.Customer.Repositories.Migrations
 
             modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Documents.DocumentSignature", b =>
                 {
-                    b.HasOne("SuperDoc.Customer.Repositories.Entities.Documents.Document", "Document")
-                        .WithMany("DocumentSignatures")
-                        .HasForeignKey("DocumentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("SuperDoc.Customer.Repositories.Entities.Documents.Revision", "Revision")
                         .WithMany("DocumentSignatures")
                         .HasForeignKey("RevisionId")
@@ -313,8 +314,6 @@ namespace SuperDoc.Customer.Repositories.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Document");
 
                     b.Navigation("Revision");
 
@@ -336,10 +335,13 @@ namespace SuperDoc.Customer.Repositories.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Cases.Case", b =>
+                {
+                    b.Navigation("Documents");
+                });
+
             modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Documents.Document", b =>
                 {
-                    b.Navigation("DocumentSignatures");
-
                     b.Navigation("Revisions");
                 });
 
