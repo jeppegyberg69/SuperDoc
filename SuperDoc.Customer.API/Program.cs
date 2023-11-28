@@ -8,9 +8,12 @@ using SuperDoc.Customer.API.Authorization.Factories;
 using SuperDoc.Customer.API.Swagger;
 using SuperDoc.Customer.Repositories.Cases;
 using SuperDoc.Customer.Repositories.Contexts;
+using SuperDoc.Customer.Repositories.Documents;
 using SuperDoc.Customer.Repositories.Users;
 using SuperDoc.Customer.Services.Cases;
 using SuperDoc.Customer.Services.Cases.Factories;
+using SuperDoc.Customer.Services.Documents;
+using SuperDoc.Customer.Services.Security;
 using SuperDoc.Customer.Services.Users;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -32,7 +35,9 @@ builder.Services.AddAuthentication(x =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
         ValidAudience = builder.Configuration["JwtSettings:Audience"],
+#nullable disable
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]))
+#nullable enable
     };
 });
 
@@ -63,6 +68,11 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICaseFactory, CaseFactory>();
 builder.Services.AddScoped<ICaseService, CaseService>();
 builder.Services.AddScoped<ICaseRepository, CaseRepository>();
+
+builder.Services.AddScoped<IDocumentService, DocumentService>();
+builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
+
+builder.Services.AddScoped<IAccessService, AccessService>();
 
 
 builder.Services.AddControllers();

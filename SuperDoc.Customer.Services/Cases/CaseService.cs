@@ -2,6 +2,7 @@
 using SuperDoc.Customer.Repositories.Entities.Cases;
 using SuperDoc.Customer.Repositories.Entities.Users;
 using SuperDoc.Customer.Repositories.Users;
+using SuperDoc.Customer.Services.Cases.StatusModels;
 using SuperDoc.Shared.Models.Cases;
 
 namespace SuperDoc.Customer.Services.Cases
@@ -18,14 +19,31 @@ namespace SuperDoc.Customer.Services.Cases
         }
 
 
-        public async Task<IEnumerable<Case>> GetAssignedCasesAsync(Guid? userId)
+        public async Task<IEnumerable<Case>> GetAssignedCasesAsync(Guid userId)
         {
-            if (!userId.HasValue)
+            User? user = await userRepository.GetUserByIdWithDocumentsAsync(userId);
+
+            if (user == null)
+            {
+                return new List<Case>();
+            }
+
+            if (user.Role == Roles.SuperAdmin)
             {
                 return await caseRepository.GetAllCasesWithResponsibleUserAndCaseManagersAsync();
             }
+            else if (user.Role == Roles.Admin || user.Role == Roles.CaseManager)
+            {
+                return await caseRepository.GetAllCasesAUserIsAssignedToWithResponsibleUserAndCaseManagers(user.UserId);
+            }
+            else
+            {
+#nullable disable
+                List<Guid> caseIds = user.Documents?.Where(x => x.CaseId.HasValue).DistinctBy(x => x.CaseId).Select(x => x.CaseId.Value).ToList() ?? new List<Guid>();
+#nullable enable
 
-            return await caseRepository.GetAllCasesAUserIsAssignedWithResponsibleUserAndCaseManagers(userId.Value);
+                return await caseRepository.GetCasesByIdsWithResponsibleUserAndCaseManagersAsync(caseIds);
+            }
         }
 
         public async Task<IEnumerable<User>> GetAllCaseManagersAsync(Guid? caseId = null)
@@ -33,7 +51,7 @@ namespace SuperDoc.Customer.Services.Cases
             return await caseRepository.GetAllCaseManagersAsync(caseId);
         }
 
-        public async Task<string?> CreateOrUpdateCaseAsync(CreateOrUpdateCaseDto docCase)
+        public async Task<CreateOrUpdateCaseStatusModel> CreateOrUpdateCaseAsync(CreateOrUpdateCaseDto docCase)
         {
 
             User? responsibleUser = await userRepository.GetUserByIdAsync(docCase.ResponsibleUserId);
@@ -41,7 +59,7 @@ namespace SuperDoc.Customer.Services.Cases
 
             if (responsibleUser == null || responsibleUser?.Role == Roles.User)
             {
-                return "Invalid responsibleUserId";
+                return new CreateOrUpdateCaseStatusModel("Invalid responsibleUserId");
             }
 
             var caseManagers = await userRepository.GetCaseManagersByIds(docCase.CaseMangers);
@@ -51,17 +69,17 @@ namespace SuperDoc.Customer.Services.Cases
             {
                 if (!caseManagers.Any(x => x.UserId == caseManagerId))
                 {
-                    return "Invalid caseManagerId: " + caseManagerId.ToString();
+                    return new CreateOrUpdateCaseStatusModel("Invalid caseManagerId: " + caseManagerId.ToString());
                 }
             }
 
             if (docCase.CaseId.HasValue)
             {
-                var dbcase = await caseRepository.GetCaseByIdWithCaseManagersAsync(docCase.CaseId.Value);
+                var dbcase = await caseRepository.GetCaseByIdWithCaseManagersAndResponsibleUserAsync(docCase.CaseId.Value);
 
                 if (dbcase == null)
                 {
-                    return "Invalid caseId";
+                    return new CreateOrUpdateCaseStatusModel("Invalid caseId");
                 }
 
                 dbcase.CaseManagers?.Clear();
@@ -73,6 +91,7 @@ namespace SuperDoc.Customer.Services.Cases
                 dbcase.DateModified = DateTime.UtcNow;
 
                 await caseRepository.UpdateCase(dbcase);
+                return new CreateOrUpdateCaseStatusModel(dbcase);
             }
             else
             {
@@ -88,9 +107,8 @@ namespace SuperDoc.Customer.Services.Cases
                 };
 
                 await caseRepository.CreateCase(newCase);
+                return new CreateOrUpdateCaseStatusModel(newCase);
             }
-
-            return null;
         }
     }
 }

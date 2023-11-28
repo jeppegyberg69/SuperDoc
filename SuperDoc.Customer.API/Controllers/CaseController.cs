@@ -5,6 +5,7 @@ using SuperDoc.Customer.API.Authorization.Identity;
 using SuperDoc.Customer.Repositories.Entities.Users;
 using SuperDoc.Customer.Services.Cases;
 using SuperDoc.Customer.Services.Cases.Factories;
+using SuperDoc.Customer.Services.Cases.StatusModels;
 using SuperDoc.Shared.Models.Cases;
 
 namespace SuperDoc.Customer.API.Controllers
@@ -36,39 +37,27 @@ namespace SuperDoc.Customer.API.Controllers
 
         [HttpPost]
         [RequiredRole(Roles.CaseManager, Roles.Admin, Roles.SuperAdmin)]
-        public async Task<IActionResult> CreateOrUpdateCase([FromBody] CreateOrUpdateCaseDto docCase)
+        public async Task<ActionResult<CaseDto>> CreateOrUpdateCase([FromBody] CreateOrUpdateCaseDto docCase)
         {
             if (!(docCase.CaseMangers?.Any() ?? false))
             {
                 return BadRequest("The must be at least 1 case manager");
             }
 
-            var errorMessage = await caseService.CreateOrUpdateCaseAsync(docCase);
+            CreateOrUpdateCaseStatusModel result = await caseService.CreateOrUpdateCaseAsync(docCase);
 
-            if (errorMessage != null)
+            if (result.Case == null)
             {
-                return BadRequest(errorMessage);
+                return BadRequest(result.ErrorMessage);
             }
 
-            return Ok();
+            return Ok(caseFactory.ConverCaseToDto(result.Case));
         }
 
         [HttpGet]
         public async Task<IActionResult> GetCases()
         {
-            Guid? userId = loginService.GetUserId(User.Claims);
-
-            if (userId == null)
-            {
-                return BadRequest("User id is null");
-            }
-
-            if (loginService.IsUserInRole(User.Claims, Roles.SuperAdmin))
-            {
-                userId = null;
-            }
-
-            var cases = await caseService.GetAssignedCasesAsync(userId);
+            var cases = await caseService.GetAssignedCasesAsync(loginService.GetUserId(User.Claims));
 
             return Ok(caseFactory.ConverCasesToDtos(cases));
         }

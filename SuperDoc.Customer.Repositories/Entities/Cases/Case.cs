@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using SuperDoc.Customer.Repositories.Entities.Documents;
 using SuperDoc.Customer.Repositories.Entities.Users;
 
 namespace SuperDoc.Customer.Repositories.Entities.Cases
@@ -10,6 +11,9 @@ namespace SuperDoc.Customer.Repositories.Entities.Cases
         [Key]
         [Required]
         public Guid CaseId { get; set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int CaseNumber { get; set; }
 
         [Required]
         [StringLength(256, MinimumLength = 1)]
@@ -32,5 +36,6 @@ namespace SuperDoc.Customer.Repositories.Entities.Cases
         public virtual User? ResponsibleUser { get; set; }
 
         public virtual ICollection<User>? CaseManagers { get; set; }
+        public virtual ICollection<Document>? Documents { get; set; }
     }
 }
