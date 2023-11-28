@@ -10,9 +10,4 @@ public partial class ProfilePage : ContentPage
     }
 
     public ProfilePageViewModel? ViewModel { get => BindingContext as ProfilePageViewModel; }
-
-    protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
-    {
-        base.OnNavigatedFrom(args);
-    }
 }

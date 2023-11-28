@@ -8,11 +8,11 @@ namespace SuperDoc.Shared.ViewModels.Pages;
 
 public partial class ProfilePageViewModel : BaseViewModel
 {
-    private readonly AuthenticationService _authenticationService;
+    private readonly IAuthenticationService _authenticationService;
 
     private readonly INavigationService _navigationService;
 
-    public ProfilePageViewModel(AuthenticationService authenticationService, INavigationService navigationService)
+    public ProfilePageViewModel(IAuthenticationService authenticationService, INavigationService navigationService)
     {
         _authenticationService = authenticationService;
         _navigationService = navigationService;
