@@ -1,63 +1,59 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="SuperDoc.Application.Views.LoginPage"
+    x:DataType="ViewModels:LoginPageViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:CommunityToolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+    xmlns:Helpers="clr-namespace:SuperDoc.Application.Helpers"
+    xmlns:Controls="clr-namespace:SuperDoc.Application.Controls"
+    xmlns:ViewModels="clr-namespace:SuperDoc.Shared.ViewModels.Pages;assembly=SuperDoc.Shared"
+    xmlns:CommunityToolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    Helpers:ViewModelLocator.InitializeViewModel="True">
 
     <ContentPage.Resources>
-        <Style x:Key="InvalidEntryStyle" TargetType="Label">
-            <Setter Property="TextColor" Value="Red" />
-        </Style>
+        <CommunityToolkit:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
     </ContentPage.Resources>
 
-    <Grid RowSpacing="50" Margin="25, 100, 25, 25">
+    <Grid RowSpacing="50" WidthRequest="300" Margin="25, 100, 25, 25">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        
+
         <Label Grid.Row="0" Text="SuperDoc" FontFamily="InterBold" HorizontalTextAlignment="Center" Style="{StaticResource Headline}"/>
 
-        <VerticalStackLayout Grid.Row="1" Spacing="20" WidthRequest="300">
-            <VerticalStackLayout Spacing="4">
-                <Label Text="Email adresse" FontFamily="InterSemiBold" Margin="4, 0"/>
-
-                <Border BackgroundColor="{StaticResource White}" Stroke="{StaticResource GrayBrush}" StrokeShape="RoundRectangle 8" Padding="3">
-                    <Entry Margin="3, 0">
-                        <Entry.Behaviors>
-                            <CommunityToolkit:EmailValidationBehavior 
-                                InvalidStyle="{StaticResource InvalidEntryStyle}"
-                                Flags="ValidateOnUnfocusing" />
-                        </Entry.Behaviors>
-                    </Entry>
-
-                    <Border.Shadow>
-                        <Shadow Brush="#212326" Offset="0, 0" Radius="30" Opacity="0.1" />
-                    </Border.Shadow>
-                </Border>
-            </VerticalStackLayout>
-
-            <VerticalStackLayout Spacing="4">
-                <Label Text="Adgangskode" FontFamily="InterSemiBold" Margin="4, 0"/>
-
-                <Border BackgroundColor="{StaticResource White}" Stroke="{StaticResource GrayBrush}" StrokeShape="RoundRectangle 8" Padding="3">
-                    <Entry IsPassword="True" Margin="3, 0"/>
-
-                    <Border.Shadow>
-                        <Shadow Brush="#212326" Offset="0, 0" Radius="30" Opacity="0.1" />
-                    </Border.Shadow>
-                </Border>
-            </VerticalStackLayout>
-
-            <Button Text="Log ind" FontAttributes="Bold">
-                <Button.Shadow>
-                    <Shadow Brush="#212326" Offset="0, 0" Radius="30" Opacity="0.1" />
-                </Button.Shadow>
-            </Button>
+        <VerticalStackLayout Grid.Row="1" Spacing="10" HorizontalOptions="Center" VerticalOptions="Start" IsVisible="{Binding ValidateAuthenticationTokenCommand.IsRunning, Mode=OneWay}" Margin="0, 75, 0, 0">
+            <ActivityIndicator IsRunning="True"/>
+            <Label Text="Checking Authentication..." FontSize="Caption"/>
         </VerticalStackLayout>
 
-        <Label Grid.Row="3" Text="© Nova Epoch ApS" TextColor="{StaticResource Muted}" FontSize="Small" HorizontalTextAlignment="Center"/>
+        <VerticalStackLayout Grid.Row="1" Spacing="20" IsVisible="{Binding ValidateAuthenticationTokenCommand.IsRunning, Mode=OneWay, Converter={StaticResource InvertedBoolConverter}}">
+            <Border Background="#FDE7E9" StrokeShape="RoundRectangle 8" StrokeThickness="0" Padding="14, 10" IsVisible="{Binding IsInvalidLogin, Mode=OneWay}">
+                <Grid ColumnSpacing="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Column="0" Text="&#xF3F1;" TextColor="#C42B1C" FontSize="Medium" FontFamily="FluentSystemIconsFilled" VerticalOptions="Center"/>
+                    <Label Grid.Column="1" Text="Email adresse og adgangskode stemmer ikke overens. Prøv venligst igen." FontSize="Caption" HorizontalTextAlignment="Start"/>
+                </Grid>
+            </Border>
+
+            <Controls:ValidationEntry Header="Email adresse" Text="{Binding EmailAddress, Mode=TwoWay}" Keyboard="Email" ValidationPropertyName="EmailAddress"/>
+
+            <Controls:ValidationEntry Header="Adgangskode" Text="{Binding Password, Mode=TwoWay}" IsPassword="True" ValidationPropertyName="Password"/>
+
+            <VerticalStackLayout Spacing="8">
+                <Button Text="Log ind" FontAttributes="Bold" Command="{Binding LoginCommand, Mode=OneTime}">
+                    <Button.Shadow>
+                        <Shadow Brush="#212326" Offset="0, 0" Radius="30" Opacity="0.1" />
+                    </Button.Shadow>
+                </Button>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+
+        <Label Grid.Row="2" Text="© Nova Epoch ApS" TextColor="{StaticResource Muted}" FontSize="Small" HorizontalTextAlignment="Center"/>
     </Grid>
 </ContentPage>

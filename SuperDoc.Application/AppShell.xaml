@@ -12,7 +12,7 @@
         <CommunityToolkit:StatusBarBehavior StatusBarColor="{StaticResource Background}" StatusBarStyle="DarkContent"/>
     </Shell.Behaviors>
 
-    <!--<ShellContent Route="Login" ContentTemplate="{DataTemplate views:LoginPage}" />-->
+    <ShellContent Route="Login" ContentTemplate="{DataTemplate Views:LoginPage}" />
 
     <TabBar>
         <Tab Title="Sager">

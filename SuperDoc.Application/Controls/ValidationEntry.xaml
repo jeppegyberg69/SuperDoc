@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView 
+    x:Name="ControlContext"
+    x:Class="SuperDoc.Application.Controls.ValidationEntry"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:SuperDoc.Application.Controls"
+    xmlns:CommunityToolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    x:DataType="local:ValidationEntry">
+
+    <ContentView.Resources>
+        <CommunityToolkit:IsStringNotNullOrWhiteSpaceConverter x:Key="IsStringNotNullOrWhiteSpaceConverter"/>
+    </ContentView.Resources>
+    
+    <VerticalStackLayout>
+        <Label Text="{Binding Header, Mode=OneWay, Source={x:Reference ControlContext}}" IsVisible="{Binding Header, Mode=OneWay, Converter={StaticResource IsStringNotNullOrWhiteSpaceConverter}, Source={x:Reference ControlContext}}" FontFamily="InterSemiBold"  Margin="4, 0, 4, 4"/>
+
+        <Border BackgroundColor="{StaticResource White}" Stroke="{StaticResource GrayBrush}" StrokeShape="RoundRectangle 8" Padding="3" Margin="0, 4">
+            <Entry x:Name="Entry" Text="{Binding Text, Mode=OneWay, Source={x:Reference ControlContext}}" Placeholder="{Binding Placeholder, Mode=OneWay, Source={x:Reference ControlContext}}" Keyboard="{Binding Keyboard, Mode=OneWay, Source={x:Reference ControlContext}}" IsPassword="{Binding IsPassword, Mode=OneWay, Source={x:Reference ControlContext}}" Margin="3, 0">
+                <Entry.Behaviors>
+                    <CommunityToolkit:UserStoppedTypingBehavior StoppedTypingTimeThreshold="500" Command="{Binding SetTextPropertyCommand, Mode=OneTime, Source={x:Reference ControlContext}}" CommandParameter="{Binding Text, Source={x:Reference Entry}}"/>
+                </Entry.Behaviors>
+            </Entry>
+
+            <Border.Shadow>
+                <Shadow Brush="#212326" Offset="0, 0" Radius="30" Opacity="0.1" />
+            </Border.Shadow>
+        </Border>
+
+        <Label Text="{Binding ErrorMessage, Mode=OneWay, Source={x:Reference ControlContext}}" TextColor="Red" FontSize="Caption" IsVisible="{Binding ErrorMessage, Mode=OneWay, Converter={StaticResource IsStringNotNullOrWhiteSpaceConverter}, Source={x:Reference ControlContext}}" Margin="4, 0"/>
+    </VerticalStackLayout>
+</ContentView>
