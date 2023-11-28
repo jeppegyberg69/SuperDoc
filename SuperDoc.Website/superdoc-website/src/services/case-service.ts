@@ -44,7 +44,12 @@ function transformGetCases(response: WebserviceResponse): Case[] {
       firstName: cm.firstName,
       lastName: cm.lastName,
     })),
-    responsibleUser: {} as any,
+    responsibleUser: {
+      id: v.responsibleUser.userId,
+      emailAddress: v.responsibleUser.emailAddress,
+      firstName: v.responsibleUser.firstName,
+      lastName: v.responsibleUser.lastName,
+    }
   }))
 }
 

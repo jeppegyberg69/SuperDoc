@@ -1,16 +1,6 @@
 import { List, ListItem } from "@/common/list/list"
 import { ListLayout } from "@/common/list-layout/list-layout"
 import { SplitView } from "@/common/split-view/split-view"
-import { PdfViewer } from "@/common/pdf-viewer/pdf-viewer"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { DocumentTabs } from "./document-tabs/document-tabs"
 
 export default function Details({ params }: { params: { id: any } }) {

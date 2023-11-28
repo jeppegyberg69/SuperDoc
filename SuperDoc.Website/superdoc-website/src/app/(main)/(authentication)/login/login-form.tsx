@@ -46,7 +46,7 @@ export function LoginForm(props: LoginFormProps) {
 
 
   const validateAndSubmit = async (values: z.infer<typeof formSchema>) => {
-    const loginResponse = login(values.email, values.password)
+    login(values.email, values.password)
       .then((response) => {
         if (response) {
           setLoginResponse(response);
@@ -89,10 +89,6 @@ export function LoginForm(props: LoginFormProps) {
               <FormControl>
                 <Input type='password' placeholder='Adgangskode' {...field} />
               </FormControl>
-              {/* <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage /> */}
             </FormItem>
           )}
         />
