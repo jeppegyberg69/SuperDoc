@@ -13,6 +13,7 @@ using SuperDoc.Customer.Repositories.Users;
 using SuperDoc.Customer.Services.Cases;
 using SuperDoc.Customer.Services.Cases.Factories;
 using SuperDoc.Customer.Services.Documents;
+using SuperDoc.Customer.Services.Documents.Factories;
 using SuperDoc.Customer.Services.Security;
 using SuperDoc.Customer.Services.Users;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -71,6 +72,8 @@ builder.Services.AddScoped<ICaseRepository, CaseRepository>();
 
 builder.Services.AddScoped<IDocumentService, DocumentService>();
 builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
+builder.Services.AddScoped<IRevisionFactory, RevisionFactory>();
+
 
 builder.Services.AddScoped<IAccessService, AccessService>();
 

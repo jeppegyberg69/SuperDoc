@@ -2,7 +2,7 @@
 using SuperDoc.Customer.Repositories.Entities.Cases;
 using SuperDoc.Customer.Repositories.Entities.Users;
 using SuperDoc.Customer.Repositories.Users;
-using SuperDoc.Customer.Services.Cases.StatusModels;
+using SuperDoc.Customer.Services.Shared.StatusModels;
 using SuperDoc.Shared.Models.Cases;
 
 namespace SuperDoc.Customer.Services.Cases
@@ -51,7 +51,7 @@ namespace SuperDoc.Customer.Services.Cases
             return await caseRepository.GetAllCaseManagersAsync(caseId);
         }
 
-        public async Task<CreateOrUpdateCaseStatusModel> CreateOrUpdateCaseAsync(CreateOrUpdateCaseDto docCase)
+        public async Task<ResultModel<Case>> CreateOrUpdateCaseAsync(CreateOrUpdateCaseDto docCase)
         {
 
             User? responsibleUser = await userRepository.GetUserByIdAsync(docCase.ResponsibleUserId);
@@ -59,7 +59,7 @@ namespace SuperDoc.Customer.Services.Cases
 
             if (responsibleUser == null || responsibleUser?.Role == Roles.User)
             {
-                return new CreateOrUpdateCaseStatusModel("Invalid responsibleUserId");
+                return new ResultModel<Case>("Invalid responsibleUserId");
             }
 
             var caseManagers = await userRepository.GetCaseManagersByIds(docCase.CaseMangers);
@@ -69,7 +69,7 @@ namespace SuperDoc.Customer.Services.Cases
             {
                 if (!caseManagers.Any(x => x.UserId == caseManagerId))
                 {
-                    return new CreateOrUpdateCaseStatusModel("Invalid caseManagerId: " + caseManagerId.ToString());
+                    return new ResultModel<Case>("Invalid caseManagerId: " + caseManagerId.ToString());
                 }
             }
 
@@ -79,7 +79,7 @@ namespace SuperDoc.Customer.Services.Cases
 
                 if (dbcase == null)
                 {
-                    return new CreateOrUpdateCaseStatusModel("Invalid caseId");
+                    return new ResultModel<Case>("Invalid caseId");
                 }
 
                 dbcase.CaseManagers?.Clear();
@@ -91,7 +91,7 @@ namespace SuperDoc.Customer.Services.Cases
                 dbcase.DateModified = DateTime.UtcNow;
 
                 await caseRepository.UpdateCase(dbcase);
-                return new CreateOrUpdateCaseStatusModel(dbcase);
+                return new ResultModel<Case>(dbcase);
             }
             else
             {
@@ -107,7 +107,7 @@ namespace SuperDoc.Customer.Services.Cases
                 };
 
                 await caseRepository.CreateCase(newCase);
-                return new CreateOrUpdateCaseStatusModel(newCase);
+                return new ResultModel<Case>(newCase);
             }
         }
     }

@@ -35,5 +35,17 @@ namespace SuperDoc.Customer.Repositories.Documents
             superDocContext.Documents.Update(document);
             await superDocContext.SaveChangesAsync();
         }
+
+        public async Task CreateRevisionAsync(Revision revision)
+        {
+            await superDocContext.Revisions.AddAsync(revision);
+            await superDocContext.SaveChangesAsync();
+        }
+
+        public async Task CreateDocumentSignaturesAsync(IEnumerable<DocumentSignature> documentSignatures)
+        {
+            await superDocContext.DocumentSignatures.AddRangeAsync(documentSignatures);
+            await superDocContext.SaveChangesAsync();
+        }
     }
 }

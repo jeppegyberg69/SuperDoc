@@ -20,6 +20,8 @@ namespace SuperDoc.Customer.Repositories.Entities.Documents
         [StringLength(128, MinimumLength = 1)]
         public string Signature { get; set; } = string.Empty;
 
+        public DateTime? DateSigned { get; set; }
+
         public virtual Revision? Revision { get; set; }
         public virtual User? User { get; set; }
     }

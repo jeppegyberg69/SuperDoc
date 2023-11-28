@@ -1,6 +1,6 @@
 ﻿using SuperDoc.Customer.Repositories.Entities.Cases;
 using SuperDoc.Customer.Repositories.Entities.Users;
-using SuperDoc.Customer.Services.Cases.StatusModels;
+using SuperDoc.Customer.Services.Shared.StatusModels;
 using SuperDoc.Shared.Models.Cases;
 
 namespace SuperDoc.Customer.Services.Cases
@@ -15,7 +15,7 @@ namespace SuperDoc.Customer.Services.Cases
         ///     Case: The case created or updated<br></br>
         ///     Case null: Error message
         /// </returns>
-        Task<CreateOrUpdateCaseStatusModel> CreateOrUpdateCaseAsync(CreateOrUpdateCaseDto docCase);
+        Task<ResultModel<Case>> CreateOrUpdateCaseAsync(CreateOrUpdateCaseDto docCase);
         Task<IEnumerable<User>> GetAllCaseManagersAsync(Guid? caseId = null);
 
         /// <summary>
