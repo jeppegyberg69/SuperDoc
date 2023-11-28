@@ -1,5 +1,6 @@
 import { WebSessionContext, getWebSession } from '@/common/session-context/session-context';
 import { Session, saveInStorage } from '@/models/session/session';
+import { WebserviceResponse } from '@/models/webservice/webservice-model';
 import { QueryKey, useQuery } from '@tanstack/react-query'
 import { Context, useContext } from 'react';
 import * as signals from 'signals';
@@ -60,14 +61,4 @@ export function login(email: string, password: string): Promise<any> {
 
 function transformLogin(response) {
   return response.data;
-}
-
-
-
-export type WebserviceResponse = {
-  status: number,
-  statusText: string,
-  data?: {
-    [key: string]: any
-  }
 }

@@ -1,7 +1,5 @@
 import React from 'react';
 import { LoginForm } from './login-form';
-import { login } from '@/services/login-service';
-
 export type LoginPageProps = {};
 
 export default function LoginPage(props: LoginPageProps) {

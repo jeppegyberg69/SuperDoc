@@ -5,6 +5,7 @@ export type Session = {
     lastName: string;
     emailAddress: string;
     role: string;
+    id: string;
   }
   token: string;
   validFrom: string;
@@ -24,6 +25,7 @@ export function createSessionFromToken(session): Session {
     validTo: session.validTo,
 
     user: {
+      id: session.userId,
       role: session.role,
       emailAddress: session.emailAddress,
       firstName: session.firstName,
