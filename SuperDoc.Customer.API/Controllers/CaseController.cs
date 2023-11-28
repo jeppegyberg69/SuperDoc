@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using SuperDoc.Customer.API.Authorization;
 using SuperDoc.Customer.API.Authorization.Identity;
+using SuperDoc.Customer.Repositories.Entities.Cases;
 using SuperDoc.Customer.Repositories.Entities.Users;
 using SuperDoc.Customer.Services.Cases;
 using SuperDoc.Customer.Services.Cases.Factories;
-using SuperDoc.Customer.Services.Cases.StatusModels;
+using SuperDoc.Customer.Services.Shared.StatusModels;
 using SuperDoc.Shared.Models.Cases;
 
 namespace SuperDoc.Customer.API.Controllers
@@ -44,14 +45,14 @@ namespace SuperDoc.Customer.API.Controllers
                 return BadRequest("The must be at least 1 case manager");
             }
 
-            CreateOrUpdateCaseStatusModel result = await caseService.CreateOrUpdateCaseAsync(docCase);
+            ResultModel<Case> result = await caseService.CreateOrUpdateCaseAsync(docCase);
 
-            if (result.Case == null)
+            if (result.Result == null)
             {
                 return BadRequest(result.ErrorMessage);
             }
 
-            return Ok(caseFactory.ConverCaseToDto(result.Case));
+            return Ok(caseFactory.ConverCaseToDto(result.Result));
         }
 
         [HttpGet]
