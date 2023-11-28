@@ -54,19 +54,33 @@ public static class MauiProgram
 
     private static void ConfigureServices(this MauiAppBuilder builder, IConfiguration configuration)
     {
+        builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
+
         builder.Services.AddSingleton<ISecureStorageService, SecureStorageService>();
         builder.Services.AddSingleton<INavigationService, NavigationService>();
-        builder.Services.AddSingleton<AuthenticationService>();
 
-        builder.Services.AddHttpClient("SuperDoc", client =>
+        builder.Services.AddHttpClient("CustomerAPI", client =>
         {
-            string? baseAddress = configuration["SuperDoc:BaseAddress"];
-            if (string.IsNullOrWhiteSpace(baseAddress))
+            string? customerBaseAddress = configuration["CustomerAPI:BaseAddress"];
+            if (string.IsNullOrWhiteSpace(customerBaseAddress))
             {
-                throw new InvalidOperationException("SuperDoc BaseAddress is missing or null. Please check the configuration.");
+                throw new InvalidOperationException("CustomerAPI BaseAddress is missing or null. Please check the configuration.");
             }
 
-            client.BaseAddress = new Uri(baseAddress);
+            client.BaseAddress = new Uri(customerBaseAddress);
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+            client.Timeout = TimeSpan.FromSeconds(10);
+        });
+
+        builder.Services.AddHttpClient("TrustedEntityAPI", client =>
+        {
+            string? trustedEntityBaseAddress = configuration["TrustedEntityAPI:BaseAddress"];
+            if (string.IsNullOrWhiteSpace(trustedEntityBaseAddress))
+            {
+                throw new InvalidOperationException("TrustedEntityAPI BaseAddress is missing or null. Please check the configuration.");
+            }
+
+            client.BaseAddress = new Uri(trustedEntityBaseAddress);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
             client.Timeout = TimeSpan.FromSeconds(10);
         });

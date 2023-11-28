@@ -42,9 +42,29 @@ public class UserViewModel(TokenDto token) : BaseModelWrapper<TokenDto>(token)
         }
     }
 
-    public string? PhoneNumber
+    public int? PhoneCode
     {
-        get => "-";
+        get => Model.PhoneCode;
+        set
+        {
+            Model.PhoneCode = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public long? PhoneNumber
+    {
+        get => Model.PhoneNumber;
+        set
+        {
+            Model.PhoneNumber = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string InternationalPhoneNumber
+    {
+        get => PhoneCode.HasValue && PhoneNumber.HasValue ? $"{Model.PhoneCode} {Model.PhoneNumber}" : "-";
     }
 
     public Role Role

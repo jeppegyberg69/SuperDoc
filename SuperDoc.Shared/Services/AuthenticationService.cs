@@ -7,18 +7,11 @@ using SuperDoc.Shared.Models.Users;
 
 namespace SuperDoc.Shared.Services;
 
-/// <summary>
-/// Manages user authentication, including login and token retrieval, and related operations.
-/// </summary>
-/// <param name="secureStorageService">An implementation of the <see cref="ISecureStorageService"/> interface for secure storage operations.</param>
-/// <param name="httpClientFactory">An implementation of the <see cref="IHttpClientFactory"/> interface for creating and managing HttpClient instances.</param>
-public class AuthenticationService(ISecureStorageService secureStorageService, IHttpClientFactory httpClientFactory) : BaseHttpService("SuperDoc", "user/", httpClientFactory)
+/// <inheritdoc cref="IAuthenticationService"/>
+public class AuthenticationService(ISecureStorageService secureStorageService, IHttpClientFactory httpClientFactory) : BaseHttpService("CustomerAPI", "user/", httpClientFactory), IAuthenticationService
 {
-    /// <summary>
-    /// Checks if the user is authenticated by validating the stored authentication token.
-    /// </summary>
-    /// <returns><see langword="true"/>  if the user is authenticated; otherwise, returns <see langword="false"/>.</returns>
-    public async Task<bool> CheckAuthentication()
+    /// <inheritdoc cref="IAuthenticationService.CheckAuthenticationAsync"/>
+    public async Task<bool> CheckAuthenticationAsync()
     {
         // Retrieve the authentication token asynchronously.
         TokenDto? token = await GetTokenAsync();
@@ -37,14 +30,7 @@ public class AuthenticationService(ISecureStorageService secureStorageService, I
         return isAuthenticated;
     }
 
-    /// <summary>
-    /// Authenticates a user by sending a login request with the provided email and password.
-    /// </summary>
-    /// <param name="email">The user's email address.</param>
-    /// <param name="password">The user's password.</param>
-    /// <param name="cancellationToken">Optional cancellation token to cancel the asynchronous operation.</param>
-    /// <returns>The authentication token if successful; otherwise, returns <see langword="null"/>.</returns>
-    /// <exception cref="HttpServiceException">Thrown when an unexpected error occurs during the HTTP request or if the response indicates failure.</exception>
+    /// <inheritdoc cref="IAuthenticationService.LoginAsync(string, string, CancellationToken)"/>
     public async Task<TokenDto?> LoginAsync(string email, string password, CancellationToken cancellationToken = default)
     {
         HttpResponseMessage? response = default;
@@ -82,10 +68,7 @@ public class AuthenticationService(ISecureStorageService secureStorageService, I
         return token;
     }
 
-    /// <summary>
-    /// Retrieves the authentication token asynchronously from secure storage.
-    /// </summary>
-    /// <returns>The authentication token if found; otherwise, returns <see langword="null"/>.</returns>
+    /// <inheritdoc cref="IAuthenticationService.GetTokenAsync"/>
     public async Task<TokenDto?> GetTokenAsync()
     {
         // Retrieve the serialized token from secure storage based on the AuthorizationTokenKey.
@@ -112,10 +95,7 @@ public class AuthenticationService(ISecureStorageService secureStorageService, I
         return isValid;
     }
 
-    /// <summary>
-    /// Revokes the stored authentication token by removing it from secure storage.
-    /// </summary>
-    /// <returns><see langword="true"/> if the token revocation is successful; otherwise, returns <see langword="false"/>.</returns>
+    /// <inheritdoc cref="IAuthenticationService.RevokeToken"/>
     public bool RevokeToken()
     {
         // Remove the authentication token from secure storage based on the AuthorizationTokenKey.

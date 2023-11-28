@@ -59,7 +59,7 @@
 
                     <FlexLayout Direction="Row" JustifyContent="SpaceBetween" Margin="15, 0">
                         <Label Text="Mobilnummer"/>
-                        <Label Text="{Binding User.PhoneNumber}" FontFamily="InterSemiBold"/>
+                        <Label Text="{Binding User.InternationalPhoneNumber, Mode=OneWay}" FontFamily="InterSemiBold"/>
                     </FlexLayout>
                 </VerticalStackLayout>
             </Border>

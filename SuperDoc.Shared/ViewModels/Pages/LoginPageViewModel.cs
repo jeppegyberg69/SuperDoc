@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using SuperDoc.Shared.Exceptions;
@@ -9,7 +8,7 @@ using SuperDoc.Shared.Services;
 
 namespace SuperDoc.Shared.ViewModels.Pages;
 
-public partial class LoginPageViewModel(AuthenticationService authenticationService, INavigationService navigationService) : BaseViewModel
+public partial class LoginPageViewModel(IAuthenticationService authenticationService, INavigationService navigationService) : BaseViewModel
 {
     private string _emailAddress = string.Empty;
     [EmailAddress(ErrorMessage = "Indtast en gyldig email adresse")]
@@ -51,7 +50,7 @@ public partial class LoginPageViewModel(AuthenticationService authenticationServ
     [RelayCommand(AllowConcurrentExecutions = false)]
     private async Task ValidateAuthenticationTokenAsync()
     {
-        bool isAuthenticated = await authenticationService.CheckAuthentication();
+        bool isAuthenticated = await authenticationService.CheckAuthenticationAsync();
         if (isAuthenticated)
         {
             await navigationService.NavigateToMainPageAsync();
