@@ -35,6 +35,11 @@ namespace SuperDoc.Customer.Repositories.Users
             return await superDocContext.Users.FirstOrDefaultAsync(x => x.UserId == userId);
         }
 
+        public async Task<User?> GetUserByIdWithDocumentsAsync(Guid userId)
+        {
+            return await superDocContext.Users.Include(x => x.Documents).FirstOrDefaultAsync(x => x.UserId == userId);
+        }
+
         public async Task<IEnumerable<User>> GetCaseManagersByIds(IEnumerable<Guid> caseManagerIds)
         {
             return await superDocContext.Users.Where(x => x.Role != Roles.User && caseManagerIds.Contains(x.UserId)).ToListAsync();
