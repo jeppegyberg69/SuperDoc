@@ -17,6 +17,7 @@ import * as z from "zod"
 import { login } from '@/services/login-service';
 import { createSessionFromToken } from '@/models/session/session';
 import { useRouter } from 'next/navigation'
+import { setWebSession } from '@/common/session-context/session-context';
 
 
 const formSchema = z.object({
@@ -104,5 +105,6 @@ export function LoginForm(props: LoginFormProps) {
 export function setLoginResponse(response: any) {
   localStorage.removeItem('jpj_websession');
   const newSession = createSessionFromToken(response)
+  setWebSession(newSession);
   localStorage.setItem('jpj_websession', JSON.stringify(newSession));
 }
