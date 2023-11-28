@@ -3,9 +3,9 @@ import { CaseOverviewTable } from './case-overview-table';
 
 export default function CaseOverview() {
   return (
-    <div className="detail-layout">
+    <div className="page-layout">
       <PageHeader />
-      <div className="detail-layout-content mx-4">
+      <div className="page-layout-content mx-4">
         <CaseOverviewTable />
       </div>
     </div>

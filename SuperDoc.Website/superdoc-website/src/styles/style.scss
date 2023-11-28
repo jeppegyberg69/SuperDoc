@@ -1,5 +1,8 @@
-@import "../app/test-scss";
+// common specific
 @import "../common/split-view/split-view";
 @import "../common/list-layout/list-layout";
 @import "../common/page-layout/page";
+
+// case specific
 @import "../app/\(main\)/case-overview";
+

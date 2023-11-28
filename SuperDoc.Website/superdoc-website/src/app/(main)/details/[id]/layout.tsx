@@ -1,63 +1,26 @@
-import { List, ListItem } from "@/common/list/list";
-import { PageHeader } from "@/common/page-layout/page-header";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFileLines } from "@fortawesome/free-solid-svg-icons/faFileLines";
-import { faClockRotateLeft } from "@fortawesome/free-solid-svg-icons/faClockRotateLeft";
+// find en måde hvor jeg ikke skal bruge use client i layout fil. Dette er på nuværrende tidspunkt nødvendigt pga. at jeg kalder en hook metode i main function
+"use client"
 
-import Link from "next/link";
+import { PageHeader } from "@/common/page-layout/page-header";
+
+import { DetailsBanner } from "../details-banner/details-banner";
+import { useGetCaseDetails } from "@/services/case-service";
+import { DetailsSidebar } from "../details-sidebar/details-sidebar";
+import { getWebSession } from "@/common/session-context/session-context";
+import { Roles } from "@/common/access-control/access-control";
 
 export default function DetailsLayout({ params, children }: { params: { id: any }, children: any }) {
+  const { data, error } = useGetCaseDetails(params.id);
+  const session = getWebSession();
+
   return (
-    <div className='detail-layout h-full gap-4'>
+    <div className='page-layout h-full'>
       <PageHeader />
-      <div className='detail-layout-sidebar p-4'><DetailsSidebar caseId={params.id} /></div>
-      <div className="detail-layout-content">
+      {session.user?.role !== Roles.User && <DetailsBanner details={data} />}
+      <div className='page-layout-sidebar p-4'><DetailsSidebar caseId={params.id} /></div>
+      <div className="page-layout-content">
         {children}
       </div>
     </div>
   );
-}
-
-export function DetailsSidebar({ caseId }) {
-  const routes = detailsMenuRoutes(caseId);
-  return (
-    <List>
-      {routes.map((item) => (
-        <li key={item.path} className='list-none flex align-middle'>
-          <ListItem>
-            <Link className="w-full flex align-middle justify-center" href={item.path}>
-              {item.icon && (
-                <div className="mx-2">
-                  {item.icon}
-                </div>
-              )} <span className="self-center">{item.name}</span>
-            </Link>
-          </ListItem>
-        </li>
-      ))}
-    </List>
-  )
-}
-
-type CustomRoute = {
-  path: string;
-  name: string;
-  icon?: React.ReactNode
-}
-
-export function detailsMenuRoutes(caseId: number): CustomRoute[] {
-  const prefix = `/details/${caseId}`
-
-  return [
-    {
-      name: "Dokumenter",
-      path: `${prefix}`,
-      icon: <FontAwesomeIcon icon={faFileLines} />
-    },
-    {
-      name: "Historik",
-      path: `${prefix}/history`,
-      icon: <FontAwesomeIcon icon={faClockRotateLeft} />
-    },
-  ]
 }

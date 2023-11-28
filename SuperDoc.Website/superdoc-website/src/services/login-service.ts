@@ -56,6 +56,7 @@ export function login(email: string, password: string): Promise<any> {
       return response;
     })
     .catch((error) => {
+      throw error;
     });
 }
 

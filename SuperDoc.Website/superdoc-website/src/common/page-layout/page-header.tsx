@@ -69,7 +69,7 @@ export function PageHeader() {
   )
 
   return (
-    <div className='grid grid-cols-3 bg-neutral-100 detail-layout-header w-full'>
+    <div className='grid grid-cols-3 bg-neutral-100 page-layout-header w-full'>
       <div className="flex">
         {menubar}
       </div>

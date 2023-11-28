@@ -3,6 +3,7 @@ import { getWebSession } from "@/common/session-context/session-context";
 import { Case } from "@/models/case";
 import { CaseManagers } from "@/models/case-manager";
 import { WebserviceResponse } from "@/models/webservice/webservice-model";
+import { useQuery } from "@tanstack/react-query";
 
 export function getCases() {
   const myHeaders = new Headers();
@@ -31,7 +32,6 @@ export function getCases() {
     .then(transformGetCases)
 }
 
-
 function transformGetCases(response: WebserviceResponse): Case[] {
   return response.data.map((v): Case => ({
     id: v.caseId,
@@ -53,7 +53,26 @@ function transformGetCases(response: WebserviceResponse): Case[] {
   }))
 }
 
+export function useGetCaseDetails(caseId: string) {
+  return useQuery({
+    queryKey: ['snowball'],
+    queryFn() {
+      return getCases()
+        .then((cases) => {
+          const caseData = cases.filter(v => v.id === caseId)[0]
 
+          return {
+            case: {
+              ...caseData
+            },
+            documents: []
+
+          } ?? null
+        })
+    },
+    gcTime: 0 // cachetime/garbage collection time
+  })
+}
 
 export function getCaseManagers(caseId?: string) {
   const myHeaders = new Headers();

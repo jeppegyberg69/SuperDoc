@@ -60,7 +60,7 @@ export const columns: ColumnDef<Case, any>[] = [{
         });
 
     return (
-      <span className='data-column-casemanagers'>{caseManagers.join(',')}</span>
+      <span className='data-column-casemanagers'>{caseManagers.join(', ')}</span>
     )
   },
 }];

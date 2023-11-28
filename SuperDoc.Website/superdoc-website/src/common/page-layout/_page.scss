@@ -1,3 +1,123 @@
+.page-layout {
+	height: 100%;
+	display: grid;
+	grid-template-rows: 3.6rem min-content 1fr;
+	grid-template-columns: min-content 1fr;
+	grid-template-areas:
+		"header header"
+		"banner banner"
+		"sidebar content"
+		"sidebar content";
+
+	&-header {
+		grid-area: header;
+		box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, .05);
+		z-index: 2;
+		display: grid;
+		grid-template-rows: 100%;
+		grid-template-areas: "left middle right";
+		// gap: var(--oj-core-spacing-2x);
+		align-content: center;
+		align-items: center;
+	}
+
+	&-banner {
+		grid-area: banner;
+		box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, .2);
+
+		display: flex;
+		// background-color: rgb(22, 21, 19);
+		color: black;
+		overflow-y: hidden;
+		height: 5rem;
+	}
+
+	&-content {
+		grid-area: content;
+		overflow: auto;
+		display: flex;
+		flex-direction: column;
+	}
+
+	&-sidebar {
+		grid-area: sidebar;
+		position: relative;
+		display: flex;
+		flex-direction: column;
+
+		height: 100%;
+		min-height: 100%;
+
+		width: 16rem;
+		display: flex;
+		flex-direction: column;
+		overflow-y: auto;
+	}
+}
+
+
+
 .menubar-trigger {
   padding: .5rem 1rem !important;
+}
+
+
+
+// TODO: lav mere theme venligt, i stedet for hvad det er nu.
+.banner-label-value-layout {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 1rem;
+  padding: 0 1rem;
+}
+
+.banner-label-value-item {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  min-width: 6rem;
+
+  &-value {
+    // color: white;
+    // --oj-text-field-text-color: white;
+  }
+
+  &-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &.nowrap {
+    white-space: nowrap;
+  }
+
+  &.clickable {
+    cursor: pointer;
+
+    &:hover {
+      background-color: #524e4a;
+    }
+
+    label {
+      cursor: pointer;
+    }
+  }
+
+  .banner-text-value-size {
+    &-large {
+      font-size: var(--oj-typography-body-lg-font-size);
+    }
+
+    &-medium {
+      font-size: var(--oj-typography-body-md-font-size);
+    }
+
+    &-small {
+      font-size: var(--oj-typography-body-sm-font-size);
+      font-style: italic;
+    }
+  }
 }

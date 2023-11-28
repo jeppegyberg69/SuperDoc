@@ -1,9 +1,12 @@
+"use client"
 import { List, ListItem } from "@/common/list/list"
 import { ListLayout } from "@/common/list-layout/list-layout"
 import { SplitView } from "@/common/split-view/split-view"
 import { DocumentTabs } from "./document-tabs/document-tabs"
+import { useGetCaseDetails } from "@/services/case-service"
 
 export default function Details({ params }: { params: { id: any } }) {
+	const { data, error, } = useGetCaseDetails(params.id);
 
 	const list = (
 		<SplitView
