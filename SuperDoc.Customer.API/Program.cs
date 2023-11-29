@@ -74,6 +74,8 @@ builder.Services.AddScoped<ICaseRepository, CaseRepository>();
 
 builder.Services.AddScoped<IDocumentService, DocumentService>();
 builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
+builder.Services.AddScoped<IDocumentFactory, DocumentFactory>();
+
 builder.Services.AddScoped<IRevisionFactory, RevisionFactory>();
 
 

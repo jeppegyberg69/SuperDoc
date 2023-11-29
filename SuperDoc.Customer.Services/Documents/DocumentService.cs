@@ -26,6 +26,24 @@ namespace SuperDoc.Customer.Services.Documents
             this.userRepository = userRepository;
         }
 
+        public async Task<IEnumerable<Document>> GetDocumentsByCaseIdAndUserIdWithExternalUsersAsync(Guid caseId, Guid userId)
+        {
+            User? user = await userRepository.GetUserByIdAsync(userId);
+
+            if (user == null)
+            {
+                return new List<Document>();
+            }
+
+            if (user.Role == Roles.SuperAdmin || user.Role == Roles.Admin || user.Role == Roles.CaseManager)
+            {
+                return await documentRepository.GetDocumentsByCaseIdWithExternalUsersAsync(caseId);
+            }
+            else
+            {
+                return await documentRepository.GetDocumentsByCaseIdAndUserIdWithExternalUsersAsync(caseId, userId);
+            }
+        }
 
         public async Task<Guid?> CreateOrUpdateDocumentAsync(CreateOrUpdateDocumentDto documentDto)
         {
@@ -338,5 +356,7 @@ namespace SuperDoc.Customer.Services.Documents
 
             return string.Empty;
         }
+
+
     }
 }
