@@ -26,10 +26,10 @@
 		box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, .2);
 
 		display: flex;
-		// background-color: rgb(22, 21, 19);
+		background-color: rgb(22, 21, 19);
 		color: black;
 		overflow-y: hidden;
-		height: 5rem;
+		min-height: 5rem;
 	}
 
 	&-content {
@@ -61,8 +61,6 @@
   padding: .5rem 1rem !important;
 }
 
-
-
 // TODO: lav mere theme venligt, i stedet for hvad det er nu.
 .banner-label-value-layout {
   display: flex;
@@ -80,8 +78,8 @@
   min-width: 6rem;
 
   &-value {
-    // color: white;
-    // --oj-text-field-text-color: white;
+    color: white;
+    --oj-text-field-text-color: white;
   }
 
   &-ellipsis {

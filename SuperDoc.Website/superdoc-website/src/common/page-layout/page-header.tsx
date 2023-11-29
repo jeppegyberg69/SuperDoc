@@ -1,4 +1,5 @@
 "use client"
+import React from "react";
 import {
   Menubar,
   MenubarContent,
@@ -22,12 +23,20 @@ import { faCalendarCheck } from "@fortawesome/free-solid-svg-icons/faCalendarChe
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 
-export function PageHeader() {
+export type PageHeaderProps = {
+  left?: React.ReactNode;
+  right?: React.ReactNode;
+}
+
+export function PageHeader(props: PageHeaderProps) {
   const routes = getGlobalNavigationRoutes();
   const menubar = (
     <Menubar className="mx-4">
       <MenubarMenu>
-        <MenubarTrigger className="menubar-trigger cursor-pointer"><FontAwesomeIcon icon={faBars} /></MenubarTrigger>
+        <MenubarTrigger
+          className="menubar-trigger cursor-pointer">
+          <FontAwesomeIcon icon={faBars} />
+        </MenubarTrigger>
         <MenubarContent>
           {routes.map((route) => (
             <MenubarItem
@@ -70,8 +79,11 @@ export function PageHeader() {
 
   return (
     <div className='grid grid-cols-3 bg-neutral-100 page-layout-header w-full'>
-      <div className="flex">
+      <div className="flex flex-1">
         {menubar}
+        <div className="flex flex-1 self-center">
+          {props.left}
+        </div>
       </div>
       <div></div>
       <div className="flex justify-end mr-4">

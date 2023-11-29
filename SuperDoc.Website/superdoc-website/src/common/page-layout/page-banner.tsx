@@ -7,7 +7,7 @@ export type PageBannerProps = {
 
 export function PageBanner(props: PageBannerProps) {
   return (
-    <div className={`page-layout-banner bg-primary/10`}>
+    <div className={`page-layout-banner`}>
       {props.children}
     </div>
   );
@@ -38,7 +38,6 @@ export type BannerItemProps = {
 };
 
 export function BannerItem(props: BannerItemProps) {
-  // const classNames = getClassNames(props);
   const style: React.CSSProperties = {
     flex: props.flex
   };
@@ -46,7 +45,7 @@ export function BannerItem(props: BannerItemProps) {
   return (
     <div
       id={props.id}
-      className={`banner-label-value-item ${props.className ?? ''}`}
+      className={`banner-label-value-item cursor-pointer hover:bg-secondary/30 ${props.className ?? ''}`}
       onClick={props.onClick}
       style={style}
     >

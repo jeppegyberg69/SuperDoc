@@ -1,14 +1,17 @@
 import { getWebSession } from "@/common/session-context/session-context";
 import { CaseDetails } from "@/models/case-details";
+import { buildConfig } from "@/models/webservice/base-url";
 import { WebserviceResponse } from "@/models/webservice/webservice-model";
 
 export type CreateCaseProps = {
+  caseId?: string
   title: string,
   description: string,
-  caseManagersId: string[]
+  caseManagersId: string[],
+  responsibleUserId?: string
 }
 
-export function createCase({ caseManagersId, description, title }: CreateCaseProps): Promise<CaseDetails> {
+export function createCase({ caseId, caseManagersId, description, title, responsibleUserId }: CreateCaseProps): Promise<CaseDetails> {
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append(
@@ -17,10 +20,11 @@ export function createCase({ caseManagersId, description, title }: CreateCasePro
   );
 
   const raw = JSON.stringify({
+    "caseId": caseId,
     "title": title,
     "description": description,
     "caseMangers": caseManagersId,
-    "responsibleUserId": getWebSession().user.id
+    "responsibleUserId": responsibleUserId ?? getWebSession().user.id
   });
 
   const requestOptions: RequestInit = {
@@ -31,7 +35,7 @@ export function createCase({ caseManagersId, description, title }: CreateCasePro
   };
 
 
-  return fetch("https://localhost:44304/api/Case/CreateOrUpdateCase", requestOptions)
+  return fetch(`${buildConfig.API}/api/Case/CreateOrUpdateCase`, requestOptions)
     .then(async (response): Promise<WebserviceResponse> => {
       if (response.ok) {
         const resp = await response.json()

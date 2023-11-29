@@ -9,6 +9,7 @@ import { Case } from '@/models/case';
 import { useIsMounted } from '@/common/hooks/use-is-mounted';
 import { CreateCaseDialog } from './create-case/create-case-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
 
 export type CaseOverviewTableProps = {};
 
@@ -67,7 +68,7 @@ export const columns: ColumnDef<Case, any>[] = [{
 
 export function CaseOverviewTable(props: CaseOverviewTableProps) {
   const [data, setData] = useState([])
-
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const isMounted = useIsMounted()
 
   useEffect(() => {
@@ -83,11 +84,14 @@ export function CaseOverviewTable(props: CaseOverviewTableProps) {
     />
   )
 
+  const onDialogOpenedChanged = (openState) => setIsDialogOpen(openState);
+
   const toolbar = (
     <div className='flex divide-x'>
-      <h1 className="font-semibold text-xl px-2">Sager</h1>
+      <h1 className="font-semibold text-xl px-2 self-center">Sager</h1>
       <div className='px-2'>
-        <CreateCaseDialog />
+        <Button variant='default' onClick={() => { onDialogOpenedChanged(true) }}> Opret sag</Button>
+        <CreateCaseDialog isDialogOpen={isDialogOpen} onOpenChanged={onDialogOpenedChanged} />
       </div>
     </div>
   );

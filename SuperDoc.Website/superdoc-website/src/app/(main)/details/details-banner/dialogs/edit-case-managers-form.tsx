@@ -1,73 +1,86 @@
-"use client";
-import React from 'react';
+"use client"
+import React, { useMemo, useState } from 'react';
+import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from "@/lib/utils"
 
 import { Checkbox } from "@/components/ui/checkbox"
 import { getCaseManagers } from '@/services/case-service';
-import { createCase } from '@/services/edit-case-services'
-import { CaseDetails } from '@/models/case-details';
 
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, } from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, } from "@/components/ui/form"
 import { Popover, PopoverContent, PopoverTrigger, } from "@/components/ui/popover"
-import { Button } from '@/components/ui/button';
-import { Input } from "@/components/ui/input"
-import { ChevronsUpDown } from "lucide-react"
+import { Check, ChevronsUpDown } from "lucide-react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { getWebSession } from '@/common/session-context/session-context';
+import { formatCheckboxSelectedValues } from '@/app/(main)/create-case/create-case-form';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command"
+import { CaseDetails } from '@/models/case-details';
+import { createCase } from '@/services/edit-case-services';
 
 const formSchema = z.object({
-  title: z.string().min(1, {
-    message: "Titlen skal være mindst 1 karakter langt",
-  }),
-  description: z.string().max(1024, {
-    message: "Beskrivelsen må højst være 1024 karakter langt",
-  }),
   caseManagers: z.array(z.string()).refine((value) => value.some((item) => item), {
     message: "Du skal vælge mindst 1 sagsbehandler fra listen.",
   }),
+  caseResponsible: z.string().min(0, {
+    message: ''
+  }).optional()
 })
 
-export type CreateCaseFormProps = {
+export type EditCaseManagersFormProps = {
+  details: CaseDetails;
   closeDialog: () => void;
+  onClose: () => void
 };
 
-export function CreateCaseForm(props: CreateCaseFormProps) {
-  const router = useRouter();
-  const userId = getWebSession().user.id
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      caseManagers: [],
-    },
-  })
-
-  const { data: items, isPending, isError, error } = useQuery({
-    queryKey: ["https://localhost:44304/api/Case/GetCaseManagers"],
+export function EditCaseManagersForm(props: EditCaseManagersFormProps) {
+  const userId = getWebSession().user?.id;
+  const [open, setOpen] = useState(false)
+  const [value, setValue] = useState(props.details.case.responsibleUser.id)
+  const { data, isPending, isError, error } = useQuery({
+    queryKey: ["https://localhost:44304/api/Case/GetCaseManagers", userId],
     async queryFn() {
-      const caseManagers = await getCaseManagers();
-      return caseManagers.filter(v => v.id !== userId);
+      return await getCaseManagers();
     }
   })
 
+  const dataProvider: { caseManagers: any[], caseResponsibleUsers: any[] } = useMemo(() => {
+    const caseManagersData = data?.filter(v => v.id !== userId);
+    return data
+      ? { caseManagers: caseManagersData, caseResponsibleUsers: data }
+      : { caseManagers: [], caseResponsibleUsers: [] }
+  }, [data]);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      caseResponsible: props.details.case.responsibleUser.id ?? '',
+      caseManagers: props.details.case.caseManagers.filter(v => v.id !== userId).length !== 0 ? props.details.case.caseManagers.filter(v => v.id !== userId).map(id => id.id) : [],
+    },
+  })
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const data: CaseDetails = await createCase({
-      title: values.title,
-      description: values.description,
+    await createCase({
+      caseId: props.details.case.id,
+      description: props.details.case.description,
+      title: props.details.case.title,
+      responsibleUserId: props.details.case.responsibleUser.id,
       caseManagersId: [...values.caseManagers, userId] // Always include the user who is logged in in the caseManagers array
     });
 
     // close dialog and push user into the case that was just created
+    props.onClose();
     props.closeDialog();
-    router.push('/details/' + data.case.id)
+    console.log(values, value);
   }
 
-  // make sure data is loaded..
   if (isPending) {
     return <span>Loading...</span>
   }
@@ -81,26 +94,53 @@ export function CreateCaseForm(props: CreateCaseFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="title"
+          disabled={(userId !== props.details.case.responsibleUser.id)}
+          name="caseResponsible"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Titel</FormLabel>
+              <FormLabel>Sagsansvarlig</FormLabel>
               <FormControl>
-                <Input placeholder='Sagstitel' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                <Popover open={open} onOpenChange={setOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      disabled={(userId !== props.details.case.responsibleUser.id)}
 
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Beskrivelse</FormLabel>
-              <FormControl>
-                <Input placeholder="Beskrivelse af sagen" {...field} />
+                      role="combobox"
+                      aria-expanded={open}
+                      className="w-full justify-between"
+                    >
+                      {value
+                        ? dataProvider.caseResponsibleUsers.find((caseResponsible) => caseResponsible.id === value)?.firstName
+                        : "Vælg Sagsansvarlig"}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandGroup>
+                        {dataProvider.caseResponsibleUsers.map((item) => (
+                          <CommandItem
+                            key={item.id}
+                            value={item.id}
+                            onSelect={(currentValue) => {
+                              setValue(currentValue === value ? "" : currentValue)
+                              setOpen(false)
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                value === item.id ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            {item.firstName}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -123,7 +163,7 @@ export function CreateCaseForm(props: CreateCaseFormProps) {
                         className={cn("w-full justify-between", !field.value && "text-muted-foreground")}
                       >
                         {field.value?.length > 0
-                          ? items.find(
+                          ? dataProvider.caseManagers.find(
                             (item) => field.value.some(v => item.id === v)
                           )?.firstName + formatCheckboxSelectedValues(field.value)
                           : "Vælg sagsbehandlere"}
@@ -132,7 +172,7 @@ export function CreateCaseForm(props: CreateCaseFormProps) {
                     </FormControl>
                   </PopoverTrigger>
                   <PopoverContent className="w-[200px] p-0">
-                    {items.map((item) => (
+                    {dataProvider.caseManagers.map((item) => (
                       <FormField
                         key={item.id}
                         control={form.control}
@@ -141,7 +181,7 @@ export function CreateCaseForm(props: CreateCaseFormProps) {
                           return (
                             <FormItem
                               key={item.id}
-                              className="flex flex-row items-start space-x-3 space-y-0 m-2"
+                              className="flex flex-row dataProvider-start space-x-3 space-y-0 m-2"
                             >
                               <FormControl>
                                 <Checkbox
@@ -175,17 +215,6 @@ export function CreateCaseForm(props: CreateCaseFormProps) {
 
         <Button type="submit">Submit</Button>
       </form>
-    </Form >
+    </Form>
   );
-}
-
-
-
-// Returns a string with the following format, containing the extra "items" in the list:
-//                                       [+(number)]
-// string might look like the following: [+5]
-export function formatCheckboxSelectedValues(items: string[]): string {
-  return items.length > 1
-    ? ` [+${items.length - 1}]`
-    : '';
 }
