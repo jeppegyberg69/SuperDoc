@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SuperDoc.Customer.API.Authorization;
+using SuperDoc.Customer.API.Authorization.Identity;
+using SuperDoc.Customer.Repositories.Entities.Users;
 using SuperDoc.Customer.Services.Revisions;
 using SuperDoc.Customer.Services.Revisions.Factories;
 using SuperDoc.Customer.Services.Security;
@@ -45,9 +47,45 @@ namespace SuperDoc.Customer.API.Controllers
                 return Forbid();
             }
 
-            var revisions = await revisionService.GetRevisionsByDocumentIdWithDocumentSignaturesAsync(documentId);
+            var revisions = await revisionService.GetRevisionsByDocumentIdWithDocumentSignaturesAndUsersAsync(documentId);
 
             return Ok(revisionFactory.ConvertRevisionsToDtos(revisions));
+        }
+
+        [HttpPost]
+        [RequiredRole(Roles.SuperAdmin, Roles.Admin, Roles.CaseManager)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(RevisionDto), StatusCodes.Status200OK)]
+        public async Task<ActionResult<RevisionDto>> UploadRevision(Guid documentId, string emailAddresses, IFormFile documentFile)
+        {
+            bool? accessResult = await accessService.HasAccessToDocumentAsync(documentId, loginService.GetUserId(User.Claims));
+
+            if (accessResult == null)
+            {
+                return NotFound("Invalid documentId");
+            }
+
+            if (!accessResult.Value)
+            {
+                return Forbid();
+            }
+
+
+            if (!documentFile.ContentType.Equals("application/pdf", StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest("Only PDF files are allowed");
+            }
+
+            var result = await revisionService.SaveRevisionAsync(loginService.GetUserId(User.Claims), documentId, emailAddresses, documentFile);
+
+            if (result.Result == null)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+
+            return Ok(revisionFactory.ConvertRevisionToDto(result.Result));
         }
     }
 }

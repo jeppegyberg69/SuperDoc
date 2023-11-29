@@ -13,9 +13,16 @@ namespace SuperDoc.Customer.Repositories.Revisions
             this.superDocContext = superDocContext;
         }
 
-        public async Task<IEnumerable<Revision>> GetRevisionsByDocumentIdWithDocumentSignaturesAsync(Guid documentId)
+        public async Task<IEnumerable<Revision>> GetRevisionsByDocumentIdWithDocumentSignaturesAndUsersAsync(Guid documentId)
         {
-            return await superDocContext.Revisions.Where(r => r.DocumentId == documentId).Include(x => x.DocumentSignatures).OrderByDescending(x => x.DateUploaded).ToListAsync();
+#nullable disable
+            return await superDocContext.Revisions.Where(r => r.DocumentId == documentId).Include(x => x.DocumentSignatures).ThenInclude(x => x.User).OrderByDescending(x => x.DateUploaded).ToListAsync();
+#nullable enable
+        }
+
+        public async Task CreateRevisionAsync(Revision revision)
+        {
+            await superDocContext.Revisions.AddAsync(revision);
         }
     }
 }

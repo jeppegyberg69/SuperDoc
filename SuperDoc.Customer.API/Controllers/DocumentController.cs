@@ -74,39 +74,6 @@ namespace SuperDoc.Customer.API.Controllers
             return Ok(documentId.Value);
         }
 
-
-        [HttpPost]
-        [RequiredRole(Roles.SuperAdmin, Roles.Admin, Roles.CaseManager)]
-        public async Task<IActionResult> UploadDocument(Guid documentId, string emailAddresses, IFormFile documentFile)
-        {
-            bool? accessResult = await accessService.HasAccessToDocumentAsync(documentId, loginService.GetUserId(User.Claims));
-
-            if (accessResult == null)
-            {
-                return BadRequest("Invalid documentId");
-            }
-
-            if (!accessResult.Value)
-            {
-                return Forbid();
-            }
-
-
-            if (!documentFile.ContentType.Equals("application/pdf", StringComparison.OrdinalIgnoreCase))
-            {
-                return BadRequest("Only PDF files are allowed");
-            }
-
-            var result = await documentService.SaveUploadedFile(loginService.GetUserId(User.Claims), documentId, emailAddresses, documentFile);
-
-            if (result.Result == null)
-            {
-                return BadRequest(result.ErrorMessage);
-            }
-
-            return Ok(revisionFactory.ConvertRevisionToDto(result.Result));
-        }
-
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DocumentDto>>> GetDocumentsByCaseId(Guid caseId)
         {
