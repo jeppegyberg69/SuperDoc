@@ -1,6 +1,6 @@
-﻿
+﻿using SuperDoc.Shared.Models.Documents;
 
-namespace SuperDoc.Shared.Models.Documents
+namespace SuperDoc.Shared.Models.Revisions
 {
     public class RevisionDto
     {

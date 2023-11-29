@@ -9,11 +9,15 @@ using SuperDoc.Customer.API.Swagger;
 using SuperDoc.Customer.Repositories.Cases;
 using SuperDoc.Customer.Repositories.Contexts;
 using SuperDoc.Customer.Repositories.Documents;
+using SuperDoc.Customer.Repositories.DocumentSignatures;
+using SuperDoc.Customer.Repositories.Revisions;
 using SuperDoc.Customer.Repositories.Users;
 using SuperDoc.Customer.Services.Cases;
 using SuperDoc.Customer.Services.Cases.Factories;
 using SuperDoc.Customer.Services.Documents;
 using SuperDoc.Customer.Services.Documents.Factories;
+using SuperDoc.Customer.Services.Revisions;
+using SuperDoc.Customer.Services.Revisions.Factories;
 using SuperDoc.Customer.Services.Security;
 using SuperDoc.Customer.Services.Users;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -76,8 +80,11 @@ builder.Services.AddScoped<IDocumentService, DocumentService>();
 builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
 builder.Services.AddScoped<IDocumentFactory, DocumentFactory>();
 
+builder.Services.AddScoped<IRevisionService, RevisionService>();
+builder.Services.AddScoped<IRevisionRepository, RevisionRepository>();
 builder.Services.AddScoped<IRevisionFactory, RevisionFactory>();
 
+builder.Services.AddScoped<IDocumentSignatureRepository, DocumentSignatureRepository>();
 
 builder.Services.AddScoped<IAccessService, AccessService>();
 

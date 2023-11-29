@@ -36,18 +36,6 @@ namespace SuperDoc.Customer.Repositories.Documents
             await superDocContext.SaveChangesAsync();
         }
 
-        public async Task CreateRevisionAsync(Revision revision)
-        {
-            await superDocContext.Revisions.AddAsync(revision);
-            await superDocContext.SaveChangesAsync();
-        }
-
-        public async Task CreateDocumentSignaturesAsync(IEnumerable<DocumentSignature> documentSignatures)
-        {
-            await superDocContext.DocumentSignatures.AddRangeAsync(documentSignatures);
-            await superDocContext.SaveChangesAsync();
-        }
-
         public async Task<IEnumerable<Document>> GetDocumentsByCaseIdWithExternalUsersAsync(Guid caseId)
         {
             return await superDocContext.Documents.Where(x => x.CaseId == caseId).Include(x => x.ExternalUsers).ToListAsync();
