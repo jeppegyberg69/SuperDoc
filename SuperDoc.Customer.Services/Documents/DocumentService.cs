@@ -135,14 +135,14 @@ namespace SuperDoc.Customer.Services.Documents
 
             await documentRepository.CreateRevisionAsync(revision);
 
-            IEnumerable<DocumentSignature> documentSignatures = await AddSignatureUsers(emailAddresses, revision.RevisionId);
+            IEnumerable<DocumentSignature> documentSignatures = await AddSignatureUsers(emailAddresses, revision.RevisionId, document);
 
             revision.DocumentSignatures = documentSignatures.ToList();
 
             return new ResultModel<Revision>(revision);
         }
 
-        private async Task<IEnumerable<DocumentSignature>> AddSignatureUsers(string emailAddresses, Guid revisionId)
+        private async Task<IEnumerable<DocumentSignature>> AddSignatureUsers(string emailAddresses, Guid revisionId, Document document)
         {
             List<User> users = (await userRepository.GetUsersByEmailsAsync(emailAddresses.Split(';'))).ToList();
 
@@ -158,7 +158,8 @@ namespace SuperDoc.Customer.Services.Documents
                         DateModified = DateTime.UtcNow,
                         DateCreated = DateTime.UtcNow,
                         EmailAddress = emailAddress,
-                        Role = Roles.User
+                        Role = Roles.User,
+                        Documents = new List<Document> { document }
                     });
                 }
             }
