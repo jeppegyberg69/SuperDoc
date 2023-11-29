@@ -6,6 +6,7 @@ using SuperDoc.Customer.Repositories.Entities.Documents;
 using SuperDoc.Customer.Repositories.Entities.Users;
 using SuperDoc.Customer.Services.Documents;
 using SuperDoc.Customer.Services.Documents.Factories;
+using SuperDoc.Customer.Services.Revisions.Factories;
 using SuperDoc.Customer.Services.Security;
 using SuperDoc.Shared.Models.Documents;
 
@@ -103,7 +104,7 @@ namespace SuperDoc.Customer.API.Controllers
                 return BadRequest(result.ErrorMessage);
             }
 
-            return Ok(revisionFactory.CoonverRevisionToDto(result.Result));
+            return Ok(revisionFactory.ConvertRevisionToDto(result.Result));
         }
 
         [HttpGet]
