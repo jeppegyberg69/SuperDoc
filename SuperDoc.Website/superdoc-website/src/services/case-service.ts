@@ -61,13 +61,11 @@ export function useGetCaseDetails(caseId: string) {
       return getCases()
         .then((cases) => {
           const caseData = cases.filter(v => v.id === caseId)[0]
-
           return {
             case: {
               ...caseData
             },
             documents: []
-
           } ?? null
         })
     },

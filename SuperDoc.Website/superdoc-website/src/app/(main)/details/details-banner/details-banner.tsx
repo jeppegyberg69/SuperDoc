@@ -8,28 +8,31 @@ import { useIsMounted } from '@/common/hooks/use-is-mounted';
 import { Button } from '@/components/ui/button';
 import { CreateCaseDialog } from '../../create-case/create-case-dialog';
 import { useQueryClient } from '@tanstack/react-query';
+import { EditCaseDescriptionDialog } from './dialogs/edit-case-description-dialog';
 
 export type DetailsBannerProps = {
   details: CaseDetails;
 };
 
 export function DetailsBanner(props: DetailsBannerProps) {
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const onDialogOpenedChanged = (openState) => setIsDialogOpen(openState);
+  const [caseManagerDialogOpen, setCaseManagerDialogOpen] = useState(false)
+  const [caseInfoDialogOpen, setCaseInfoDialogOpen] = useState(false)
+  const caseInfoDialogOpenChanged = (openState) => setCaseInfoDialogOpen(openState);
+  const caseManagerDialogOpenChanged = (openState) => setCaseManagerDialogOpen(openState);
+
   const queryClient = useQueryClient();
   const onDialogClose = () => {
-    console.log('dsa')
-    queryClient.invalidateQueries({queryKey: ['snowball']});
+    queryClient.invalidateQueries({ queryKey: ['snowball'] });
   }
 
-  
+
   if (!props.details)
     return <span></span>
   return (
     <PageBanner>
       <BannerItemLayout>
         <BannerItem
-          className='w-[200px]'
+          className='w-[200px] !cursor-default'
           label='Sagsnummer'
           value={props.details?.case?.caseNumber}
         />
@@ -47,6 +50,7 @@ export function DetailsBanner(props: DetailsBannerProps) {
             </div>
           )}
           className='flex-1'
+          onClick={() => { caseInfoDialogOpenChanged(true) }}
         />
         <BannerItem
           className='flex-1'
@@ -61,11 +65,11 @@ export function DetailsBanner(props: DetailsBannerProps) {
               </div>
             </div>
           )}
-          onClick={() => { setIsDialogOpen(true) }}
+          onClick={() => { caseManagerDialogOpenChanged(true) }}
         />
-        
-        <EditCaseManagersDialog onClose={onDialogClose} details={props.details} isDialogOpen={isDialogOpen} onOpenedChange={onDialogOpenedChanged} />
 
+        <EditCaseManagersDialog onClose={onDialogClose} details={props.details} isDialogOpen={caseManagerDialogOpen} onOpenedChange={caseManagerDialogOpenChanged} />
+        <EditCaseDescriptionDialog onClose={onDialogClose} details={props.details} isDialogOpen={caseInfoDialogOpen} onOpenedChange={caseInfoDialogOpenChanged} />
       </BannerItemLayout>
     </PageBanner>
   );

@@ -78,7 +78,6 @@ export function EditCaseManagersForm(props: EditCaseManagersFormProps) {
     // close dialog and push user into the case that was just created
     props.onClose();
     props.closeDialog();
-    console.log(values, value);
   }
 
   if (isPending) {
