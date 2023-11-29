@@ -18,6 +18,17 @@ namespace SuperDoc.Customer.Services.Documents
         Task<Guid?> CreateOrUpdateDocumentAsync(CreateOrUpdateDocumentDto documentDto);
 
         /// <summary>
+        ///    This method returns all documents for the given case id.
+        /// </summary>
+        /// <param name="caseId"></param>
+        /// <param name="userId"></param>
+        /// <returns>
+        ///     The documents for the given case id.<br></br>
+        ///     If the person signed in has the role User, then only the documents that are shared with the user are returned.<br></br>
+        /// </returns>
+        Task<IEnumerable<Document>> GetDocumentsByCaseIdAndUserIdWithExternalUsersAsync(Guid caseId, Guid userId);
+
+        /// <summary>
         ///    This method will creae a new revision for the given document.<br></br>
         ///    And if the given email address don't exist in the database, a new user will be created.
         /// </summary>
