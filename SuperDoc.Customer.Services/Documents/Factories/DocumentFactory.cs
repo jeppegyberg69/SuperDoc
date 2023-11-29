@@ -29,8 +29,8 @@ namespace SuperDoc.Customer.Services.Documents.Factories
                         CaseId = document?.CaseId ?? Guid.NewGuid(),
                         Title = document?.Title ?? string.Empty,
                         Description = document?.Description ?? string.Empty,
-                        DateCreated = document?.DateCreated,
-                        DateModified = document?.DateModified,
+                        DateCreated = document?.DateCreated ?? DateTime.UtcNow,
+                        DateModified = document?.DateModified ?? DateTime.UtcNow,
                         ExternalUsers = caseFactory.ConverUsersToCaseManagerDtos(document?.ExternalUsers ?? new List<User>())
                     });
                 }
