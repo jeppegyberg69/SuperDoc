@@ -19,7 +19,8 @@ using SuperDoc.Customer.Services.Users;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+builder.Services.AddHealthChecks();
 
 builder.Services.AddAuthentication(x =>
 {
@@ -45,10 +46,11 @@ builder.Services.AddAuthentication(x =>
 // Configure cross-origin resource sharing (CORS)
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: MyAllowSpecificOrigins,
+    // Test environment
+    options.AddPolicy(name: "testEnv",
                       policy =>
                       {
-                          policy.WithOrigins("http://localhost:3000", "https://localhost:3000");
+                          policy.AllowAnyOrigin();
                           policy.AllowAnyHeader();
                       });
 });
@@ -84,14 +86,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+app.MapHealthChecks("/health");
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    app.UseCors(MyAllowSpecificOrigins);
-}
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.UseCors("testEnv");
 
 app.UseHttpsRedirection();
 
