@@ -18,7 +18,8 @@ export function createCase({ caseId, caseManagersId, description, title, respons
     "Authorization",
     `Bearer ${getWebSession().token}`
   );
-
+    console.log('responsible',responsibleUserId);
+    
   const raw = JSON.stringify({
     "caseId": caseId,
     "title": title,

@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/command"
 import { CaseDetails } from '@/models/case-details';
 import { createCase } from '@/services/edit-case-services';
+import { buildConfig } from '@/models/webservice/base-url';
 
 const formSchema = z.object({
   caseManagers: z.array(z.string()).refine((value) => value.some((item) => item), {
@@ -45,24 +46,22 @@ export function EditCaseManagersForm(props: EditCaseManagersFormProps) {
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState(props.details.case.responsibleUser.id)
   const { data, isPending, isError, error } = useQuery({
-    queryKey: ["https://localhost:44304/api/Case/GetCaseManagers", userId],
+    queryKey: [`${buildConfig.API}/api/Case/GetCaseManagers`, userId],
     async queryFn() {
       return await getCaseManagers();
     }
   })
 
-  const dataProvider: { caseManagers: any[], caseResponsibleUsers: any[] } = useMemo(() => {
-    const caseManagersData = data?.filter(v => v.id !== userId);
-    return data
-      ? { caseManagers: caseManagersData, caseResponsibleUsers: data }
-      : { caseManagers: [], caseResponsibleUsers: [] }
+  const dataProvider = useMemo(() => {
+    // const caseManagersData = data?.filter(v => v.id !== userId);
+    return data ? data : []
   }, [data]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       caseResponsible: props.details.case.responsibleUser.id ?? '',
-      caseManagers: props.details.case.caseManagers.filter(v => v.id !== userId).length !== 0 ? props.details.case.caseManagers.filter(v => v.id !== userId).map(id => id.id) : [],
+      caseManagers: props.details.case.caseManagers.length !== 0 ? props.details.case.caseManagers?.map(id => id.id) : [],
     },
   })
 
@@ -71,8 +70,11 @@ export function EditCaseManagersForm(props: EditCaseManagersFormProps) {
       caseId: props.details.case.id,
       description: props.details.case.description,
       title: props.details.case.title,
-      responsibleUserId: props.details.case.responsibleUser.id,
-      caseManagersId: [...values.caseManagers, userId] // Always include the user who is logged in in the caseManagers array
+
+      // new values
+      responsibleUserId: value,
+      // caseManagersId: [...values.caseManagers, userId]
+      caseManagersId: [...values.caseManagers] // Always include the user who is logged in in the caseManagers array
     });
 
     // close dialog and push user into the case that was just created
@@ -104,13 +106,12 @@ export function EditCaseManagersForm(props: EditCaseManagersFormProps) {
                     <Button
                       variant="outline"
                       disabled={(userId !== props.details.case.responsibleUser.id)}
-
                       role="combobox"
                       aria-expanded={open}
                       className="w-full justify-between"
                     >
                       {value
-                        ? dataProvider.caseResponsibleUsers.find((caseResponsible) => caseResponsible.id === value)?.firstName
+                        ? dataProvider.find((caseResponsible) => caseResponsible.id === value)?.firstName
                         : "Vælg Sagsansvarlig"}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
@@ -118,7 +119,7 @@ export function EditCaseManagersForm(props: EditCaseManagersFormProps) {
                   <PopoverContent className="w-[200px] p-0">
                     <Command>
                       <CommandGroup>
-                        {dataProvider.caseResponsibleUsers.map((item) => (
+                        {dataProvider.map((item) => (
                           <CommandItem
                             key={item.id}
                             value={item.id}
@@ -159,10 +160,11 @@ export function EditCaseManagersForm(props: EditCaseManagersFormProps) {
                       <Button
                         variant="outline"
                         role="combobox"
+                        disabled={(userId !== props.details.case.responsibleUser.id)}
                         className={cn("w-full justify-between", !field.value && "text-muted-foreground")}
                       >
                         {field.value?.length > 0
-                          ? dataProvider.caseManagers.find(
+                          ? dataProvider.find(
                             (item) => field.value.some(v => item.id === v)
                           )?.firstName + formatCheckboxSelectedValues(field.value)
                           : "Vælg sagsbehandlere"}
@@ -170,11 +172,13 @@ export function EditCaseManagersForm(props: EditCaseManagersFormProps) {
                       </Button>
                     </FormControl>
                   </PopoverTrigger>
+
                   <PopoverContent className="w-[200px] p-0">
-                    {dataProvider.caseManagers.map((item) => (
+                    {dataProvider.map((item) => (
                       <FormField
                         key={item.id}
                         control={form.control}
+                        disabled={(userId !== props.details.case.responsibleUser.id)}
                         name="caseManagers"
                         render={({ field }) => {
                           return (

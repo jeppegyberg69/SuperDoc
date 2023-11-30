@@ -40,7 +40,6 @@ export function DetailsBanner(props: DetailsBannerProps) {
           label='Sagsinformationer'
           value={(
             <div>
-
               <div className=''>
                 {props.details.case.title}
               </div>
