@@ -18,6 +18,7 @@ export function CreateDocumentDialog(props: CreateDocumentDialogProps) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Opret dokument</DialogTitle>
+          <hr />
           <CreateDocumentForm closeDialog={() => props.onOpenChanged?.(false)} details={props.details}></CreateDocumentForm>
         </DialogHeader>
       </DialogContent>

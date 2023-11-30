@@ -82,7 +82,7 @@ export function CreateDocumentForm(props: CreateDocumentFormProps) {
           )}
         />
 
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Gem</Button>
       </form>
     </Form>
   );

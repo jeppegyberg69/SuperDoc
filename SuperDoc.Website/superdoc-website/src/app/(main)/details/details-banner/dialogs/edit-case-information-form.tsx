@@ -20,13 +20,13 @@ const formSchema = z.object({
   })
 })
 
-export type EditCaseDescriptionFormProps = {
+export type EditCaseInformationFormProps = {
   details: CaseDetails;
   closeDialog: () => void;
   onClose: () => void
 };
 
-export function EditCaseDescriptionForm(props: EditCaseDescriptionFormProps) {
+export function EditCaseInformationForm(props: EditCaseInformationFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -82,7 +82,7 @@ export function EditCaseDescriptionForm(props: EditCaseDescriptionFormProps) {
           )}
         />
 
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Gem</Button>
       </form>
     </Form>
   );

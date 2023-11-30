@@ -1,12 +1,11 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ListLayout } from "@/common/list-layout/list-layout"
 import { ColumnDef } from "@tanstack/react-table"
 import { nameof } from '@/common/nameof/nameof';
 import { DataTable } from '@/components/ui/data-table';
-import { getCases } from '@/services/case-service';
+import { useGetCases } from '@/services/case-service';
 import { Case } from '@/models/case';
-import { useIsMounted } from '@/common/hooks/use-is-mounted';
 import { CreateCaseDialog } from './create-case/create-case-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
@@ -67,15 +66,8 @@ export const columns: ColumnDef<Case, any>[] = [{
 }];
 
 export function CaseOverviewTable(props: CaseOverviewTableProps) {
-  const [data, setData] = useState([])
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const isMounted = useIsMounted()
-
-  useEffect(() => {
-    if (isMounted()) {
-      getCases().then((data) => setData(data));
-    }
-  }, [isMounted()])
+  const { data } = useGetCases();
 
   const dataTable = (
     <DataTable
@@ -88,7 +80,7 @@ export function CaseOverviewTable(props: CaseOverviewTableProps) {
 
   const toolbar = (
     <div className='flex divide-x'>
-      <h1 className="font-semibold text-xl px-2 self-center">Sager</h1>
+      <h1 className="font-semibold text-xl mr-4 self-center">Sager</h1>
       <div className='px-2'>
         <Button variant='default' onClick={() => { onDialogOpenedChanged(true) }}> Opret sag</Button>
         <CreateCaseDialog isDialogOpen={isDialogOpen} onOpenChanged={onDialogOpenedChanged} />

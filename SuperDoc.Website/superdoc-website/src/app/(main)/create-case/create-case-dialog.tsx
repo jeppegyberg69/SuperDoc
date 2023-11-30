@@ -15,6 +15,7 @@ export function CreateCaseDialog(props: CreateCaseDialogProps) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Opret sag</DialogTitle>
+          <hr />
           <CreateCaseForm closeDialog={() => DialogClose}></CreateCaseForm>
         </DialogHeader>
       </DialogContent>

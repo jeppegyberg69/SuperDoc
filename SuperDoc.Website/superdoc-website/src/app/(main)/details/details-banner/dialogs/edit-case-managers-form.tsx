@@ -216,7 +216,7 @@ export function EditCaseManagersForm(props: EditCaseManagersFormProps) {
           )}
         />
 
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Gem</Button>
       </form>
     </Form>
   );

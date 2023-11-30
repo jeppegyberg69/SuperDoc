@@ -173,7 +173,7 @@ export function CreateCaseForm(props: CreateCaseFormProps) {
           )}
         />
 
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Gem</Button>
       </form>
     </Form>
   );

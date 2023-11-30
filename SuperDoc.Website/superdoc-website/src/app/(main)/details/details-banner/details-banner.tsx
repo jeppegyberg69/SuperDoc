@@ -1,14 +1,13 @@
-"use client"
+"use client";
+
+import React, { useState } from 'react';
 import { BannerItem, BannerItemLayout, PageBanner } from '@/common/page-layout/page-banner';
 import { CaseDetails } from '@/models/case-details';
 import { CaseManagers } from '@/models/case-manager';
-import React, { useEffect, useState } from 'react';
 import { EditCaseManagersDialog } from './dialogs/edit-case-managers-dialog';
-import { useIsMounted } from '@/common/hooks/use-is-mounted';
-import { Button } from '@/components/ui/button';
-import { CreateCaseDialog } from '../../create-case/create-case-dialog';
 import { useQueryClient } from '@tanstack/react-query';
-import { EditCaseDescriptionDialog } from './dialogs/edit-case-description-dialog';
+import { EditCaseInformationDialog } from './dialogs/edit-case-information-dialog';
+import { CaseServiceQueryKeys } from '@/services/case-service';
 
 export type DetailsBannerProps = {
   details: CaseDetails;
@@ -22,19 +21,20 @@ export function DetailsBanner(props: DetailsBannerProps) {
 
   const queryClient = useQueryClient();
   const onDialogClose = () => {
-    queryClient.invalidateQueries({ queryKey: ['snowball'] });
+    queryClient.invalidateQueries({ queryKey: [CaseServiceQueryKeys.useGetDetails] });
   }
 
+  if (!props.details) {
+    return <span></span>;
+  }
 
-  if (!props.details)
-    return <span></span>
   return (
     <PageBanner>
       <BannerItemLayout>
         <BannerItem
           className='w-[200px] !cursor-default'
           label='Sagsnummer'
-          value={props.details?.case?.caseNumber}
+          value={props.details.case.caseNumber}
         />
         <BannerItem
           label='Sagsinformationer'
@@ -57,10 +57,10 @@ export function DetailsBanner(props: DetailsBannerProps) {
           value={(
             <div>
               <div className='font-semibold'>
-                {[props.details?.case?.responsibleUser?.firstName, props.details?.case?.responsibleUser?.lastName].filter(Boolean).join(' ')}
+                {[props.details.case.responsibleUser.firstName, props.details.case.responsibleUser.lastName].filter(Boolean).join(' ')}
               </div>
               <div className='text-xs italic text-muted/90'>
-                {formatStringValues(props.details?.case?.caseManagers ?? [])}
+                {caseManagersStringFormat(props.details.case.caseManagers ?? [])}
               </div>
             </div>
           )}
@@ -68,14 +68,14 @@ export function DetailsBanner(props: DetailsBannerProps) {
         />
 
         <EditCaseManagersDialog onClose={onDialogClose} details={props.details} isDialogOpen={caseManagerDialogOpen} onOpenedChange={caseManagerDialogOpenChanged} />
-        <EditCaseDescriptionDialog onClose={onDialogClose} details={props.details} isDialogOpen={caseInfoDialogOpen} onOpenedChange={caseInfoDialogOpenChanged} />
+        <EditCaseInformationDialog onClose={onDialogClose} details={props.details} isDialogOpen={caseInfoDialogOpen} onOpenedChange={caseInfoDialogOpenChanged} />
       </BannerItemLayout>
     </PageBanner>
   );
 }
 
 
-function formatStringValues(caseManagers: CaseManagers[]): string {
+function caseManagersStringFormat(caseManagers: CaseManagers[]): string {
   const firstdata = caseManagers[0];
 
   return caseManagers.length > 1

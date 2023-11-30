@@ -17,6 +17,7 @@ export function EditCaseManagersDialog(props: EditCaseManagersDialogProps) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Sagsbehandlere</DialogTitle>
+          <hr />
           <EditCaseManagersForm onClose={props.onClose} closeDialog={() => props.onOpenedChange(false)} details={props.details} />
         </DialogHeader>
       </DialogContent>

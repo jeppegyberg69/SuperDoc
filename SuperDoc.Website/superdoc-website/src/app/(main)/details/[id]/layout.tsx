@@ -1,4 +1,3 @@
-// find en måde hvor jeg ikke skal bruge use client i layout fil. Dette er på nuværrende tidspunkt nødvendigt pga. at jeg kalder en hook metode i main function
 "use client"
 
 import { PageHeader } from "@/common/page-layout/page-header";
@@ -12,27 +11,27 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons/faAngleLeft";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { CaseDetails } from "@/models/case-details";
+import { toast } from "@/components/ui/use-toast";
 
 export default function DetailsLayout({ params, children }: { params: { id: any }, children: any }) {
   const router = useRouter();
   const { data, error } = useGetCaseDetails(params.id);
   const session = getWebSession();
 
+  if (error) {
+    toast({
+      title: "Fejl",
+      description: "Kunne ikke hente sagsdetaljer."
+    })
+  }
+
+
   return (
     <div className='page-layout h-full'>
-      <PageHeader
-        left={(
-          <div className="flex flex-1">
-            <Button
-              className="hover:text-white"
-              variant="ghost"
-              onClick={() => { router.push("/") }}
-            >
-              <FontAwesomeIcon icon={faAngleLeft} />
-            </Button>
-            <span className="pl-2 self-center font-semibold text-xl">{data?.case?.title}</span>
-          </div>
-        )}
+      <DetailsHeader
+        details={data}
+        router={router}
       />
       {session.user?.role !== Roles.User && <DetailsBanner details={data} />}
       <div className='page-layout-sidebar p-4'><DetailsSidebar caseId={params.id} /></div>
@@ -41,4 +40,24 @@ export default function DetailsLayout({ params, children }: { params: { id: any 
       </div>
     </div>
   );
+}
+
+
+function DetailsHeader({ details, router }: { details: CaseDetails, router: ReturnType<typeof useRouter> }) {
+  return (
+    <PageHeader
+      left={(
+        <div className="flex flex-1">
+          <Button
+            className="hover:text-white"
+            variant="ghost"
+            onClick={() => { router.push("/") }}
+          >
+            <FontAwesomeIcon icon={faAngleLeft} />
+          </Button>
+          <span className="pl-2 self-center font-semibold text-xl">{details?.case?.title}</span>
+        </div>
+      )}
+    />
+  )
 }

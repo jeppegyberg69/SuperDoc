@@ -11,6 +11,7 @@ import { CaseDocument } from '@/models/document';
 import { Button } from '@/components/ui/button';
 import { CreateDocumentDialog } from './document-tabs/edit-dialog/create-document-dialog';
 import { useQueryClient } from '@tanstack/react-query';
+import { CaseServiceQueryKeys } from '@/services/case-service';
 
 export type DocumentsProps = {
   details: CaseDetails;
@@ -31,7 +32,7 @@ export function Documents(props: DocumentsProps) {
   }
 
   const onDialogClose = () => {
-    queryClient.invalidateQueries({ queryKey: ['snowball'] });
+    queryClient.invalidateQueries({ queryKey: [CaseServiceQueryKeys.getCaseManagers] });
   }
 
 
@@ -50,9 +51,8 @@ export function Documents(props: DocumentsProps) {
                 <span className='italic text-xs text-muted-foreground'>{document.description}</span>
                 <span className='text-xs text-muted-foreground'>{document.externalUsers.length > 0 && <>Eksterne brugere: {document.externalUsers.map((v) => v.emailAddress).join(', ')}</>}</span>
                 <div className='flex flex-col'>
-                  {/* lav egen format til dato, sådan at timer ikke er med. */}
-                  <span className='text-xs text-muted-foreground/70'>Oprettet: {DateTime.fromISO(document.dateCreated).toLocaleString(DateTime.DATETIME_SHORT)} </span>
-                  <span className='text-xs text-muted-foreground/70'>Sidst ændret: {DateTime.fromISO(document.dateCreated).toLocaleString(DateTime.DATETIME_SHORT)} </span>
+                  <span className='text-xs text-muted-foreground/70'>Oprettet: {DateTime.fromISO(document.dateCreated).toFormat("dd-LL-yyyy")} </span>
+                  <span className='text-xs text-muted-foreground/70'>Sidst ændret: {DateTime.fromISO(document.dateCreated).toFormat("dd-LL-yyyy")} </span>
                 </div>
               </div>
             </ListItem>
@@ -71,7 +71,7 @@ export function Documents(props: DocumentsProps) {
 
   const toolbar = (
     <div className='flex divide-x'>
-      <h1 className="font-semibold text-xl">Dokumenter</h1>
+      <h1 className="font-semibold text-xl self-center mr-4">Dokumenter</h1>
       <div className='px-2'>
         <Button variant='default' onClick={() => { onDialogOpenedChanged(true) }}>Opret dokument</Button>
         <CreateDocumentDialog onClose={onDialogClose} isDialogOpen={isDialogOpen} onOpenChanged={onDialogOpenedChanged} details={props.details}></CreateDocumentDialog>
