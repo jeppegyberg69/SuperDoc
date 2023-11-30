@@ -21,7 +21,7 @@ export function List(props: ListProps) {
 
 export function ListItem({ children }: { children: any }) {
   return (
-    <div className='h-12 px-4 text-left text-sm text-muted-foreground align-middle font-medium'>
+    <div className='flex h-full px-4 text-left text-sm text-muted-foreground align-middle font-medium'>
       {children}
     </div>
   )

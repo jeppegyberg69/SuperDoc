@@ -1,6 +1,6 @@
 "use client"
 import { cn } from '@/lib/utils';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 export type PdfViewerProps = {
   url: string;
@@ -13,7 +13,7 @@ export function PdfViewer(props: PdfViewerProps) {
 
   return (
     <div className={cn('h-full', props.className)} ref={pdfViewerElement}>
-      <iframe ref={iFrameElement} src={props.url} width="100%" height="100%"></iframe>
+      <iframe id="pdfViewerIframe" ref={iFrameElement} width="100%" height="100%"></iframe>
     </div>
   );
 }

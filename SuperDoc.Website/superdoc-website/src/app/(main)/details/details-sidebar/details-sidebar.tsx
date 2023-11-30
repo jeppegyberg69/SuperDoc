@@ -15,11 +15,11 @@ export function DetailsSidebar({ caseId }) {
   return (
     <List>
       {routes.map((item) => (
-        <li key={item.id} data-active={activeRoute === item.id ? 'active' : 'inactive'} className='list-none flex align-middle border-l data-[active=active]:border-x-black data-[active=inactive]:border-x-transparent'>
+        <li key={item.id} data-active={activeRoute === item.id ? 'active' : 'inactive'} className=' h-full list-none flex align-middle border-l data-[active=active]:border-x-black data-[active=inactive]:border-x-transparent'>
           <ListItem>
-            <Link className="w-full flex align-middle justify-center" href={item.path} onClick={() => setActiveRoute(item.id)}>
+            <Link className="w-full h-12 flex align-middle self-center justify-center" href={item.path} onClick={() => setActiveRoute(item.id)}>
               {item.icon && (
-                <div className="mx-2">
+                <div className="mx-2 self-center">
                   {item.icon}
                 </div>
               )} <span className="self-center">{item.name}</span>

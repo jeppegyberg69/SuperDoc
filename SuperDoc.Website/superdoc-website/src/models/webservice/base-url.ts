@@ -1,3 +1,3 @@
 export const buildConfig = {
-  API: "https://super-doc.jeppeg.com"
+  API: "https://api-super-doc.jeppeg.com"
 }
