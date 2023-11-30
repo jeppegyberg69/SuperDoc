@@ -55,6 +55,8 @@ namespace SuperDoc.Customer.Services.Cases.Factories
                 CaseNumber = docCase.CaseNumber,
                 Title = docCase.Title,
                 Description = docCase.Description,
+                DateCreated = docCase.DateCreated,
+                DateModified = docCase.DateModified,
                 ResponsibleUser = docCase.ResponsibleUser == null ? new CaseManagerDto() : ConvertUserToCaseManagerDto(docCase.ResponsibleUser),
                 CaseManagers = docCase.CaseManagers != null ? ConverUsersToCaseManagerDtos(docCase.CaseManagers) : new List<CaseManagerDto>()
             };
