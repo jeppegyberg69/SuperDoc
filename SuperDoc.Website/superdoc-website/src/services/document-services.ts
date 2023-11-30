@@ -212,23 +212,5 @@ export function getRevisionFile(revisionId: string): Promise<any> {
         }
       }
     })
-    .then((response) => {
-      console.log('dsa')
-      return response?.data
-    })
-}
-
-
-
-export function useDownloadRevisionFile(revisionId: string) {
-  return useQuery({
-    queryKey: ["bebber", revisionId],
-    queryFn() {
-      // console.log('revisionid', revisionId)
-      // if (!revisionId)
-      //   return;
-
-      return getRevisionFile("6f2d66b0-368d-45c1-68c6-08dbf19fa18d")
-    }
-  })
+    .then((response) => response?.data)
 }

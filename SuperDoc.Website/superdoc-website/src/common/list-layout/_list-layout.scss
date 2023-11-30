@@ -11,6 +11,8 @@
 
   &-list {
     grid-area: list;
+    overflow-y: auto;
+
 
     *> {
       height: 100%;
