@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "docker-build": "docker build -t superdoc-website:latest .",
+    "docker-tag": "docker tag superdoc-website:latest jyskejens/superdoc-website:latest",
+    "docker-push": "docker push jyskejens/superdoc-website:latest",
+    "docker-deploy": "npm run docker-build && npm run docker-tag && npm run docker-push"
   },
   "dependencies": {
     "@fortawesome/free-brands-svg-icons": "^6.4.2",
