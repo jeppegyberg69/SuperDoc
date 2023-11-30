@@ -11,6 +11,8 @@ namespace SuperDoc.Customer.Repositories.Contexts
         public DbSet<Case> Cases { get => Set<Case>(); }
         public DbSet<User> Users { get => Set<User>(); }
         public DbSet<Document> Documents { get => Set<Document>(); }
+        public DbSet<Revision> Revisions { get => Set<Revision>(); }
+        public DbSet<DocumentSignature> DocumentSignatures { get => Set<DocumentSignature>(); }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

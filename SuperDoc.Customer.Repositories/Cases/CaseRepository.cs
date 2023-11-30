@@ -23,7 +23,7 @@ namespace SuperDoc.Customer.Repositories.Cases
 
         public async Task<IEnumerable<Case>> GetCasesByIdsWithResponsibleUserAndCaseManagersAsync(IEnumerable<Guid> caseIds)
         {
-            return await superDocContext.Cases.Include(x => x.CaseManagers).Include(x => x.ResponsibleUser).Where(x => caseIds.Contains(x.CaseId)).ToListAsync();
+            return await superDocContext.Cases.Include(x => x.CaseManagers).Include(x => x.ResponsibleUser).Where(x => caseIds.Contains(x.CaseId)).OrderByDescending(x => x.DateCreated).ToListAsync();
         }
 
         public async Task<Case?> GetCaseByIdWithCaseManagersAsync(Guid caseId)
@@ -38,7 +38,7 @@ namespace SuperDoc.Customer.Repositories.Cases
 
         public async Task<IEnumerable<Case>> GetAllCasesWithResponsibleUserAndCaseManagersAsync()
         {
-            return await superDocContext.Cases.Include(x => x.ResponsibleUser).Include(x => x.CaseManagers).ToListAsync();
+            return await superDocContext.Cases.Include(x => x.ResponsibleUser).Include(x => x.CaseManagers).OrderByDescending(x => x.DateCreated).ToListAsync();
         }
 
         public async Task<IEnumerable<Case>> GetAllCasesAUserIsAssignedToWithResponsibleUserAndCaseManagers(Guid userId)
@@ -52,7 +52,7 @@ namespace SuperDoc.Customer.Repositories.Cases
 
             Guid[] caseIds = user.Cases.Select(x => x.CaseId).ToArray();
 
-            return await superDocContext.Cases.Where(x => caseIds.Contains(x.CaseId)).Include(x => x.ResponsibleUser).Include(x => x.CaseManagers).ToListAsync();
+            return await superDocContext.Cases.Where(x => caseIds.Contains(x.CaseId)).Include(x => x.ResponsibleUser).Include(x => x.CaseManagers).OrderByDescending(x => x.DateCreated).ToListAsync();
         }
 
         public async Task<IEnumerable<User>> GetAllCaseManagersAsync(Guid? caseId = null)

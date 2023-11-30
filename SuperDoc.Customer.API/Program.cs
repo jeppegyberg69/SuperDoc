@@ -9,16 +9,22 @@ using SuperDoc.Customer.API.Swagger;
 using SuperDoc.Customer.Repositories.Cases;
 using SuperDoc.Customer.Repositories.Contexts;
 using SuperDoc.Customer.Repositories.Documents;
+using SuperDoc.Customer.Repositories.DocumentSignatures;
+using SuperDoc.Customer.Repositories.Revisions;
 using SuperDoc.Customer.Repositories.Users;
 using SuperDoc.Customer.Services.Cases;
 using SuperDoc.Customer.Services.Cases.Factories;
 using SuperDoc.Customer.Services.Documents;
+using SuperDoc.Customer.Services.Documents.Factories;
+using SuperDoc.Customer.Services.Revisions;
+using SuperDoc.Customer.Services.Revisions.Factories;
 using SuperDoc.Customer.Services.Security;
 using SuperDoc.Customer.Services.Users;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+builder.Services.AddHealthChecks();
 
 builder.Services.AddAuthentication(x =>
 {
@@ -44,10 +50,11 @@ builder.Services.AddAuthentication(x =>
 // Configure cross-origin resource sharing (CORS)
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: MyAllowSpecificOrigins,
+    // Test environment
+    options.AddPolicy(name: "testEnv",
                       policy =>
                       {
-                          policy.WithOrigins("http://localhost:3000", "https://localhost:3000");
+                          policy.AllowAnyOrigin();
                           policy.AllowAnyHeader();
                       });
 });
@@ -71,6 +78,13 @@ builder.Services.AddScoped<ICaseRepository, CaseRepository>();
 
 builder.Services.AddScoped<IDocumentService, DocumentService>();
 builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
+builder.Services.AddScoped<IDocumentFactory, DocumentFactory>();
+
+builder.Services.AddScoped<IRevisionService, RevisionService>();
+builder.Services.AddScoped<IRevisionRepository, RevisionRepository>();
+builder.Services.AddScoped<IRevisionFactory, RevisionFactory>();
+
+builder.Services.AddScoped<IDocumentSignatureRepository, DocumentSignatureRepository>();
 
 builder.Services.AddScoped<IAccessService, AccessService>();
 
@@ -81,14 +95,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+app.MapHealthChecks("/health");
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    app.UseCors(MyAllowSpecificOrigins);
-}
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.UseCors("testEnv");
 
 app.UseHttpsRedirection();
 

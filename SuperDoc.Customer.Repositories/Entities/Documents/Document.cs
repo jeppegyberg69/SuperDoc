@@ -21,9 +21,9 @@ namespace SuperDoc.Customer.Repositories.Entities.Documents
         public string Description { get; set; } = string.Empty;
 
         [Required]
-        public DateTime? DateCreated { get; set; }
+        public DateTime DateCreated { get; set; }
         [Required]
-        public DateTime? DateModified { get; set; }
+        public DateTime DateModified { get; set; }
 
         public virtual Case? Case { get; set; }
         public virtual ICollection<User>? ExternalUsers { get; set; }

@@ -24,6 +24,12 @@ namespace SuperDoc.Customer.Repositories.Users
             await superDocContext.SaveChangesAsync();
         }
 
+        public async Task AddUsersAsync(IEnumerable<User> users)
+        {
+            await superDocContext.Users.AddRangeAsync(users);
+            await superDocContext.SaveChangesAsync();
+        }
+
         public async Task UpdateUserAsync(User user)
         {
             superDocContext.Users.Update(user);
@@ -38,6 +44,11 @@ namespace SuperDoc.Customer.Repositories.Users
         public async Task<User?> GetUserByIdWithDocumentsAsync(Guid userId)
         {
             return await superDocContext.Users.Include(x => x.Documents).FirstOrDefaultAsync(x => x.UserId == userId);
+        }
+
+        public async Task<IEnumerable<User>> GetUsersByEmailsAsync(string[] emails)
+        {
+            return await superDocContext.Users.Where(x => emails.Contains(x.EmailAddress)).ToListAsync();
         }
 
         public async Task<IEnumerable<User>> GetCaseManagersByIds(IEnumerable<Guid> caseManagerIds)

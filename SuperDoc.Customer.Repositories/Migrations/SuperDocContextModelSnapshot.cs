@@ -90,7 +90,7 @@ namespace SuperDoc.Customer.Repositories.Migrations
 
                     b.HasIndex("ResponsibleUserId");
 
-                    b.ToTable("Cases", (string)null);
+                    b.ToTable("Cases");
                 });
 
             modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Documents.Document", b =>
@@ -124,7 +124,7 @@ namespace SuperDoc.Customer.Repositories.Migrations
 
                     b.HasIndex("CaseId");
 
-                    b.ToTable("Documents", (string)null);
+                    b.ToTable("Documents");
                 });
 
             modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Documents.DocumentSignature", b =>
@@ -132,6 +132,9 @@ namespace SuperDoc.Customer.Repositories.Migrations
                     b.Property<Guid>("SignatureId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DateSigned")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("PublicKey")
                         .IsRequired()
@@ -155,7 +158,7 @@ namespace SuperDoc.Customer.Repositories.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("DocumentSignatories", (string)null);
+                    b.ToTable("DocumentSignatories");
                 });
 
             modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Documents.Revision", b =>
@@ -189,7 +192,7 @@ namespace SuperDoc.Customer.Repositories.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Revision", (string)null);
+                    b.ToTable("Revisions");
                 });
 
             modelBuilder.Entity("SuperDoc.Customer.Repositories.Entities.Users.User", b =>
@@ -246,7 +249,7 @@ namespace SuperDoc.Customer.Repositories.Migrations
                     b.HasIndex("EmailAddress")
                         .IsUnique();
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("CaseUser", b =>

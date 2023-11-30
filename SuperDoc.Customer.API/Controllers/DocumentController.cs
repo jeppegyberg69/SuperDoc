@@ -2,8 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using SuperDoc.Customer.API.Authorization;
 using SuperDoc.Customer.API.Authorization.Identity;
+using SuperDoc.Customer.Repositories.Entities.Documents;
 using SuperDoc.Customer.Repositories.Entities.Users;
 using SuperDoc.Customer.Services.Documents;
+using SuperDoc.Customer.Services.Documents.Factories;
+using SuperDoc.Customer.Services.Revisions.Factories;
 using SuperDoc.Customer.Services.Security;
 using SuperDoc.Shared.Models.Documents;
 
@@ -17,12 +20,16 @@ namespace SuperDoc.Customer.API.Controllers
         private readonly IDocumentService documentService;
         private readonly IAccessService accessService;
         private readonly ILoginService loginService;
+        private readonly IRevisionFactory revisionFactory;
+        private readonly IDocumentFactory documentFactory;
 
-        public DocumentController(IDocumentService documentService, IAccessService accessService, ILoginService loginService)
+        public DocumentController(IDocumentService documentService, IAccessService accessService, ILoginService loginService, IRevisionFactory revisionFactory, IDocumentFactory documentFactory)
         {
             this.documentService = documentService;
             this.accessService = accessService;
             this.loginService = loginService;
+            this.revisionFactory = revisionFactory;
+            this.documentFactory = documentFactory;
         }
 
         [HttpPost]
@@ -65,6 +72,26 @@ namespace SuperDoc.Customer.API.Controllers
             }
 
             return Ok(documentId.Value);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<DocumentDto>>> GetDocumentsByCaseId(Guid caseId)
+        {
+            bool? accessResult = await accessService.HasAccessToCaseAsync(caseId, loginService.GetUserId(User.Claims));
+
+            if (accessResult == null)
+            {
+                return BadRequest("Invalid caseId");
+            }
+
+            if (!accessResult.Value)
+            {
+                return Forbid();
+            }
+
+            IEnumerable<Document> documents = await documentService.GetDocumentsByCaseIdAndUserIdWithExternalUsersAsync(caseId, loginService.GetUserId(User.Claims));
+
+            return Ok(documentFactory.CreateDocumentDtos(documents));
         }
     }
 }

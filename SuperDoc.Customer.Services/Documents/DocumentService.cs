@@ -2,6 +2,8 @@
 using SuperDoc.Customer.Repositories.Documents;
 using SuperDoc.Customer.Repositories.Entities.Cases;
 using SuperDoc.Customer.Repositories.Entities.Documents;
+using SuperDoc.Customer.Repositories.Entities.Users;
+using SuperDoc.Customer.Repositories.Users;
 using SuperDoc.Shared.Models.Documents;
 
 namespace SuperDoc.Customer.Services.Documents
@@ -10,13 +12,33 @@ namespace SuperDoc.Customer.Services.Documents
     {
         private readonly IDocumentRepository documentRepository;
         private readonly ICaseRepository caseRepository;
+        private readonly IUserRepository userRepository;
 
-        public DocumentService(IDocumentRepository documentRepository, ICaseRepository caseRepository)
+        public DocumentService(IDocumentRepository documentRepository, ICaseRepository caseRepository, IUserRepository userRepository)
         {
             this.documentRepository = documentRepository;
             this.caseRepository = caseRepository;
+            this.userRepository = userRepository;
         }
 
+        public async Task<IEnumerable<Document>> GetDocumentsByCaseIdAndUserIdWithExternalUsersAsync(Guid caseId, Guid userId)
+        {
+            User? user = await userRepository.GetUserByIdAsync(userId);
+
+            if (user == null)
+            {
+                return new List<Document>();
+            }
+
+            if (user.Role == Roles.SuperAdmin || user.Role == Roles.Admin || user.Role == Roles.CaseManager)
+            {
+                return await documentRepository.GetDocumentsByCaseIdWithExternalUsersAsync(caseId);
+            }
+            else
+            {
+                return await documentRepository.GetDocumentsByCaseIdAndUserIdWithExternalUsersAsync(caseId, userId);
+            }
+        }
 
         public async Task<Guid?> CreateOrUpdateDocumentAsync(CreateOrUpdateDocumentDto documentDto)
         {
@@ -67,5 +89,6 @@ namespace SuperDoc.Customer.Services.Documents
                 return document.DocumentId;
             }
         }
+
     }
 }
