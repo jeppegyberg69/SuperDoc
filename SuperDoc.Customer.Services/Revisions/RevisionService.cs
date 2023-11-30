@@ -27,6 +27,11 @@ namespace SuperDoc.Customer.Services.Revisions
             this.documentSignatureRepository = documentSignatureRepository;
         }
 
+        public async Task<Revision?> GetRevisionByIdAsync(Guid revisionId)
+        {
+            return await revisionRepository.GetRevisionByIdAsync(revisionId);
+        }
+
         public async Task<IEnumerable<Revision>> GetRevisionsByDocumentIdWithDocumentSignaturesAndUsersAsync(Guid documentId)
         {
             return await revisionRepository.GetRevisionsByDocumentIdWithDocumentSignaturesAndUsersAsync(documentId);

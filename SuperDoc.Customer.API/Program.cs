@@ -1,4 +1,5 @@
 using System.Text;
+using Invio.Extensions.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -45,7 +46,7 @@ builder.Services.AddAuthentication(x =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]))
 #nullable enable
     };
-});
+}).AddJwtBearerQueryStringAuthentication();
 
 // Configure cross-origin resource sharing (CORS)
 builder.Services.AddCors(options =>
@@ -105,7 +106,7 @@ app.UseCors("testEnv");
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
-app.UseAuthorization();
+app.UseJwtBearerQueryString();
 
 app.UseAuthorization();
 

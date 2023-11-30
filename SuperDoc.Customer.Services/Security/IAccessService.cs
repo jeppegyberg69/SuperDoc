@@ -22,5 +22,15 @@ namespace SuperDoc.Customer.Services.Security
         ///     Null is returned if the user or document does not exist
         /// </returns>
         Task<bool?> HasAccessToDocumentAsync(Guid documentId, Guid userId);
+
+        /// <summary>
+        ///     Check if the user has access to the revision
+        /// </summary>
+        /// <param name="revisionId"></param>
+        /// <param name="userId"></param>
+        /// <returns>
+        ///     NULL if the user or revision does not exist
+        /// </returns>
+        Task<bool?> HasAccessToRevision(Guid revisionId, Guid userId);
     }
 }
