@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SuperDoc.Customer.API.Authorization;
 using SuperDoc.Customer.API.Authorization.Identity;
+using SuperDoc.Customer.Repositories.Entities.Documents;
 using SuperDoc.Customer.Repositories.Entities.Users;
 using SuperDoc.Customer.Services.Revisions;
 using SuperDoc.Customer.Services.Revisions.Factories;
@@ -41,8 +42,7 @@ namespace SuperDoc.Customer.API.Controllers
             {
                 return NotFound("Invalid documentId");
             }
-
-            if (accessResult == false)
+            else if (accessResult == false)
             {
                 return Forbid();
             }
@@ -66,8 +66,7 @@ namespace SuperDoc.Customer.API.Controllers
             {
                 return NotFound("Invalid documentId");
             }
-
-            if (!accessResult.Value)
+            else if (!accessResult.Value)
             {
                 return Forbid();
             }
@@ -86,6 +85,40 @@ namespace SuperDoc.Customer.API.Controllers
             }
 
             return Ok(revisionFactory.ConvertRevisionToDto(result.Result));
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK)]
+
+        public async Task<IActionResult> DownloadRevision(Guid revisionId)
+        {
+            bool? accessResult = await accessService.HasAccessToRevision(revisionId, loginService.GetUserId(User.Claims));
+
+            if (accessResult == null)
+            {
+                return NotFound("Invalid revisionId");
+            }
+            else if (!accessResult.Value)
+            {
+                return Forbid();
+            }
+
+
+            Revision? revision = await revisionService.GetRevisionByIdAsync(revisionId);
+
+            if (revision == null)
+            {
+                return NotFound("Invalid revisionId");
+            }
+
+            if (!System.IO.File.Exists(revision.FilePath))
+            {
+                return NotFound("File not found");
+            }
+
+            return new FileStreamResult(System.IO.File.OpenRead(revision.FilePath), "application/pdf");
         }
     }
 }

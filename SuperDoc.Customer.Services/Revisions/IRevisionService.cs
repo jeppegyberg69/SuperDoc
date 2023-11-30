@@ -6,6 +6,7 @@ namespace SuperDoc.Customer.Services.Revisions
 {
     public interface IRevisionService
     {
+        Task<Revision?> GetRevisionByIdAsync(Guid revisionId);
         Task<IEnumerable<Revision>> GetRevisionsByDocumentIdWithDocumentSignaturesAndUsersAsync(Guid documentId);
 
         /// <summary>
