@@ -184,7 +184,7 @@ export function CreateCaseForm(props: CreateCaseFormProps) {
 // Returns a string with the following format, containing the extra "items" in the list:
 //                                       [+(number)]
 // string might look like the following: [+5]
-function formatCheckboxSelectedValues(items: string[]): string {
+export function formatCheckboxSelectedValues(items: string[]): string {
   return items.length > 1
     ? ` [+${items.length - 1}]`
     : '';

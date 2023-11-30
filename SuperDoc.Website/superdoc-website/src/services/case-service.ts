@@ -2,7 +2,9 @@
 import { getWebSession } from "@/common/session-context/session-context";
 import { Case } from "@/models/case";
 import { CaseManagers } from "@/models/case-manager";
+import { buildConfig } from "@/models/webservice/base-url";
 import { WebserviceResponse } from "@/models/webservice/webservice-model";
+import { useQuery } from "@tanstack/react-query";
 
 export function getCases() {
   const myHeaders = new Headers();
@@ -17,7 +19,7 @@ export function getCases() {
     redirect: 'follow'
   };
 
-  return fetch("https://localhost:44304/api/Case/GetCases", requestOptions)
+  return fetch(`${buildConfig.API}/api/Case/GetCases`, requestOptions)
     .then(async (response): Promise<WebserviceResponse> => {
       if (response.ok) {
         const resp = await response.json()
@@ -30,7 +32,6 @@ export function getCases() {
     })
     .then(transformGetCases)
 }
-
 
 function transformGetCases(response: WebserviceResponse): Case[] {
   return response.data.map((v): Case => ({
@@ -53,7 +54,24 @@ function transformGetCases(response: WebserviceResponse): Case[] {
   }))
 }
 
-
+export function useGetCaseDetails(caseId: string) {
+  return useQuery({
+    queryKey: ['snowball'],
+    queryFn() {
+      return getCases()
+        .then((cases) => {
+          const caseData = cases.filter(v => v.id === caseId)[0]
+          return {
+            case: {
+              ...caseData
+            },
+            documents: []
+          } ?? null
+        })
+    },
+    gcTime: 0 // cachetime/garbage collection time
+  })
+}
 
 export function getCaseManagers(caseId?: string) {
   const myHeaders = new Headers();
@@ -68,7 +86,7 @@ export function getCaseManagers(caseId?: string) {
     redirect: 'follow'
   };
 
-  return fetch("https://localhost:44304/api/Case/GetCaseManagers", requestOptions)
+  return fetch(`${buildConfig.API}/api/Case/GetCaseManagers`, requestOptions)
     .then(async (response): Promise<WebserviceResponse> => {
       if (response.ok) {
         const resp = await response.json()

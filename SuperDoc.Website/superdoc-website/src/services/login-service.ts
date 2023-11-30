@@ -1,5 +1,6 @@
 import { WebSessionContext, getWebSession } from '@/common/session-context/session-context';
 import { Session, saveInStorage } from '@/models/session/session';
+import { buildConfig } from '@/models/webservice/base-url';
 import { WebserviceResponse } from '@/models/webservice/webservice-model';
 import { QueryKey, useQuery } from '@tanstack/react-query'
 import { Context, useContext } from 'react';
@@ -36,7 +37,7 @@ export function login(email: string, password: string): Promise<any> {
     redirect: 'follow'
   };
 
-  return fetch("https://localhost:44304/api/User/Login", requestOptions)
+  return fetch(`${buildConfig.API}/api/User/Login`, requestOptions)
     .then(async (response): Promise<WebserviceResponse> => {
       if (response.ok) {
         return {
@@ -56,6 +57,7 @@ export function login(email: string, password: string): Promise<any> {
       return response;
     })
     .catch((error) => {
+      throw error;
     });
 }
 

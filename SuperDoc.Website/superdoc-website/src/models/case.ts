@@ -7,6 +7,6 @@ export type Case = {
   caseNumber: number;
   title: string;
   description: string;
-  caseManagers: CaseManagers;
+  caseManagers: CaseManagers[];
   responsibleUser: User;
 }

@@ -10,3 +10,10 @@ export function hasPermissions(...permissions: string[]): boolean {
 export function hasRole(role: string): boolean {
   return true;
 }
+
+export enum Roles {
+  SuperAdmin = "SuperAdmin",
+  Admin = "Admin",
+  CaseManager = "CaseManager",
+  User = "User",
+}

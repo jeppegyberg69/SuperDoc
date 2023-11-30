@@ -7,6 +7,7 @@ import '@fortawesome/fontawesome-svg-core/styles.css';
 
 import CustomQueryClientProvider, { SessionProvider } from './providers';
 import { RequireAuth } from '@/common/require-auth/require-auth';
+import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,11 +24,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={inter.className + ' bg-background/30'}>
         <SessionProvider>
           <CustomQueryClientProvider>
             <RequireAuth>
               {children}
+              <Toaster />
             </RequireAuth>
           </CustomQueryClientProvider>
         </SessionProvider>
