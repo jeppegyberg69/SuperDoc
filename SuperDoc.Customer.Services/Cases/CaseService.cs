@@ -90,7 +90,7 @@ namespace SuperDoc.Customer.Services.Cases
                 dbcase.CaseManagers = caseManagers.ToList();
                 dbcase.DateModified = DateTime.UtcNow;
 
-                await caseRepository.UpdateCase(dbcase);
+                await caseRepository.UpdateCaseAsync(dbcase);
                 return new ResultModel<Case>(dbcase);
             }
             else
