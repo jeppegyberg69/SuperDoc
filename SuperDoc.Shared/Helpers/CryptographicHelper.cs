@@ -16,7 +16,7 @@ public static class CryptographicHelper
         return new RSAKeyParameters(publicKey, privateKey);
     }
 
-    public static string? SignData(byte[] data, string privateKey)
+    public static string SignData(byte[] data, string privateKey)
     {
         RSACryptoServiceProvider cryptoServiceProvider = new RSACryptoServiceProvider(KeySize);
         cryptoServiceProvider.ImportRSAPrivateKey(Convert.FromBase64String(privateKey), out _);
