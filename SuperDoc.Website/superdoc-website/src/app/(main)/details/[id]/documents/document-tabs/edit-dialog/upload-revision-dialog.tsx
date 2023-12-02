@@ -3,15 +3,17 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Button } from '@/components/ui/button';
 import { CreateDocumentForm } from './create-document-form';
 import { CaseDetails } from '@/models/case-details';
+import { CaseDocument } from '@/models/document';
+import { UploadRevisionForm } from './upload-revision-form';
 
-export type CreateDocumentDialogProps = {
+export type UploadRevisionDialogProps = {
   isDialogOpen: boolean;
   onOpenChanged: (value: boolean) => void;
-  details: CaseDetails
+  caseDocument: CaseDocument;
   onClose: () => void
 };
 
-export function CreateDocumentDialog(props: CreateDocumentDialogProps) {
+export function UploadRevisionDialog(props: UploadRevisionDialogProps) {
 
   return (
     <Dialog open={props.isDialogOpen} onOpenChange={props.onOpenChanged}>
@@ -19,7 +21,7 @@ export function CreateDocumentDialog(props: CreateDocumentDialogProps) {
         <DialogHeader>
           <DialogTitle>Opret dokument</DialogTitle>
           <hr />
-          <CreateDocumentForm  closeDialog={() => props.onOpenChanged?.(false)} details={props.details}></CreateDocumentForm>
+          <UploadRevisionForm closeDialog={() => props.onOpenChanged?.(false)} caseDocument={props.caseDocument}></UploadRevisionForm>
         </DialogHeader>
       </DialogContent>
     </Dialog>

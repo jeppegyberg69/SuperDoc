@@ -4,7 +4,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { PdfViewer } from '@/common/pdf-viewer/pdf-viewer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSortDown } from "@fortawesome/free-solid-svg-icons/faSortDown";
-import { getRevisionFile, useDocumentRevisions } from '@/services/document-services';
+import { faSquareCheck } from "@fortawesome/free-solid-svg-icons/faSquareCheck";
+import { faSquareMinus } from "@fortawesome/free-solid-svg-icons/faSquareMinus";
+import { DocumentServiceQueryKeys, getRevisionFile, uploadRevision, useDocumentRevisions } from '@/services/document-services';
 import { CaseDocument } from '@/models/document';
 import {
   Menubar,
@@ -15,54 +17,33 @@ import {
 } from "@/components/ui/menubar"
 import { Button } from '@/components/ui/button';
 import { DocumentRevision } from '@/models/document-revision';
+import { UploadRevisionDialog } from './edit-dialog/upload-revision-dialog';
+import { useQueryClient } from '@tanstack/react-query';
 
 export type DocumentTabsProps = {
   caseDocument: CaseDocument;
   pdfUrl: string;
 };
 
-export function DocumentTabs({ caseDocument, pdfUrl }: DocumentTabsProps) {
-  const [revision, setRevision] = useState<any>();
-  const [selectedFile, setSelectedFile] = useState(null);
-  const { data } = useDocumentRevisions(caseDocument?.id ?? '');
+export function DocumentTabs({ caseDocument }: DocumentTabsProps) {
+  const queryClient = useQueryClient();
+  const { data: documentRevisionsData, isFetched } = useDocumentRevisions(caseDocument?.id ?? '');
+
+  const [revision, setRevision] = useState<DocumentRevision>();
   const [newUrl, setNewUrl] = useState("");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const onFileInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const input = event.target;
-    const files = input.files;
-
-    if (files.length > 0) {
-      const file = files[0];
-      setSelectedFile(file);
-
-      // Convert the selected file to a Blob
-      const blob = new Blob([file], { type: file.type });
-
-      // Now you can pass 'blob' to your web service
-      // For example, you might want to send it using fetch or Axios
-      // fetch('your-web-service-url', { method: 'POST', body: blob });
-
-    }
-
-    console.log(files);
+  const onDialogOpenedChanged = (openState) => setIsDialogOpen(openState);
+  const onDialogClose = () => {
+    queryClient.invalidateQueries({ queryKey: [DocumentServiceQueryKeys.getDocumentRevisions, caseDocument.caseId] });
   }
 
-  const handleFileUpload = (event) => {
-    const input = event.target;
-    const files = input.files;
-
-    if (files.length > 0) {
-      const file = files[0];
-      setSelectedFile(file);
-
-      // Convert the selected file to a Blob
-      const blob = new Blob([file], { type: file.type });
-
-      // Now you can pass 'blob' to your web service
-      // For example, you might want to send it using fetch or Axios
-      // fetch('your-web-service-url', { method: 'POST', body: blob });
+  useEffect(() => {
+    if (documentRevisionsData && documentRevisionsData.length > 0 && !revision && isFetched) {
+      setRevision(documentRevisionsData[0])
     }
-  };
+  }, [isFetched, documentRevisionsData])
+
   const getFile = () => {
     if (!revision) return;
     return getRevisionFile(revision?.id).then((resp) => {
@@ -76,36 +57,60 @@ export function DocumentTabs({ caseDocument, pdfUrl }: DocumentTabsProps) {
 
   useEffect(() => {
     getFile()
-  }, [data, revision])
+  }, [documentRevisionsData, revision])
 
   return (
-    <Tabs defaultValue="dokumentvisning" className="h-full w-full">
-      <TabsList className='w-full'>
-        <TabsTrigger value="dokumentvisning">Dokumentvisning</TabsTrigger>
-        <TabsTrigger value="kommentar">Kommentar</TabsTrigger>
-        <RevisionsList
-          documentRevisions={data}
-          onFileInputChange={onFileInputChange}
-          onRevisionClick={(v) => { setRevision(v) }}
-        />
-      </TabsList>
-      <TabsContent value="dokumentvisning">
-        <PdfViewer url={newUrl}></PdfViewer>
-      </TabsContent>
-      <TabsContent value="kommentar">
-      </TabsContent>
-    </Tabs>
+    <>
+      <Tabs defaultValue="dokumentvisning" className="h-full w-full">
+        <TabsList className='w-full'>
+          <TabsTrigger value="dokumentvisning">Dokumentvisning</TabsTrigger>
+          <TabsTrigger value="kommentar">Kommentar</TabsTrigger>
+          <RevisionsList
+            documentRevisions={documentRevisionsData}
+            onRevisionClick={(v) => { setRevision(v) }}
+            caseDocument={caseDocument}
+            setIsDialogOpen={setIsDialogOpen}
+          />
+        </TabsList>
+        <TabsContent value="dokumentvisning">
+          <div className='h-full w-full flex '>
+            <PdfViewer className='h-full w-full' url={newUrl}></PdfViewer>
+
+            <div className='flex flex-col h-full w-64 mx-6 '>
+              Underskrift:
+              <div className='flex flex-col w-full text-sm text-muted-foreground'>
+
+                <div>
+                  <div>
+                    Titel: {caseDocument?.title}
+                  </div>
+                  Brugere: {revision?.signatures?.map(v =>
+                    <div key={v.emailAddress} className='w-full'>
+                      {v.emailAddress} - {v.dateSigned ? <FontAwesomeIcon icon={faSquareCheck} color='green' /> : <FontAwesomeIcon icon={faSquareMinus} color='red' />}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+        <TabsContent value="kommentar">
+        </TabsContent>
+      </Tabs>
+
+      <UploadRevisionDialog onClose={onDialogClose} isDialogOpen={isDialogOpen} onOpenChanged={onDialogOpenedChanged} caseDocument={caseDocument}></UploadRevisionDialog>
+    </>
   );
 }
 
 export type RevisionsListProps = {
   documentRevisions: DocumentRevision[];
   onRevisionClick: (revision: DocumentRevision) => void;
-  onFileInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  caseDocument: CaseDocument;
+  setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export function RevisionsList({ documentRevisions, onRevisionClick, onFileInputChange }: RevisionsListProps) {
-  const fileInputRef = useRef<HTMLInputElement>();
+export function RevisionsList({ documentRevisions, onRevisionClick, caseDocument, setIsDialogOpen }: RevisionsListProps) {
   return (
     <div className='h-full w-full flex items-center justify-end mx-4'>
       <Menubar className="mx-4">
@@ -116,28 +121,30 @@ export function RevisionsList({ documentRevisions, onRevisionClick, onFileInputC
             <FontAwesomeIcon icon={faSortDown} className='!align-top self-baseline' />
           </MenubarTrigger>
           <MenubarContent>
-            {documentRevisions?.map((rev) => (
+            {documentRevisions?.map((rev, index) => (
               <MenubarItem
-                className="h-12 text-base text-muted-foreground"
+                className="h-12 text-base text-muted-foreground focus:bg-accent/20"
                 key={rev.id}
               >
                 <Button
                   variant='ghost'
-                  className='w-full'
+                  className='w-full focus:!bg-accent/0 hover:bg-transparent'
                   onClick={() => onRevisionClick?.(rev)}
                 >
                   {'Revision: ' + rev.id}
                 </Button>
               </MenubarItem>
             ))}
+            <hr></hr>
             <MenubarItem
-              className="!focus:bg-transparent !hover:bg-transparent h-12 text-base text-muted-foreground"
+              className="focus:!bg-accent/0 hover:bg-transparent h-12 text-base text-muted-foreground"
             >
               <Button
+                disabled={documentRevisions?.length === 0}
                 variant='ghost'
                 className='w-full'
                 onClick={() => {
-                  fileInputRef.current.click();
+                  setIsDialogOpen(true)
                 }}
               >
                 Opret ny revision
@@ -147,13 +154,10 @@ export function RevisionsList({ documentRevisions, onRevisionClick, onFileInputC
           </MenubarContent>
         </MenubarMenu>
       </Menubar>
-      <input
-        ref={fileInputRef}
-        type='file'
-        accept="application/pdf"
-        style={{ display: "none" }}
-        onChange={onFileInputChange}
-      />
     </div>
   );
 }
+
+// for (int i • Ø; i revisions .Length; i")
+// Revisions. Add(ne
+// Revision*nber revisions. Length — i

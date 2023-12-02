@@ -10,8 +10,6 @@ export const DocumentServiceQueryKeys = {
   getDocumentRevisions: "/api/Revision/GetRevisionsByDocumentId"
 }
 
-
-
 export function getDocuments(caseId: string): Promise<CaseDocument[]> {
   const myHeaders = new Headers();
   myHeaders.append(
@@ -130,9 +128,9 @@ export function useDocumentRevisions(caseId: string) {
       if (!caseId) {
         return [];
       }
-
       return getDocumentRevisions(caseId)
     },
+    gcTime: 0
   })
 }
 
@@ -191,7 +189,8 @@ export function getRevisionFile(revisionId: string): Promise<any> {
   const requestOptions: RequestInit = {
     method: 'GET',
     headers: myHeaders,
-    redirect: 'follow'
+    redirect: 'follow',
+    cache: 'no-store'
   };
 
 
@@ -213,4 +212,67 @@ export function getRevisionFile(revisionId: string): Promise<any> {
       }
     })
     .then((response) => response?.data)
+}
+
+
+
+export type UploadRevisionProps = {
+  externalUserEmails: string;
+  documentId: string;
+  file: Blob;
+  fileName: string
+}
+
+export function uploadRevision({ documentId, externalUserEmails, file, fileName }: UploadRevisionProps): Promise<DocumentRevision> {
+  const myHeaders = new Headers();
+  myHeaders.append(
+    "Authorization",
+    `Bearer ${getWebSession().token}`
+  );
+
+  const formdata = new FormData();
+  formdata.append("documentFile", file, fileName);
+
+  const requestOptions: RequestInit = {
+    method: 'POST',
+    headers: myHeaders,
+    body: formdata,
+    redirect: 'follow'
+  };
+
+
+  let params = "";
+  params += `?documentId=${documentId}`;
+  params += `&emailAddresses=${externalUserEmails}`;
+
+  return fetch(`${buildConfig.API}/api/Revision/UploadRevision${params}`, requestOptions)
+    .then(async (response): Promise<WebserviceResponse> => {
+      if (response.ok) {
+        const resp = await response.json()
+
+        return {
+          status: response.status,
+          statusText: response.statusText,
+          data: resp// this wont error because we made sure that the response is ok earlier, so response.json is always an actual json value.
+        }
+      }
+    })
+    .then(transformUploadRevision)
+}
+
+function transformUploadRevision(response: WebserviceResponse): DocumentRevision {
+  const data = response?.data;
+
+  return {
+    id: data.revisionId,
+    dateUploaded: data.dateUploaded,
+    signatures: data.signatures.map((signature) => ({
+      firstName: signature.firstName,
+      lastName: signature.lastName,
+      emailAddress: signature.emailAddress,
+      publicKey: signature.publicKey,
+      signature: signature.signature,
+      dateSigned: signature.dateSigned,
+    }))
+  }
 }

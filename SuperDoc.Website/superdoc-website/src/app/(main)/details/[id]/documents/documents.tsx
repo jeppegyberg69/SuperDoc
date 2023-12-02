@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { List, ListItem } from "@/common/list/list"
 import { ListLayout } from "@/common/list-layout/list-layout"
 import { SplitView } from "@/common/split-view/split-view"
@@ -20,16 +20,23 @@ const pdfUrlTemp = "https://www.africau.edu/images/default/sample.pdf";
 
 export function Documents(props: DocumentsProps) {
   const queryClient = useQueryClient();
-  const { data: documentData } = useDocuments(props.details.case.id)
+  const { data: documentData, isFetchedAfterMount } = useDocuments(props.details.case.id)
   const [selectedDocument, setSelectedDocument] = useState<CaseDocument>();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const onDialogOpenedChanged = (openState) => setIsDialogOpen(openState);
 
   const onDocumentItemClick = (document: CaseDocument) => {
-
     setSelectedDocument(document)
   }
+
+  useEffect(() => {
+    if (documentData && documentData.length > 0 && isFetchedAfterMount && !selectedDocument) {
+      setSelectedDocument(documentData[0])
+    }
+  }, [isFetchedAfterMount, selectedDocument])
+
+
 
   const onDialogClose = () => {
     queryClient.invalidateQueries({ queryKey: [CaseServiceQueryKeys.getCaseManagers] });

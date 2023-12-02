@@ -1,21 +1,12 @@
 "use client";
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
-import { cn } from "@/lib/utils"
-
-import { Checkbox } from "@/components/ui/checkbox"
-import { getCaseManagers } from '@/services/case-service';
-import { createCase } from '@/services/edit-case-services'
 import { CaseDetails } from '@/models/case-details';
-
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, } from "@/components/ui/form"
 import { Button } from '@/components/ui/button';
 import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { getWebSession } from '@/common/session-context/session-context';
 import { createDocument } from '@/services/document-services';
 
 const formSchema = z.object({
