@@ -7,6 +7,8 @@ using SuperDoc.Customer.Repositories.Entities.Users;
 using SuperDoc.Customer.Services.Revisions;
 using SuperDoc.Customer.Services.Revisions.Factories;
 using SuperDoc.Customer.Services.Security;
+using SuperDoc.Customer.Services.Shared.StatusModels;
+using SuperDoc.Shared.Models.Documents;
 using SuperDoc.Shared.Models.Revisions;
 
 namespace SuperDoc.Customer.API.Controllers
@@ -120,5 +122,34 @@ namespace SuperDoc.Customer.API.Controllers
 
             return new FileStreamResult(System.IO.File.OpenRead(revision.FilePath), "application/pdf");
         }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(DocumentSignatureDto), StatusCodes.Status200OK)]
+        public async Task<ActionResult<DocumentSignatureDto>> SignRevision([FromBody] RevisionSignDto signatureDto)
+        {
+            bool? accessResult = await accessService.HasAccessToRevision(signatureDto.RevisionId, loginService.GetUserId(User.Claims));
+
+            if (accessResult == null)
+            {
+                return NotFound("Invalid revisionId");
+            }
+            else if (!accessResult.Value)
+            {
+                return Forbid();
+            }
+
+            ResultModel<DocumentSignature> result = await revisionService.SignRevisionAsync(signatureDto.RevisionId, loginService.GetUserId(User.Claims), signatureDto.Signature, signatureDto.PublicKey);
+
+            if (result.Result == null)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+
+            return Ok(revisionFactory.ConvertSignatureToDto(result.Result));
+        }
+
     }
 }

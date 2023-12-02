@@ -6,6 +6,7 @@ namespace SuperDoc.Customer.Repositories.Revisions
     {
         Task CreateRevisionAsync(Revision revision);
         Task<Revision?> GetRevisionByIdAsync(Guid revisionId);
+        Task<Revision?> GetRevisionByIdWithDocumentSignaturesAndUsersAsync(Guid revisionId);
         Task<IEnumerable<Revision>> GetRevisionsByDocumentIdWithDocumentSignaturesAndUsersAsync(Guid documentId);
     }
 }
