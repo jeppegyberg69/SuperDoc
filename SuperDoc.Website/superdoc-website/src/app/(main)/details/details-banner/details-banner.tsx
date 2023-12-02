@@ -14,12 +14,13 @@ export type DetailsBannerProps = {
 };
 
 export function DetailsBanner(props: DetailsBannerProps) {
+  const queryClient = useQueryClient();
+  
   const [caseManagerDialogOpen, setCaseManagerDialogOpen] = useState(false)
   const [caseInfoDialogOpen, setCaseInfoDialogOpen] = useState(false)
   const caseInfoDialogOpenChanged = (openState) => setCaseInfoDialogOpen(openState);
   const caseManagerDialogOpenChanged = (openState) => setCaseManagerDialogOpen(openState);
 
-  const queryClient = useQueryClient();
   const onDialogClose = () => {
     queryClient.invalidateQueries({ queryKey: [CaseServiceQueryKeys.useGetDetails] });
   }

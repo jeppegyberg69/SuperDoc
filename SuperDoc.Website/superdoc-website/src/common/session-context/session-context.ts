@@ -42,3 +42,8 @@ export const anonymousWebSession: Session = {
   validFrom: null,
   validTo: null,
 };
+
+export function clearWebSession() {
+  localStorage.removeItem("jpj_websession");
+  setWebSession(null);
+}

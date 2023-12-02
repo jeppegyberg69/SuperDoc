@@ -14,7 +14,6 @@ export default function CustomQueryClientProvider({ children }) {
   )
 }
 
-
 export type SessionProviderProps = {
   children?: any;
 };
@@ -33,6 +32,7 @@ export function SessionProvider(props: SessionProviderProps) {
       setWebSession(session);
     });
 
+    // cleanup from any listener events
     return () => {
       webSessionSubscription?.detach();
     };

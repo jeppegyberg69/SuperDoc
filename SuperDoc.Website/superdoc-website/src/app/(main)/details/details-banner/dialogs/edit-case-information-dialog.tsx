@@ -1,7 +1,6 @@
 "use client";
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { EditCaseManagersForm } from './edit-case-managers-form';
 import { CaseDetails } from '@/models/case-details';
 import { EditCaseInformationForm } from './edit-case-information-form';
 

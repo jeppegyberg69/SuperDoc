@@ -17,9 +17,7 @@ import { getWebSession } from '@/common/session-context/session-context';
 import { formatCheckboxSelectedValues } from '@/app/(main)/create-case/create-case-form';
 import {
   Command,
-  CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
 } from "@/components/ui/command"
 import { CaseDetails } from '@/models/case-details';
@@ -44,6 +42,7 @@ export type EditCaseManagersFormProps = {
 export function EditCaseManagersForm(props: EditCaseManagersFormProps) {
   const userId = getWebSession().user?.id;
   const [open, setOpen] = useState(false)
+  
   const [value, setValue] = useState(props.details.case.responsibleUser.id)
   const { data, isPending, isError, error } = useQuery({
     queryKey: [`${buildConfig.API}/api/Case/GetCaseManagers`, userId],
@@ -53,7 +52,6 @@ export function EditCaseManagersForm(props: EditCaseManagersFormProps) {
   })
 
   const dataProvider = useMemo(() => {
-    // const caseManagersData = data?.filter(v => v.id !== userId);
     return data ? data : []
   }, [data]);
 
@@ -73,8 +71,7 @@ export function EditCaseManagersForm(props: EditCaseManagersFormProps) {
 
       // new values
       responsibleUserId: value,
-      // caseManagersId: [...values.caseManagers, userId]
-      caseManagersId: [...values.caseManagers] // Always include the user who is logged in in the caseManagers array
+      caseManagersId: [...values.caseManagers]
     });
 
     // close dialog and push user into the case that was just created

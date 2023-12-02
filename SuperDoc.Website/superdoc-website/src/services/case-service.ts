@@ -23,7 +23,8 @@ export function getCases() {
   const requestOptions: RequestInit = {
     method: 'GET',
     headers: myHeaders,
-    redirect: 'follow'
+    redirect: 'follow',
+    cache: "no-store"
   };
 
   return fetch(`${buildConfig.API}${QueryKeys.getCases}`, requestOptions)
@@ -36,6 +37,7 @@ export function getCases() {
           data: resp// this wont error because we made sure that the response is ok earlier, so response.json is always an actual json value.
         }
       }
+
     })
     .then(transformGetCases)
 }

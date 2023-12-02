@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { createDocument } from '@/services/document-services';
+import { toast } from '@/components/ui/use-toast';
 
 const formSchema = z.object({
   title: z.string().min(1, {
@@ -20,6 +21,7 @@ const formSchema = z.object({
 export type CreateDocumentFormProps = {
   closeDialog: () => void;
   details: CaseDetails;
+  onClose: () => void
 };
 
 export function CreateDocumentForm(props: CreateDocumentFormProps) {
@@ -36,8 +38,14 @@ export function CreateDocumentForm(props: CreateDocumentFormProps) {
       caseId: props.details.case.id,
       title: values.title,
       description: values.description,
+    }).catch(() => {
+      toast({
+        title: "Fejl",
+        description: "Kunne ikke oprette dokument, prøv igen senere."
+      })
     });
 
+    props.onClose();
     props.closeDialog();
   }
 

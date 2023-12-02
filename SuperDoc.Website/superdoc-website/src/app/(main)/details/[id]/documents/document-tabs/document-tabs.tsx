@@ -1,12 +1,12 @@
 "use client";
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { PdfViewer } from '@/common/pdf-viewer/pdf-viewer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSortDown } from "@fortawesome/free-solid-svg-icons/faSortDown";
 import { faSquareCheck } from "@fortawesome/free-solid-svg-icons/faSquareCheck";
 import { faSquareMinus } from "@fortawesome/free-solid-svg-icons/faSquareMinus";
-import { DocumentServiceQueryKeys, getRevisionFile, uploadRevision, useDocumentRevisions } from '@/services/document-services';
+import { DocumentServiceQueryKeys, getRevisionFile, useDocumentRevisions } from '@/services/document-services';
 import { CaseDocument } from '@/models/document';
 import {
   Menubar,
@@ -27,7 +27,11 @@ export type DocumentTabsProps = {
 
 export function DocumentTabs({ caseDocument }: DocumentTabsProps) {
   const queryClient = useQueryClient();
-  const { data: documentRevisionsData, isFetched } = useDocumentRevisions(caseDocument?.id ?? '');
+  const { data: revisionsData, isFetched } = useDocumentRevisions(caseDocument?.id ?? '');
+
+  const documentRevisionsData = useMemo(() => {
+    return revisionsData;
+  }, [revisionsData])
 
   const [revision, setRevision] = useState<DocumentRevision>();
   const [newUrl, setNewUrl] = useState("");
@@ -64,7 +68,6 @@ export function DocumentTabs({ caseDocument }: DocumentTabsProps) {
       <Tabs defaultValue="dokumentvisning" className="h-full w-full">
         <TabsList className='w-full'>
           <TabsTrigger value="dokumentvisning">Dokumentvisning</TabsTrigger>
-          <TabsTrigger value="kommentar">Kommentar</TabsTrigger>
           <RevisionsList
             documentRevisions={documentRevisionsData}
             onRevisionClick={(v) => { setRevision(v) }}
@@ -73,13 +76,12 @@ export function DocumentTabs({ caseDocument }: DocumentTabsProps) {
           />
         </TabsList>
         <TabsContent value="dokumentvisning">
-          <div className='h-full w-full flex '>
+          <div className='h-full w-full flex'>
             <PdfViewer className='h-full w-full' url={newUrl}></PdfViewer>
 
             <div className='flex flex-col h-full w-64 mx-6 '>
               Underskrift:
               <div className='flex flex-col w-full text-sm text-muted-foreground'>
-
                 <div>
                   <div>
                     Titel: {caseDocument?.title}
@@ -93,8 +95,6 @@ export function DocumentTabs({ caseDocument }: DocumentTabsProps) {
               </div>
             </div>
           </div>
-        </TabsContent>
-        <TabsContent value="kommentar">
         </TabsContent>
       </Tabs>
 
@@ -111,53 +111,54 @@ export type RevisionsListProps = {
 };
 
 export function RevisionsList({ documentRevisions, onRevisionClick, caseDocument, setIsDialogOpen }: RevisionsListProps) {
-  return (
-    <div className='h-full w-full flex items-center justify-end mx-4'>
-      <Menubar className="mx-4">
-        <MenubarMenu>
-          <MenubarTrigger
-            className="!hover:text-primary-foreground cursor-pointer">
-            <span className='mx-2'>Revisioner</span>
-            <FontAwesomeIcon icon={faSortDown} className='!align-top self-baseline' />
-          </MenubarTrigger>
-          <MenubarContent>
-            {documentRevisions?.map((rev, index) => (
+  // the idea of this is that we can listen on changes to any variable we use, and if theres a change then the JSX should update.
+  const renderer = useCallback(() => {
+    return (
+      <div className='h-full w-full flex items-center justify-end mx-4'>
+        <Menubar className="mx-4">
+          <MenubarMenu>
+            <MenubarTrigger
+              className="!hover:text-primary-foreground cursor-pointer">
+              <span className='mx-2'>Revisioner</span>
+              <FontAwesomeIcon icon={faSortDown} className='!align-top self-baseline' />
+            </MenubarTrigger>
+            <MenubarContent>
+              {documentRevisions?.map((rev, index) => (
+                <MenubarItem
+                  className="h-12 text-base text-muted-foreground focus:bg-accent/20"
+                  key={rev.id}
+                >
+                  <Button
+                    variant='ghost'
+                    className='w-full focus:!bg-accent/0 hover:bg-transparent'
+                    onClick={() => onRevisionClick?.(rev)}
+                  >
+                    {'Revision: ' + rev.id}
+                  </Button>
+                </MenubarItem>
+              ))}
+              <hr></hr>
               <MenubarItem
-                className="h-12 text-base text-muted-foreground focus:bg-accent/20"
-                key={rev.id}
+                className="focus:!bg-accent/0 hover:bg-transparent h-12 text-base text-muted-foreground"
               >
                 <Button
+                  disabled={!caseDocument}
                   variant='ghost'
-                  className='w-full focus:!bg-accent/0 hover:bg-transparent'
-                  onClick={() => onRevisionClick?.(rev)}
+                  className='w-full'
+                  onClick={() => {
+                    setIsDialogOpen(true)
+                  }}
                 >
-                  {'Revision: ' + rev.id}
+                  Opret ny revision
                 </Button>
+
               </MenubarItem>
-            ))}
-            <hr></hr>
-            <MenubarItem
-              className="focus:!bg-accent/0 hover:bg-transparent h-12 text-base text-muted-foreground"
-            >
-              <Button
-                disabled={documentRevisions?.length === 0}
-                variant='ghost'
-                className='w-full'
-                onClick={() => {
-                  setIsDialogOpen(true)
-                }}
-              >
-                Opret ny revision
-              </Button>
+            </MenubarContent>
+          </MenubarMenu>
+        </Menubar>
+      </div>
+    )
+  }, [documentRevisions, onRevisionClick, setIsDialogOpen, caseDocument])
 
-            </MenubarItem>
-          </MenubarContent>
-        </MenubarMenu>
-      </Menubar>
-    </div>
-  );
+  return renderer();
 }
-
-// for (int i • Ø; i revisions .Length; i")
-// Revisions. Add(ne
-// Revision*nber revisions. Length — i

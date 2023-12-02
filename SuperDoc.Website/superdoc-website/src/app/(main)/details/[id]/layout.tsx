@@ -26,7 +26,6 @@ export default function DetailsLayout({ params, children }: { params: { id: any 
     })
   }
 
-
   return (
     <div className='page-layout h-full'>
       <DetailsHeader
@@ -41,7 +40,6 @@ export default function DetailsLayout({ params, children }: { params: { id: any 
     </div>
   );
 }
-
 
 function DetailsHeader({ details, router }: { details: CaseDetails, router: ReturnType<typeof useRouter> }) {
   return (

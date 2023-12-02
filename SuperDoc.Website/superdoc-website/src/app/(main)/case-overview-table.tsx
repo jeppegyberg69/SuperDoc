@@ -15,7 +15,7 @@ export type CaseOverviewTableProps = {};
 export const columns: ColumnDef<Case, any>[] = [{
   id: "id",
   accessorKey: nameof<Case>('caseNumber'),
-  header: "id",
+  header: "Sagsnummer",
   cell(props) {
     const data = props.getValue();
     return (
@@ -26,7 +26,7 @@ export const columns: ColumnDef<Case, any>[] = [{
 {
   id: "title",
   accessorKey: nameof<Case>('title'),
-  header: "Title",
+  header: "Titel",
   cell(props) {
     const data = props.getValue();
     return (

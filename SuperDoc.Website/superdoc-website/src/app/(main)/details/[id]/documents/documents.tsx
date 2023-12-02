@@ -4,7 +4,7 @@ import { List, ListItem } from "@/common/list/list"
 import { ListLayout } from "@/common/list-layout/list-layout"
 import { SplitView } from "@/common/split-view/split-view"
 import { DocumentTabs } from './document-tabs/document-tabs';
-import { useDocuments } from '@/services/document-services';
+import { DocumentServiceQueryKeys, useDocuments } from '@/services/document-services';
 import { CaseDetails } from '@/models/case-details';
 import { DateTime } from 'luxon';
 import { CaseDocument } from '@/models/document';
@@ -39,7 +39,7 @@ export function Documents(props: DocumentsProps) {
 
 
   const onDialogClose = () => {
-    queryClient.invalidateQueries({ queryKey: [CaseServiceQueryKeys.getCaseManagers] });
+    queryClient.invalidateQueries({ queryKey: [DocumentServiceQueryKeys.getDocuments] });
   }
 
 

@@ -17,7 +17,6 @@ export default function Details({ params }: { params: { id: any } }) {
 		})
 	}
 
-
 	return (
 		<Documents details={data}></Documents>
 	)

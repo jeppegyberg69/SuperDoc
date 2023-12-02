@@ -83,6 +83,11 @@ export function UploadRevisionForm(props: UploadRevisionFormProps) {
       externalUserEmails: values.emails,
       file: selectedFile.file,
       fileName: selectedFile.fileName
+    }).catch(() => {
+      toast({
+        title: "Fejl",
+        description: "Kunne ikke oprette revision, prøv igen senere."
+      })
     });
 
     props.closeDialog();
