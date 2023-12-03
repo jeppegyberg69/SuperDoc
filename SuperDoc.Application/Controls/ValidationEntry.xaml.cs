@@ -5,15 +5,22 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace SuperDoc.Application.Controls;
 
+/// <summary>
+/// An <see cref="Entry"/> that is designed to work with data binding and supports the INotifyDataErrorInfo interface for handling and displaying validation errors.
+/// </summary>
 public partial class ValidationEntry : ContentView
 {
+    // Holds a reference to the current binding context that implements the INotifyDataErrorInfo interface.
     private INotifyDataErrorInfo? _currentBindingContext;
 
     public ValidationEntry()
     {
         InitializeComponent();
 
+        // Set the initial value of _currentBindingContext to the BindingContext if it implements INotifyDataErrorInfo.
         _currentBindingContext = BindingContext as INotifyDataErrorInfo;
+
+        // Subscribe to the BindingContextChanged event to handle changes in the binding context.
         BindingContextChanged += ValidationEntry_BindingContextChanged;
     }
 
@@ -81,6 +88,26 @@ public partial class ValidationEntry : ContentView
 
     public static readonly BindableProperty IsValidProperty = BindableProperty.Create(nameof(IsValid), typeof(bool), typeof(ValidationEntry), false);
 
+    private void ValidationEntry_BindingContextChanged(object? sender, EventArgs e)
+    {
+        // Unsubscribe from the ErrorsChanged event of the previous binding context, if any.
+        if (_currentBindingContext != null)
+        {
+            _currentBindingContext.ErrorsChanged -= BindingContext_ErrorsChanged;
+        }
+
+        // Check if the new binding context implements INotifyDataErrorInfo.
+        if (BindingContext is INotifyDataErrorInfo newBindingContext)
+        {
+            // Subscribe to the ErrorsChanged event of the new binding context, so that we can be notified of any errors.
+            newBindingContext.ErrorsChanged += BindingContext_ErrorsChanged;
+            _currentBindingContext = newBindingContext;
+        }
+
+        // Trigger property validation to show any existing errors in the new binding context.
+        ValidateProperty();
+    }
+
     private static void ValidationPropertyName_PropertyChanged(BindableObject obj, object oldValue, object newValue)
     {
         if (obj is ValidationEntry validationEntry)
@@ -89,38 +116,18 @@ public partial class ValidationEntry : ContentView
         }
     }
 
-    private void ValidationEntry_BindingContextChanged(object? sender, EventArgs e)
-    {
-        if (_currentBindingContext != null)
-        {
-            _currentBindingContext.ErrorsChanged -= BindingContext_ErrorsChanged;
-        }
-
-        if (BindingContext is INotifyDataErrorInfo newBindingContext)
-        {
-            newBindingContext.ErrorsChanged += BindingContext_ErrorsChanged;
-            _currentBindingContext = newBindingContext;
-        }
-
-        ValidateProperty();
-    }
-
     private void BindingContext_ErrorsChanged(object? sender, DataErrorsChangedEventArgs e)
     {
         ValidateProperty();
     }
 
-    [RelayCommand]
-    private void SetTextProperty(string text)
-    {
-        // UpdateSourceTrigger doesn't exist in MAUI, so we'll have to recreate it with UserStoppedTypingBehavior.
-        Text = text;
-    }
-
-    [RelayCommand]
+    [RelayCommand] // Automatically generate an ICommand property from the declared method.
     private void ValidateProperty()
     {
+        // Get validation errors for the specified property by the ValidationPropertyName.
         ValidationResult? result = _currentBindingContext?.GetErrors(ValidationPropertyName).OfType<ValidationResult>().FirstOrDefault();
+
+        // Set the ErrorMessage property based on the validation result.
         ErrorMessage = result?.ErrorMessage;
     }
 }

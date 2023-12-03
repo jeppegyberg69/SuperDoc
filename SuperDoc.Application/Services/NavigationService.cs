@@ -1,56 +1,37 @@
-﻿using SuperDoc.Application.Helpers;
-using SuperDoc.Shared.Helpers;
-using SuperDoc.Shared.Services;
+﻿using SuperDoc.Shared.Services.Contracts;
 
 namespace SuperDoc.Application.Services;
 
+/// <inheritdoc cref="INavigationService"/>
 public class NavigationService : INavigationService
 {
-    public async Task NavigateToAsync(string route, IDictionary<string, object>? routeParameters = null)
+    /// <inheritdoc cref="INavigationService.NavigateToPageAsync(string, IDictionary{string, object}?)"/>
+    public async Task NavigateToPageAsync(string route, IDictionary<string, object>? parameters = null)
     {
-        if (routeParameters != null)
+        if (parameters != null)
         {
-            await Shell.Current.GoToAsync(route, routeParameters);
+            await Shell.Current.GoToAsync(route, parameters);
+            return;
         }
 
         await Shell.Current.GoToAsync(route);
     }
 
+    /// <inheritdoc cref="INavigationService.NavigateToLoginPageAsync"/>
     public async Task NavigateToLoginPageAsync()
     {
         await Shell.Current.GoToAsync("//Login");
     }
 
+    /// <inheritdoc cref="INavigationService.NavigateToMainPageAsync"/>
     public async Task NavigateToMainPageAsync()
     {
         await Shell.Current.GoToAsync("//Cases");
     }
 
+    /// <inheritdoc cref="INavigationService.GoBackAsync"/>
     public async Task GoBackAsync()
     {
         await Shell.Current.GoToAsync("..");
-    }
-
-    public async Task PushAsync(string page)
-    {
-        Type? pageType = AssemblyHelper.GetType(page);
-        if (pageType != null)
-        {
-            ServiceHelper.EnsureServicesInitialized();
-            await Shell.Current.Navigation.PushAsync((Page)ActivatorUtilities.GetServiceOrCreateInstance(ServiceHelper.Services, pageType));
-        }
-    }
-
-    public async Task PopAsync()
-    {
-        if (Shell.Current.Navigation.NavigationStack.Count > 1)
-        {
-            await Shell.Current.Navigation.PopAsync();
-        }
-    }
-
-    public async Task PopToRootAsync()
-    {
-        await Shell.Current.Navigation.PopToRootAsync();
     }
 }

@@ -5,6 +5,11 @@ namespace SuperDoc.Shared.ViewModels.Wrappers;
 
 public class UserViewModel(TokenDto token) : BaseModelWrapper<TokenDto>(token)
 {
+    public Guid UserId
+    {
+        get => Model.UserId;
+    }
+
     public string FirstName
     {
         get => Model.FirstName;
@@ -49,6 +54,7 @@ public class UserViewModel(TokenDto token) : BaseModelWrapper<TokenDto>(token)
         {
             Model.PhoneCode = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(InternationalPhoneNumber));
         }
     }
 
@@ -59,12 +65,13 @@ public class UserViewModel(TokenDto token) : BaseModelWrapper<TokenDto>(token)
         {
             Model.PhoneNumber = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(InternationalPhoneNumber));
         }
     }
 
     public string InternationalPhoneNumber
     {
-        get => PhoneCode.HasValue && PhoneNumber.HasValue ? $"{Model.PhoneCode} {Model.PhoneNumber}" : "-";
+        get => PhoneCode.HasValue && PhoneNumber.HasValue ? $"+{Model.PhoneCode} {Model.PhoneNumber}" : "-";
     }
 
     public Role Role

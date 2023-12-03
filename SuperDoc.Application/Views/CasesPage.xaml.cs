@@ -1,3 +1,5 @@
+using SuperDoc.Shared.ViewModels.Pages;
+
 namespace SuperDoc.Application.Views;
 
 public partial class CasesPage : ContentPage
@@ -6,6 +8,8 @@ public partial class CasesPage : ContentPage
     {
         InitializeComponent();
     }
+
+    public CasesPageViewModel? ViewModel { get => BindingContext as CasesPageViewModel; }
 
     protected override void OnDisappearing()
     {
@@ -28,9 +32,9 @@ public partial class CasesPage : ContentPage
         OpenMoreButtonFlyoutMenu();
     }
 
-    private async void Case_Tapped(object sender, TappedEventArgs e)
+    private void FlyoutButton_Clicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new CaseDetailsPage());
+        CloseMoreButtonFlyoutMenu();
     }
 
     private void OpenMoreButtonFlyoutMenu()

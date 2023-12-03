@@ -17,7 +17,7 @@
     <TabBar>
         <Tab Title="Sager">
             <Tab.Icon>
-                <FontImageSource Glyph="&#xF515;" FontFamily="FluentSystemIconsRegular"/>
+                <FontImageSource Glyph="&#xE7B7;" FontFamily="FluentSystemIconsRegular"/>
             </Tab.Icon>
 
             <ShellContent Route="Cases" ContentTemplate="{DataTemplate Views:CasesPage}"/>

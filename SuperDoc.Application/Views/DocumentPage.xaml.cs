@@ -3,26 +3,26 @@ using SuperDoc.Shared.ViewModels.Wrappers;
 
 namespace SuperDoc.Application.Views;
 
-[QueryProperty(nameof(Case), nameof(Case))]
-public partial class CaseDetailsPage : ContentPage
+[QueryProperty(nameof(Document), nameof(Document))]
+public partial class DocumentPage : ContentPage
 {
-    public CaseDetailsPage()
+    public DocumentPage()
     {
         InitializeComponent();
     }
 
-    public CaseDetailsPageViewModel? ViewModel { get => BindingContext as CaseDetailsPageViewModel; }
+    public DocumentPageViewModel? ViewModel { get => BindingContext as DocumentPageViewModel; }
 
-    public CaseViewModel? Case
+    public DocumentViewModel? Document
     {
-        get => ViewModel?.Case;
+        get => ViewModel?.Document;
         set
         {
-            // Check if the ViewModel is not null and if the LoadCaseCommand can be executed with the provided case.
-            if (ViewModel != null && ViewModel.LoadCaseCommand.CanExecute(value))
+            // Check if the ViewModel is not null and if the LoadDocumentCommand can be executed with the provided document.
+            if (ViewModel != null && ViewModel.LoadDocumentCommand.CanExecute(value))
             {
-                // Execute the LoadCaseCommand with the provided case.
-                ViewModel.LoadCaseCommand.Execute(value);
+                // Execute the LoadCaseCommand with the provided document.
+                ViewModel.LoadDocumentCommand.Execute(value);
             }
         }
     }
@@ -30,7 +30,6 @@ public partial class CaseDetailsPage : ContentPage
     protected override void OnDisappearing()
     {
         CloseMoreButtonFlyoutMenu();
-
         base.OnDisappearing();
     }
 
@@ -49,6 +48,16 @@ public partial class CaseDetailsPage : ContentPage
         CloseMoreButtonFlyoutMenu();
     }
 
+    private void EraseSignatureButton_Clicked(object sender, EventArgs e)
+    {
+        ClearSignaturePad();
+    }
+
+    private void SignDocumentButton_Clicked(object sender, EventArgs e)
+    {
+        ClearSignaturePad();
+    }
+
     private void OpenMoreButtonFlyoutMenu()
     {
         MoreButtonFlyoutMenu.IsVisible = !MoreButtonFlyoutMenu.IsVisible;
@@ -60,5 +69,10 @@ public partial class CaseDetailsPage : ContentPage
     private void CloseMoreButtonFlyoutMenu()
     {
         MoreButtonFlyoutMenu.IsVisible = false;
+    }
+
+    private void ClearSignaturePad()
+    {
+        DocumentSignaturePad.Clear();
     }
 }
