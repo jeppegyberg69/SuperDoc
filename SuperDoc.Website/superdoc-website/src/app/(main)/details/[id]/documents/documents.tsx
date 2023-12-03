@@ -80,7 +80,7 @@ export function Documents(props: DocumentsProps) {
   const toolbar = (
     <div className='flex divide-x'>
       <h1 className="font-semibold text-xl self-center mr-4">Dokumenter</h1>
-      {getWebSession().user.role !== Roles.User && (
+      {getWebSession().user?.role !== Roles.User && (
         <div className='px-2'>
           <Button variant='default' onClick={() => { onDialogOpenedChanged(true) }}>Opret dokument</Button>
           <CreateDocumentDialog onClose={onDialogClose} isDialogOpen={isDialogOpen} onOpenChanged={onDialogOpenedChanged} details={props.details}></CreateDocumentDialog>

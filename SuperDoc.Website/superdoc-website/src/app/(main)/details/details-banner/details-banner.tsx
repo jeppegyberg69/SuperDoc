@@ -51,15 +51,15 @@ export function DetailsBanner(props: DetailsBannerProps) {
               </div>
             </div>
           )}
-          className={`flex-1 ${getWebSession().user.role !== Roles.User ? '' : '!cursor-default'}`}
+          className={`flex-1 ${getWebSession().user?.role !== Roles.User ? '' : '!cursor-default'}`}
           onClick={() => {
-            if (getWebSession().user.role !== Roles.User) {
+            if (getWebSession().user?.role !== Roles.User) {
               caseInfoDialogOpenChanged(true)
             }
           }}
         />
         <BannerItem
-          className={`flex-1 ${getWebSession().user.role !== Roles.User ? '' : '!cursor-default'}`}
+          className={`flex-1 ${getWebSession().user?.role !== Roles.User ? '' : '!cursor-default'}`}
           label='Sagsbehandlere'
           value={(
             <div>
@@ -72,7 +72,7 @@ export function DetailsBanner(props: DetailsBannerProps) {
             </div>
           )}
           onClick={() => {
-            if (getWebSession().user.role !== Roles.User) {
+            if (getWebSession().user?.role !== Roles.User) {
               caseManagerDialogOpenChanged(true)
             }
           }}

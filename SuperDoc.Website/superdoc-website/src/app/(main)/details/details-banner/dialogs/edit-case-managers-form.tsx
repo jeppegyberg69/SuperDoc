@@ -93,7 +93,7 @@ export function EditCaseManagersForm(props: EditCaseManagersFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          disabled={((userId !== props.details.case.responsibleUser.id && getWebSession().user.role !== Roles.User) && getWebSession().user.role !== Roles.SuperAdmin)}
+          disabled={((userId !== props.details.case.responsibleUser.id && getWebSession().user?.role !== Roles.User) && getWebSession().user?.role !== Roles.SuperAdmin)}
           name="caseResponsible"
           render={({ field }) => (
             <FormItem>
@@ -103,7 +103,7 @@ export function EditCaseManagersForm(props: EditCaseManagersFormProps) {
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
-                      disabled={((userId !== props.details.case.responsibleUser.id && getWebSession().user.role !== Roles.User) && getWebSession().user.role !== Roles.SuperAdmin)}
+                      disabled={((userId !== props.details.case.responsibleUser.id && getWebSession().user?.role !== Roles.User) && getWebSession().user?.role !== Roles.SuperAdmin)}
                       role="combobox"
                       aria-expanded={open}
                       className="w-full justify-between"
@@ -158,7 +158,7 @@ export function EditCaseManagersForm(props: EditCaseManagersFormProps) {
                       <Button
                         variant="outline"
                         role="combobox"
-                        disabled={((userId !== props.details.case.responsibleUser.id && getWebSession().user.role !== Roles.User) && getWebSession().user.role !== Roles.SuperAdmin)}
+                        disabled={((userId !== props.details.case.responsibleUser.id && getWebSession().user?.role !== Roles.User) && getWebSession().user?.role !== Roles.SuperAdmin)}
                         className={cn("w-full justify-between", !field.value && "text-muted-foreground")}
                       >
                         {field.value?.length > 0

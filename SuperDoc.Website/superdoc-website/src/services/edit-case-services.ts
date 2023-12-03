@@ -24,7 +24,7 @@ export function createCase({ caseId, caseManagersId, description, title, respons
     "title": title,
     "description": description,
     "caseMangers": caseManagersId,
-    "responsibleUserId": responsibleUserId ?? getWebSession().user.id
+    "responsibleUserId": responsibleUserId ?? getWebSession().user?.id
   });
 
   const requestOptions: RequestInit = {

@@ -137,7 +137,7 @@ export function RevisionsList({ documentRevisions, onRevisionClick, caseDocument
                   </Button>
                 </MenubarItem>
               ))}
-              {getWebSession().user.role !== Roles.User &&
+              {getWebSession().user?.role !== Roles.User &&
                 <>
                   <hr></hr>
                   <MenubarItem

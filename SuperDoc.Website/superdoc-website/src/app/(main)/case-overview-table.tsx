@@ -83,7 +83,7 @@ export function CaseOverviewTable(props: CaseOverviewTableProps) {
   const toolbar = (
     <div className='flex divide-x'>
       <h1 className="font-semibold text-xl mr-4 self-center">Sager</h1>
-      {getWebSession().user.role !== Roles.User &&
+      {getWebSession().user?.role !== Roles.User &&
         <div className='px-2'>
           <Button variant='default' onClick={() => { onDialogOpenedChanged(true) }}> Opret sag</Button>
           <CreateCaseDialog isDialogOpen={isDialogOpen} onOpenChanged={onDialogOpenedChanged} />
