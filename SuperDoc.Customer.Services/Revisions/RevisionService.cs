@@ -11,6 +11,7 @@ using SuperDoc.Customer.Repositories.Entities.Users;
 using SuperDoc.Customer.Repositories.Revisions;
 using SuperDoc.Customer.Repositories.Users;
 using SuperDoc.Customer.Services.Shared.StatusModels;
+using SuperDoc.Shared.Helpers;
 
 namespace SuperDoc.Customer.Services.Revisions
 {
@@ -39,6 +40,47 @@ namespace SuperDoc.Customer.Services.Revisions
         public async Task<IEnumerable<Revision>> GetRevisionsByDocumentIdWithDocumentSignaturesAndUsersAsync(Guid documentId)
         {
             return await revisionRepository.GetRevisionsByDocumentIdWithDocumentSignaturesAndUsersAsync(documentId);
+        }
+
+
+        public async Task<ResultModel<DocumentSignature>> SignRevisionAsync(Guid revisionId, Guid userId, string signature, string publicKey)
+        {
+            User? user = await userRepository.GetUserByIdAsync(userId);
+
+            if (user == null)
+            {
+                return new ResultModel<DocumentSignature>("Invalid userId");
+            }
+
+            Revision? revision = await revisionRepository.GetRevisionByIdWithDocumentSignaturesAndUsersAsync(revisionId);
+
+            if (revision == null)
+            {
+                return new ResultModel<DocumentSignature>("Invalid revisionId");
+            }
+
+            DocumentSignature? documentSignature = revision.DocumentSignatures?.FirstOrDefault(x => x.UserId == userId);
+
+            if (documentSignature == null)
+            {
+                return new ResultModel<DocumentSignature>("The user is not one of the individuals who need to sign this revision.");
+            }
+
+            bool isSignatureValid = CryptographicHelper.IsSignatureValid(revision.DocumentHash, signature, publicKey);
+
+            if (isSignatureValid)
+            {
+                return new ResultModel<DocumentSignature>("Invalid signature");
+            }
+
+            documentSignature.Signature = signature;
+            documentSignature.PublicKey = publicKey;
+            documentSignature.DateSigned = DateTime.UtcNow;
+
+            await documentSignatureRepository.UpdateDocumentSignatureAsync(documentSignature);
+
+
+            return new ResultModel<DocumentSignature>(documentSignature);
         }
 
         public async Task<ResultModel<Revision>> SaveRevisionAsync(Guid userId, Guid documentId, string emailAddresses, IFormFile documentFile)

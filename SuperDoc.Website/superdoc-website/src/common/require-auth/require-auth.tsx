@@ -1,8 +1,8 @@
 "use client";
 
-import { Session, isTokenExpired } from '@/models/session/session';
+import { isTokenExpired } from '@/models/session/session';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useWebSession } from '../session-context/session-context';
 
 export type RequireAuthProps = {
@@ -13,15 +13,15 @@ export function RequireAuth(props: RequireAuthProps) {
   const router = useRouter()
   const session = useWebSession();
 
+  // check if session is expired or doesnt exist atm
   useEffect(() => {
-    if (!session || isTokenExpired(session)) {
+    if (!session || isTokenExpired(session) || !session?.token) {
       router.push("/login");
     };
   }, [session])
 
   return (
     <>
-      {/* Should wait with returning props.children, and instead return a suspense or alike. */}
       {props.children}
     </>
   );

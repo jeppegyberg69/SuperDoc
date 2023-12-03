@@ -6,6 +6,13 @@ import { buildConfig } from "@/models/webservice/base-url";
 import { WebserviceResponse } from "@/models/webservice/webservice-model";
 import { useQuery } from "@tanstack/react-query";
 
+const QueryKeys = {
+  getCases: "/api/Case/GetCases",
+  useGetDetails: "caseDetailQueryKey",
+  getCaseManagers: "/api/Case/GetCaseManagers"
+}
+export { QueryKeys as CaseServiceQueryKeys }
+
 export function getCases() {
   const myHeaders = new Headers();
   myHeaders.append(
@@ -16,10 +23,11 @@ export function getCases() {
   const requestOptions: RequestInit = {
     method: 'GET',
     headers: myHeaders,
-    redirect: 'follow'
+    redirect: 'follow',
+    cache: "no-store"
   };
 
-  return fetch(`${buildConfig.API}/api/Case/GetCases`, requestOptions)
+  return fetch(`${buildConfig.API}${QueryKeys.getCases}`, requestOptions)
     .then(async (response): Promise<WebserviceResponse> => {
       if (response.ok) {
         const resp = await response.json()
@@ -29,6 +37,7 @@ export function getCases() {
           data: resp// this wont error because we made sure that the response is ok earlier, so response.json is always an actual json value.
         }
       }
+
     })
     .then(transformGetCases)
 }
@@ -54,9 +63,20 @@ function transformGetCases(response: WebserviceResponse): Case[] {
   }))
 }
 
+export function useGetCases() {
+  return useQuery({
+    gcTime: 0,
+    queryKey: [QueryKeys.getCases],
+    queryFn() {
+      return getCases()
+    },
+    initialData: []
+  })
+}
+
 export function useGetCaseDetails(caseId: string) {
   return useQuery({
-    queryKey: ['snowball'],
+    queryKey: [QueryKeys.useGetDetails],
     queryFn() {
       return getCases()
         .then((cases) => {
@@ -86,7 +106,7 @@ export function getCaseManagers(caseId?: string) {
     redirect: 'follow'
   };
 
-  return fetch(`${buildConfig.API}/api/Case/GetCaseManagers`, requestOptions)
+  return fetch(`${buildConfig.API}${QueryKeys.getCaseManagers}`, requestOptions)
     .then(async (response): Promise<WebserviceResponse> => {
       if (response.ok) {
         const resp = await response.json()

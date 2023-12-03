@@ -1,7 +1,12 @@
+import { User } from "./case";
+
 export type CaseDocument = {
   id: string;
   caseId: string;
   title: string;
   description: string;
-  file?: File;
+  dateCreated: string;
+  dateModified: string;
+  externalUsers: User[];
 }
+

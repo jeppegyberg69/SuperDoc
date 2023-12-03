@@ -10,7 +10,7 @@ import { getCaseManagers } from '@/services/case-service';
 import { createCase } from '@/services/edit-case-services'
 import { CaseDetails } from '@/models/case-details';
 
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, } from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, } from "@/components/ui/form"
 import { Popover, PopoverContent, PopoverTrigger, } from "@/components/ui/popover"
 import { Button } from '@/components/ui/button';
 import { Input } from "@/components/ui/input"
@@ -18,6 +18,8 @@ import { ChevronsUpDown } from "lucide-react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { getWebSession } from '@/common/session-context/session-context';
+import { toast } from '@/components/ui/use-toast';
+import { buildConfig } from '@/models/webservice/base-url';
 
 const formSchema = z.object({
   title: z.string().min(1, {
@@ -37,30 +39,40 @@ export type CreateCaseFormProps = {
 
 export function CreateCaseForm(props: CreateCaseFormProps) {
   const router = useRouter();
-  const userId = getWebSession().user.id
+  const userId = getWebSession().user?.id
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
       description: "",
-      caseManagers: [],
+      caseManagers: [userId],
     },
   })
 
   const { data: items, isPending, isError, error } = useQuery({
-    queryKey: ["https://localhost:44304/api/Case/GetCaseManagers"],
+    queryKey: [`${buildConfig.API}/api/Case/GetCaseManagers`, userId],
     async queryFn() {
-      const caseManagers = await getCaseManagers();
-      return caseManagers.filter(v => v.id !== userId);
+      return await getCaseManagers();
     }
   })
+
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const data: CaseDetails = await createCase({
       title: values.title,
       description: values.description,
-      caseManagersId: [...values.caseManagers, userId] // Always include the user who is logged in in the caseManagers array
+      caseManagersId: [...values.caseManagers]
+    }).catch((err) => {
+      toast({
+        title: "Fejl",
+        description: "Kunne ikke oprette sagen. Prøv igen senere."
+      })
+      return null;
     });
+
+    if (!data) {
+      return;
+    }
 
     // close dialog and push user into the case that was just created
     props.closeDialog();
@@ -146,6 +158,7 @@ export function CreateCaseForm(props: CreateCaseFormProps) {
                               <FormControl>
                                 <Checkbox
                                   checked={field.value?.includes(item.id)}
+                                  disabled={item.id === userId}
                                   onCheckedChange={(checked) => {
                                     return checked
                                       ? field.onChange([...field.value, item.id])
@@ -173,9 +186,9 @@ export function CreateCaseForm(props: CreateCaseFormProps) {
           )}
         />
 
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Opret</Button>
       </form>
-    </Form >
+    </Form>
   );
 }
 

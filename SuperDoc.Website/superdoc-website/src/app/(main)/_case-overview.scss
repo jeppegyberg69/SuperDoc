@@ -7,8 +7,6 @@
       max-width: 50px;
     }
 
-    &:has(.data-column-title) {}
-
     &:has(.data-column-casemanagers) {
       max-width: 50px;
       text-align: end;

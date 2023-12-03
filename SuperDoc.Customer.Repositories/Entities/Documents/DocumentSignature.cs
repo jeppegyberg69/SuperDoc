@@ -13,11 +13,11 @@ namespace SuperDoc.Customer.Repositories.Entities.Documents
         public Guid UserId { get; set; }
 
         [Required]
-        [StringLength(392, MinimumLength = 1)]
+        [StringLength(736, MinimumLength = 1)]
         public string PublicKey { get; set; } = string.Empty;
 
         [Required]
-        [StringLength(128, MinimumLength = 1)]
+        [StringLength(2000, MinimumLength = 1)]
         public string Signature { get; set; } = string.Empty;
 
         public DateTime? DateSigned { get; set; }

@@ -18,6 +18,13 @@ namespace SuperDoc.Customer.Repositories.Revisions
             return await superDocContext.Revisions.FirstOrDefaultAsync(r => r.RevisionId == revisionId);
         }
 
+        public async Task<Revision?> GetRevisionByIdWithDocumentSignaturesAndUsersAsync(Guid revisionId)
+        {
+#nullable disable
+            return await superDocContext.Revisions.Include(x => x.DocumentSignatures).ThenInclude(x => x.User).FirstOrDefaultAsync(r => r.RevisionId == revisionId);
+#nullable enable
+        }
+
         public async Task<IEnumerable<Revision>> GetRevisionsByDocumentIdWithDocumentSignaturesAndUsersAsync(Guid documentId)
         {
 #nullable disable

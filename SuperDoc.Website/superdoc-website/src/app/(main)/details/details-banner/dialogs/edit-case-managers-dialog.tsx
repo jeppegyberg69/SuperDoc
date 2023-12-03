@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { EditCaseManagersForm } from './edit-case-managers-form';
 import { CaseDetails } from '@/models/case-details';
 
@@ -17,6 +17,7 @@ export function EditCaseManagersDialog(props: EditCaseManagersDialogProps) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Sagsbehandlere</DialogTitle>
+          <hr />
           <EditCaseManagersForm onClose={props.onClose} closeDialog={() => props.onOpenedChange(false)} details={props.details} />
         </DialogHeader>
       </DialogContent>

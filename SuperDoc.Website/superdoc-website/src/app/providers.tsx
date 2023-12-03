@@ -2,7 +2,6 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
-import * as signals from 'signals';
 import { WebSessionContext, anonymousWebSession, setWebSession as contextSetWebSession, createFromStorage } from '@/common/session-context/session-context';
 import { Session } from '@/models/session/session';
 import { sessionChangedSignal } from '@/services/login-service';
@@ -15,11 +14,8 @@ export default function CustomQueryClientProvider({ children }) {
   )
 }
 
-
 export type SessionProviderProps = {
   children?: any;
-  // webSession: Session;
-  // sessionChangedSignal: signals.Signal<Session>
 };
 
 export function SessionProvider(props: SessionProviderProps) {
@@ -36,6 +32,7 @@ export function SessionProvider(props: SessionProviderProps) {
       setWebSession(session);
     });
 
+    // cleanup from any listener events
     return () => {
       webSessionSubscription?.detach();
     };
