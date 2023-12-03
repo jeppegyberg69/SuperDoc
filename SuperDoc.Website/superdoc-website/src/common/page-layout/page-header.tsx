@@ -1,5 +1,5 @@
 "use client"
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Menubar,
   MenubarContent,
@@ -10,9 +10,7 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -22,6 +20,8 @@ import { faBars } from "@fortawesome/free-solid-svg-icons/faBars";
 import { faCalendarCheck } from "@fortawesome/free-solid-svg-icons/faCalendarCheck";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
+import { clearWebSession, getWebSession } from "../session-context/session-context";
+import { useRouter } from "next/navigation";
 
 export type PageHeaderProps = {
   left?: React.ReactNode;
@@ -29,6 +29,24 @@ export type PageHeaderProps = {
 }
 
 export function PageHeader(props: PageHeaderProps) {
+  const router = useRouter()
+  const session = getWebSession();
+
+  const [userInitials, setUserInitials] = useState("");
+
+  useEffect(() => {
+    setUserInitials(
+      [session?.user?.firstName, session?.user?.lastName]
+        .join(' ')
+        .split(' ')
+        .map(word => word[0])
+        .filter(v => !!v)
+        .slice(0, 2)
+        .join('')
+    )
+  }, [session])
+
+
   const routes = getGlobalNavigationRoutes();
   const menubar = (
     <Menubar className="mx-4">
@@ -58,20 +76,20 @@ export function PageHeader(props: PageHeaderProps) {
 
   const avatar = (
     <Avatar>
-      <AvatarImage src="https://github.com/shadcn.png" />
-      <AvatarFallback>CN</AvatarFallback>
+      <AvatarFallback className="bg-slate-500 text-primary-foreground ">
+        {session && userInitials && (userInitials ?? '')}
+      </AvatarFallback>
     </Avatar>
   )
 
   const dropdownMenu = (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        {avatar}
-      </DropdownMenuTrigger>
+      <DropdownMenuTrigger>{avatar}</DropdownMenuTrigger>
       <DropdownMenuContent className="mx-1">
-        <DropdownMenuLabel>
-          {/*NOTE:  fjern session og log brugeren ud */}
-          Log ud
+        <DropdownMenuLabel className="w-full block">
+          <Link href={"/login"} onClick={() => { clearWebSession(); }} className="p-1 rounded-sm w-full block hover:bg-gray-700/20" >
+            Log ud
+          </Link>
         </DropdownMenuLabel>
       </DropdownMenuContent>
     </DropdownMenu>

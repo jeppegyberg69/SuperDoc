@@ -87,7 +87,7 @@ namespace SuperDoc.Customer.Repositories.Cases
             await superDocContext.SaveChangesAsync();
         }
 
-        public async Task UpdateCase(Case docCase)
+        public async Task UpdateCaseAsync(Case docCase)
         {
             superDocContext.Cases.Update(docCase);
 

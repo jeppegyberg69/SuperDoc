@@ -89,7 +89,7 @@ export function LoginForm(props: LoginFormProps) {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Log ind</Button>
       </form>
     </Form>
   );
