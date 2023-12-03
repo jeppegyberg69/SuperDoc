@@ -1,22 +1,23 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ListLayout } from "@/common/list-layout/list-layout"
 import { ColumnDef } from "@tanstack/react-table"
 import { nameof } from '@/common/nameof/nameof';
 import { DataTable } from '@/components/ui/data-table';
-import { getCases } from '@/services/case-service';
+import { useGetCases } from '@/services/case-service';
 import { Case } from '@/models/case';
-import { useIsMounted } from '@/common/hooks/use-is-mounted';
 import { CreateCaseDialog } from './create-case/create-case-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
+import { getWebSession } from '@/common/session-context/session-context';
+import { Roles } from '@/common/access-control/access-control';
 
 export type CaseOverviewTableProps = {};
 
 export const columns: ColumnDef<Case, any>[] = [{
   id: "id",
   accessorKey: nameof<Case>('caseNumber'),
-  header: "id",
+  header: "Sagsnummer",
   cell(props) {
     const data = props.getValue();
     return (
@@ -27,7 +28,7 @@ export const columns: ColumnDef<Case, any>[] = [{
 {
   id: "title",
   accessorKey: nameof<Case>('title'),
-  header: "Title",
+  header: "Titel",
   cell(props) {
     const data = props.getValue();
     return (
@@ -67,15 +68,8 @@ export const columns: ColumnDef<Case, any>[] = [{
 }];
 
 export function CaseOverviewTable(props: CaseOverviewTableProps) {
-  const [data, setData] = useState([])
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const isMounted = useIsMounted()
-
-  useEffect(() => {
-    if (isMounted()) {
-      getCases().then((data) => setData(data));
-    }
-  }, [isMounted()])
+  const { data, isPending } = useGetCases();
 
   const dataTable = (
     <DataTable
@@ -88,11 +82,13 @@ export function CaseOverviewTable(props: CaseOverviewTableProps) {
 
   const toolbar = (
     <div className='flex divide-x'>
-      <h1 className="font-semibold text-xl px-2 self-center">Sager</h1>
-      <div className='px-2'>
-        <Button variant='default' onClick={() => { onDialogOpenedChanged(true) }}> Opret sag</Button>
-        <CreateCaseDialog isDialogOpen={isDialogOpen} onOpenChanged={onDialogOpenedChanged} />
-      </div>
+      <h1 className="font-semibold text-xl mr-4 self-center">Sager</h1>
+      {getWebSession().user.role !== Roles.User &&
+        <div className='px-2'>
+          <Button variant='default' onClick={() => { onDialogOpenedChanged(true) }}> Opret sag</Button>
+          <CreateCaseDialog isDialogOpen={isDialogOpen} onOpenChanged={onDialogOpenedChanged} />
+        </div>
+      }
     </div>
   );
 
@@ -108,7 +104,7 @@ export function CaseOverviewTable(props: CaseOverviewTableProps) {
   return (
     <ListLayout
       toolbar={toolbar}
-      list={data?.length === 0 ? loadingSkeleton : dataTable}
+      list={data?.length === 0 && isPending ? loadingSkeleton : dataTable}
     />
   )
 }
