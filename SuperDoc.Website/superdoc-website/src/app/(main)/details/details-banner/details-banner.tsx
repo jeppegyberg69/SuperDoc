@@ -8,6 +8,8 @@ import { EditCaseManagersDialog } from './dialogs/edit-case-managers-dialog';
 import { useQueryClient } from '@tanstack/react-query';
 import { EditCaseInformationDialog } from './dialogs/edit-case-information-dialog';
 import { CaseServiceQueryKeys } from '@/services/case-service';
+import { getWebSession } from '@/common/session-context/session-context';
+import { Roles } from '@/common/access-control/access-control';
 
 export type DetailsBannerProps = {
   details: CaseDetails;
@@ -15,7 +17,7 @@ export type DetailsBannerProps = {
 
 export function DetailsBanner(props: DetailsBannerProps) {
   const queryClient = useQueryClient();
-  
+
   const [caseManagerDialogOpen, setCaseManagerDialogOpen] = useState(false)
   const [caseInfoDialogOpen, setCaseInfoDialogOpen] = useState(false)
   const caseInfoDialogOpenChanged = (openState) => setCaseInfoDialogOpen(openState);
@@ -49,11 +51,15 @@ export function DetailsBanner(props: DetailsBannerProps) {
               </div>
             </div>
           )}
-          className='flex-1'
-          onClick={() => { caseInfoDialogOpenChanged(true) }}
+          className={`flex-1 ${getWebSession().user.role !== Roles.User ? '' : '!cursor-default'}`}
+          onClick={() => {
+            if (getWebSession().user.role !== Roles.User) {
+              caseInfoDialogOpenChanged(true)
+            }
+          }}
         />
         <BannerItem
-          className='flex-1'
+          className={`flex-1 ${getWebSession().user.role !== Roles.User ? '' : '!cursor-default'}`}
           label='Sagsbehandlere'
           value={(
             <div>
@@ -65,7 +71,11 @@ export function DetailsBanner(props: DetailsBannerProps) {
               </div>
             </div>
           )}
-          onClick={() => { caseManagerDialogOpenChanged(true) }}
+          onClick={() => {
+            if (getWebSession().user.role !== Roles.User) {
+              caseManagerDialogOpenChanged(true)
+            }
+          }}
         />
 
         <EditCaseManagersDialog onClose={onDialogClose} details={props.details} isDialogOpen={caseManagerDialogOpen} onOpenedChange={caseManagerDialogOpenChanged} />

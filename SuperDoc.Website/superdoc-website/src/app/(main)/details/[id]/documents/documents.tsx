@@ -12,12 +12,12 @@ import { Button } from '@/components/ui/button';
 import { CreateDocumentDialog } from './document-tabs/edit-dialog/create-document-dialog';
 import { useQueryClient } from '@tanstack/react-query';
 import { CaseServiceQueryKeys } from '@/services/case-service';
+import { getWebSession } from '@/common/session-context/session-context';
+import { Roles } from '@/common/access-control/access-control';
 
 export type DocumentsProps = {
   details: CaseDetails;
 };
-const pdfUrlTemp = "https://www.africau.edu/images/default/sample.pdf";
-
 export function Documents(props: DocumentsProps) {
   const queryClient = useQueryClient();
   const { data: documentData, isFetchedAfterMount } = useDocuments(props.details.case.id)
@@ -73,17 +73,19 @@ export function Documents(props: DocumentsProps) {
   const list = (
     <SplitView
       left={left}
-      right={<DocumentTabs pdfUrl={pdfUrlTemp} caseDocument={selectedDocument} />}
+      right={<DocumentTabs caseDocument={selectedDocument} />}
     />
   )
 
   const toolbar = (
     <div className='flex divide-x'>
       <h1 className="font-semibold text-xl self-center mr-4">Dokumenter</h1>
-      <div className='px-2'>
-        <Button variant='default' onClick={() => { onDialogOpenedChanged(true) }}>Opret dokument</Button>
-        <CreateDocumentDialog onClose={onDialogClose} isDialogOpen={isDialogOpen} onOpenChanged={onDialogOpenedChanged} details={props.details}></CreateDocumentDialog>
-      </div>
+      {getWebSession().user.role !== Roles.User && (
+        <div className='px-2'>
+          <Button variant='default' onClick={() => { onDialogOpenedChanged(true) }}>Opret dokument</Button>
+          <CreateDocumentDialog onClose={onDialogClose} isDialogOpen={isDialogOpen} onOpenChanged={onDialogOpenedChanged} details={props.details}></CreateDocumentDialog>
+        </div>
+      )}
     </div>
   )
 

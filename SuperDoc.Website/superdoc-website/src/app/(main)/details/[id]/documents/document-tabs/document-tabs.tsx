@@ -19,34 +19,34 @@ import { Button } from '@/components/ui/button';
 import { DocumentRevision } from '@/models/document-revision';
 import { UploadRevisionDialog } from './edit-dialog/upload-revision-dialog';
 import { useQueryClient } from '@tanstack/react-query';
+import { getWebSession } from '@/common/session-context/session-context';
+import { Roles } from '@/common/access-control/access-control';
 
 export type DocumentTabsProps = {
   caseDocument: CaseDocument;
-  pdfUrl: string;
 };
 
 export function DocumentTabs({ caseDocument }: DocumentTabsProps) {
   const queryClient = useQueryClient();
-  const { data: revisionsData, isFetched } = useDocumentRevisions(caseDocument?.id ?? '');
-
-  const documentRevisionsData = useMemo(() => {
-    return revisionsData;
-  }, [revisionsData])
-
+  const { data: revisionData, isFetched } = useDocumentRevisions(caseDocument?.id ?? '');
   const [revision, setRevision] = useState<DocumentRevision>();
   const [newUrl, setNewUrl] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
   const onDialogOpenedChanged = (openState) => setIsDialogOpen(openState);
   const onDialogClose = () => {
     queryClient.invalidateQueries({ queryKey: [DocumentServiceQueryKeys.getDocumentRevisions, caseDocument.caseId] });
   }
 
+  // const documentRevisionsData = useMemo(() => {
+  //   return revisionsData;
+  // }, [revisionsData])
+
   useEffect(() => {
-    if (documentRevisionsData && documentRevisionsData.length > 0 && !revision && isFetched) {
-      setRevision(documentRevisionsData[0])
+    console.log('revisionData', isFetched)
+    if (revisionData && isFetched) {
+      setRevision(revisionData[0])
     }
-  }, [isFetched, documentRevisionsData])
+  }, [isFetched, revisionData])
 
   const getFile = () => {
     if (!revision) return;
@@ -61,7 +61,7 @@ export function DocumentTabs({ caseDocument }: DocumentTabsProps) {
 
   useEffect(() => {
     getFile()
-  }, [documentRevisionsData, revision])
+  }, [revision])
 
   return (
     <>
@@ -69,7 +69,7 @@ export function DocumentTabs({ caseDocument }: DocumentTabsProps) {
         <TabsList className='w-full'>
           <TabsTrigger value="dokumentvisning">Dokumentvisning</TabsTrigger>
           <RevisionsList
-            documentRevisions={documentRevisionsData}
+            documentRevisions={revisionData}
             onRevisionClick={(v) => { setRevision(v) }}
             caseDocument={caseDocument}
             setIsDialogOpen={setIsDialogOpen}
@@ -137,26 +137,29 @@ export function RevisionsList({ documentRevisions, onRevisionClick, caseDocument
                   </Button>
                 </MenubarItem>
               ))}
-              <hr></hr>
-              <MenubarItem
-                className="focus:!bg-accent/0 hover:bg-transparent h-12 text-base text-muted-foreground"
-              >
-                <Button
-                  disabled={!caseDocument}
-                  variant='ghost'
-                  className='w-full'
-                  onClick={() => {
-                    setIsDialogOpen(true)
-                  }}
-                >
-                  Opret ny revision
-                </Button>
-
-              </MenubarItem>
+              {getWebSession().user.role !== Roles.User &&
+                <>
+                  <hr></hr>
+                  <MenubarItem
+                    className="focus:!bg-accent/0 hover:bg-transparent h-12 text-base text-muted-foreground"
+                  >
+                    <Button
+                      disabled={!caseDocument}
+                      variant='ghost'
+                      className='w-full'
+                      onClick={() => {
+                        setIsDialogOpen(true)
+                      }}
+                    >
+                      Opret ny revision
+                    </Button>
+                  </MenubarItem>
+                </>
+              }
             </MenubarContent>
           </MenubarMenu>
         </Menubar>
-      </div>
+      </div >
     )
   }, [documentRevisions, onRevisionClick, setIsDialogOpen, caseDocument])
 

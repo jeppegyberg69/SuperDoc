@@ -23,6 +23,7 @@ import {
 import { CaseDetails } from '@/models/case-details';
 import { createCase } from '@/services/edit-case-services';
 import { buildConfig } from '@/models/webservice/base-url';
+import { Roles } from '@/common/access-control/access-control';
 
 const formSchema = z.object({
   caseManagers: z.array(z.string()).refine((value) => value.some((item) => item), {
@@ -42,7 +43,7 @@ export type EditCaseManagersFormProps = {
 export function EditCaseManagersForm(props: EditCaseManagersFormProps) {
   const userId = getWebSession().user?.id;
   const [open, setOpen] = useState(false)
-  
+
   const [value, setValue] = useState(props.details.case.responsibleUser.id)
   const { data, isPending, isError, error } = useQuery({
     queryKey: [`${buildConfig.API}/api/Case/GetCaseManagers`, userId],
@@ -92,7 +93,7 @@ export function EditCaseManagersForm(props: EditCaseManagersFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          disabled={(userId !== props.details.case.responsibleUser.id)}
+          disabled={((userId !== props.details.case.responsibleUser.id && getWebSession().user.role !== Roles.User) && getWebSession().user.role !== Roles.SuperAdmin)}
           name="caseResponsible"
           render={({ field }) => (
             <FormItem>
@@ -102,7 +103,7 @@ export function EditCaseManagersForm(props: EditCaseManagersFormProps) {
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
-                      disabled={(userId !== props.details.case.responsibleUser.id)}
+                      disabled={((userId !== props.details.case.responsibleUser.id && getWebSession().user.role !== Roles.User) && getWebSession().user.role !== Roles.SuperAdmin)}
                       role="combobox"
                       aria-expanded={open}
                       className="w-full justify-between"
@@ -157,7 +158,7 @@ export function EditCaseManagersForm(props: EditCaseManagersFormProps) {
                       <Button
                         variant="outline"
                         role="combobox"
-                        disabled={(userId !== props.details.case.responsibleUser.id)}
+                        disabled={((userId !== props.details.case.responsibleUser.id && getWebSession().user.role !== Roles.User) && getWebSession().user.role !== Roles.SuperAdmin)}
                         className={cn("w-full justify-between", !field.value && "text-muted-foreground")}
                       >
                         {field.value?.length > 0
@@ -212,7 +213,6 @@ export function EditCaseManagersForm(props: EditCaseManagersFormProps) {
             </FormItem>
           )}
         />
-
         <Button type="submit">Gem</Button>
       </form>
     </Form>

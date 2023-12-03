@@ -9,6 +9,8 @@ import { Case } from '@/models/case';
 import { CreateCaseDialog } from './create-case/create-case-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
+import { getWebSession } from '@/common/session-context/session-context';
+import { Roles } from '@/common/access-control/access-control';
 
 export type CaseOverviewTableProps = {};
 
@@ -67,7 +69,7 @@ export const columns: ColumnDef<Case, any>[] = [{
 
 export function CaseOverviewTable(props: CaseOverviewTableProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { data } = useGetCases();
+  const { data, isPending } = useGetCases();
 
   const dataTable = (
     <DataTable
@@ -81,10 +83,12 @@ export function CaseOverviewTable(props: CaseOverviewTableProps) {
   const toolbar = (
     <div className='flex divide-x'>
       <h1 className="font-semibold text-xl mr-4 self-center">Sager</h1>
-      <div className='px-2'>
-        <Button variant='default' onClick={() => { onDialogOpenedChanged(true) }}> Opret sag</Button>
-        <CreateCaseDialog isDialogOpen={isDialogOpen} onOpenChanged={onDialogOpenedChanged} />
-      </div>
+      {getWebSession().user.role !== Roles.User &&
+        <div className='px-2'>
+          <Button variant='default' onClick={() => { onDialogOpenedChanged(true) }}> Opret sag</Button>
+          <CreateCaseDialog isDialogOpen={isDialogOpen} onOpenChanged={onDialogOpenedChanged} />
+        </div>
+      }
     </div>
   );
 
@@ -100,7 +104,7 @@ export function CaseOverviewTable(props: CaseOverviewTableProps) {
   return (
     <ListLayout
       toolbar={toolbar}
-      list={data?.length === 0 ? loadingSkeleton : dataTable}
+      list={data?.length === 0 && isPending ? loadingSkeleton : dataTable}
     />
   )
 }

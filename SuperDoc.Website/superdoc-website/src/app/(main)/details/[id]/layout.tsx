@@ -32,7 +32,7 @@ export default function DetailsLayout({ params, children }: { params: { id: any 
         details={data}
         router={router}
       />
-      {session.user?.role !== Roles.User && <DetailsBanner details={data} />}
+      <DetailsBanner details={data} />
       <div className='page-layout-sidebar p-4'><DetailsSidebar caseId={params.id} /></div>
       <div className="page-layout-content">
         {children}
