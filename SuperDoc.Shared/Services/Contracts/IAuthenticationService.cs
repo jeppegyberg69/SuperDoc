@@ -1,13 +1,13 @@
 ﻿using SuperDoc.Shared.Models.Users;
 
-namespace SuperDoc.Shared.Services;
+namespace SuperDoc.Shared.Services.Contracts;
 
 /// <summary>
-/// Manages user authentication, including login and token retrieval, and related operations.
+/// Service for managing user authentication, including login and token retrieval, and related operations.
 /// </summary>
 /// <param name="secureStorageService">An implementation of the <see cref="ISecureStorageService"/> interface for secure storage operations.</param>
-/// <param name="httpClientFactory">An implementation of the <see cref="IHttpClientFactory"/> interface for creating and managing HttpClient instances.</param>
-public interface IAuthenticationService
+/// <param name="httpClientFactory">The factory for creating an instances of <see cref="HttpClient"/>.</param>
+public interface IAuthenticationService : IHttpService
 {
     /// <summary>
     /// Checks if the user is authenticated by validating the stored authentication token.

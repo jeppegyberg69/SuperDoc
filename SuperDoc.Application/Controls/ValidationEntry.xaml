@@ -16,9 +16,9 @@
         <Label Text="{Binding Header, Mode=OneWay, Source={x:Reference ControlContext}}" IsVisible="{Binding Header, Mode=OneWay, Converter={StaticResource IsStringNotNullOrWhiteSpaceConverter}, Source={x:Reference ControlContext}}" FontFamily="InterSemiBold"  Margin="4, 0, 4, 4"/>
 
         <Border BackgroundColor="{StaticResource White}" Stroke="{StaticResource GrayBrush}" StrokeShape="RoundRectangle 8" Padding="3" Margin="0, 4">
-            <Entry x:Name="Entry" Text="{Binding Text, Mode=OneWay, Source={x:Reference ControlContext}}" Placeholder="{Binding Placeholder, Mode=OneWay, Source={x:Reference ControlContext}}" Keyboard="{Binding Keyboard, Mode=OneWay, Source={x:Reference ControlContext}}" IsPassword="{Binding IsPassword, Mode=OneWay, Source={x:Reference ControlContext}}" Margin="3, 0">
+            <Entry Text="{Binding Text, Mode=TwoWay, Source={x:Reference ControlContext}}" Placeholder="{Binding Placeholder, Mode=OneWay, Source={x:Reference ControlContext}}" Keyboard="{Binding Keyboard, Mode=OneWay, Source={x:Reference ControlContext}}" IsPassword="{Binding IsPassword, Mode=OneWay, Source={x:Reference ControlContext}}" Margin="3, 0">
                 <Entry.Behaviors>
-                    <CommunityToolkit:UserStoppedTypingBehavior StoppedTypingTimeThreshold="500" Command="{Binding SetTextPropertyCommand, Mode=OneTime, Source={x:Reference ControlContext}}" CommandParameter="{Binding Text, Source={x:Reference Entry}}"/>
+                    <CommunityToolkit:UserStoppedTypingBehavior StoppedTypingTimeThreshold="500" Command="{Binding ValidatePropertyCommand, Mode=OneTime, Source={x:Reference ControlContext}}"/>
                 </Entry.Behaviors>
             </Entry>
 

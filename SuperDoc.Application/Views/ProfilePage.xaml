@@ -22,7 +22,7 @@
 
             <Label Grid.Column="0" Text="Profil" FontSize="Large" VerticalTextAlignment="Center" Style="{StaticResource PageHeader}"/>
 
-            <Button x:Name="LogoutButton" Grid.Column="1" Text="Log ud" FontSize="Small" FontFamily="InterRegular" WidthRequest="120" Padding="10, 0, 0, 0" Style="{StaticResource ActionButton}" Command="{Binding LogoutCommand}"/>
+            <Button x:Name="LogoutButton" Grid.Column="1" Text="Log ud" FontSize="Small" FontFamily="InterRegular" WidthRequest="120" Padding="10, 0, 0, 0" Style="{StaticResource ActionButton}" Command="{Binding LogoutCommand, Mode=OneTime}"/>
             <Label Grid.Column="1" Text="&#xF15C;" FontSize="Medium" FontFamily="FluentSystemIconsRegular" HorizontalOptions="Start" VerticalOptions="Center" Margin="10, 0"/>
         </Grid>
     </Shell.TitleView>
@@ -40,8 +40,8 @@
             </Border>
 
             <VerticalStackLayout>
-                <Label Text="{Binding User.FullName, Mode=OneWay}" FontSize="18" LineBreakMode="WordWrap" FontFamily="InterSemiBold" HorizontalTextAlignment="Center"/>
-                <Label Text="{Binding User.Role, Mode=OneWay, Converter={StaticResource DisplayAttributeConverter}}" TextColor="{StaticResource Gray600}" HorizontalTextAlignment="Center"/>
+                <Label Text="{Binding AuthenticatedUser.FullName, Mode=OneWay}" FontSize="18" LineBreakMode="WordWrap" FontFamily="InterSemiBold" HorizontalTextAlignment="Center"/>
+                <Label Text="{Binding AuthenticatedUser.Role, Mode=OneWay, Converter={StaticResource DisplayAttributeConverter}}" TextColor="{StaticResource Gray600}" HorizontalTextAlignment="Center"/>
             </VerticalStackLayout>
         </VerticalStackLayout>
 
@@ -52,14 +52,14 @@
                 <VerticalStackLayout Spacing="15">
                     <FlexLayout Direction="Row" JustifyContent="SpaceBetween" Margin="15, 0">
                         <Label Text="Email adresse"/>
-                        <Label Text="{Binding User.EmailAddress, Mode=OneWay}" FontFamily="InterSemiBold"/>
+                        <Label Text="{Binding AuthenticatedUser.EmailAddress, Mode=OneWay}" FontFamily="InterSemiBold"/>
                     </FlexLayout>
 
                     <Border Stroke="{StaticResource Gray}" StrokeThickness="0.3"/>
 
                     <FlexLayout Direction="Row" JustifyContent="SpaceBetween" Margin="15, 0">
                         <Label Text="Mobilnummer"/>
-                        <Label Text="{Binding User.InternationalPhoneNumber, Mode=OneWay}" FontFamily="InterSemiBold"/>
+                        <Label Text="{Binding AuthenticatedUser.InternationalPhoneNumber, Mode=OneWay}" FontFamily="InterSemiBold"/>
                     </FlexLayout>
                 </VerticalStackLayout>
             </Border>

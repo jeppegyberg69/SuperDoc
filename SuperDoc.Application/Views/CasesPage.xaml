@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="SuperDoc.Application.Views.CasesPage"
+    x:DataType="ViewModels:CasesPageViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
-
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:Helpers="clr-namespace:SuperDoc.Application.Helpers"
+    xmlns:Controls="clr-namespace:SuperDoc.Application.Controls"
+    xmlns:ViewModels="clr-namespace:SuperDoc.Shared.ViewModels.Pages;assembly=SuperDoc.Shared"
+    xmlns:Wrappers="clr-namespace:SuperDoc.Shared.ViewModels.Wrappers;assembly=SuperDoc.Shared"
+    xmlns:CommunityToolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    Helpers:ViewModelLocator.InitializeViewModel="True">
+    
+    <ContentPage.Resources>
+        <CommunityToolkit:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
+    </ContentPage.Resources>
+    
     <Shell.TitleView>
         <Grid ColumnSpacing="10" Padding="0, 0, 15, 0">
-            <Grid.GestureRecognizers>
-                <TapGestureRecognizer Tapped="Page_Tapped"/>
-            </Grid.GestureRecognizers>
-            
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
@@ -22,58 +29,84 @@
             <Label Grid.Column="1" Text="&#xF690;" FontSize="Medium" FontFamily="FluentSystemIconsRegular" HorizontalOptions="Start" VerticalOptions="Center" Margin="10, 0"/>
 
             <Button x:Name="MoreButton" Grid.Column="2" Text="&#xE825;" Style="{StaticResource ActionButton}" Clicked="MoreButton_Clicked"/>
+
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Tapped="Page_Tapped"/>
+            </Grid.GestureRecognizers>
         </Grid>
     </Shell.TitleView>
-    
-    <Grid RowSpacing="20" Padding="15">
-        <Grid.GestureRecognizers>
-            <TapGestureRecognizer Tapped="Page_Tapped"/>
-        </Grid.GestureRecognizers>
-      
-        <VerticalStackLayout Grid.Row="0" Spacing="4">
-            <Label Text="Aktive sager" TextColor="{StaticResource Gray600}" Margin="4, 0"/>
 
-            <Border BackgroundColor="{StaticResource White}" Stroke="{StaticResource Gray}" StrokeThickness="1" StrokeShape="RoundRectangle 8" Padding="15">
-                <Grid ColumnSpacing="15">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+    <Grid RowSpacing="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+        <Label Grid.Row="0" Text="Aktive sager" TextColor="{StaticResource Gray600}" Margin="20, 0" />
 
-                    <Border Grid.Column="0" Grid.RowSpan="2" BackgroundColor="{StaticResource Gray}" StrokeThickness="0" StrokeShape="RoundRectangle 100" HeightRequest="40" WidthRequest="40" HorizontalOptions="Center" VerticalOptions="Center" Padding="5">
-                        <Label Text="&#xE4EC;" TextColor="{StaticResource Black}" FontSize="Medium" FontFamily="FluentSystemIconsRegular" HorizontalOptions="Center" VerticalOptions="Center"/>
-                    </Border>
+        <Controls:LoadingIndicator Grid.Row="1" Text="Indlæser sager..."  IsVisible="{Binding IsInitialized, Mode=OneWay, Converter={StaticResource InvertedBoolConverter}}"/>
 
-                    <Label Grid.Column="1" Grid.Row="0" Text="Ansættelseskontrakter" TextColor="{StaticResource Gray900}" FontSize="Small" FontFamily="InterSemiBold"/>
-                    <Label Grid.Column="2" Grid.Row="0" Text="25. Nov" TextColor="{StaticResource Gray400}" FontSize="Caption" FontFamily="InterRegular"/>
+        <RefreshView Grid.Row="1" IsRefreshing="{Binding LoadCasesCommand.IsRunning, Mode=OneWay}" RefreshColor="{StaticResource Primary}" Command="{Binding LoadCasesCommand, Mode=OneTime}" IsVisible="{Binding IsInitializedSucessfully, Mode=OneWay}">
+            <ScrollView>
+                <VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Cases, Mode=OneWay}" Padding="15, 5, 15, 20">
+                    <BindableLayout.EmptyView>
+                        <VerticalStackLayout Spacing="8" HorizontalOptions="Center" WidthRequest="250" Margin="0, 75, 0, 0">
+                            <Label Text="&#xF515;" TextColor="{StaticResource Primary}" FontSize="64" FontFamily="FluentSystemIconsRegular" HorizontalOptions="Center"/>
+                            <Label Text="Vi kunne ikke finde nogen sager, der er tildelt dig." TextColor="{StaticResource Gray600}" FontSize="Small" HorizontalTextAlignment="Center"/>
+                        </VerticalStackLayout>
+                    </BindableLayout.EmptyView>
 
-                    <Label Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Text="Sagsnummer: 1" TextColor="{StaticResource Gray600}" FontSize="Caption" FontFamily="InterRegular"/>
-                </Grid>
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="Wrappers:CaseViewModel">
+                            <Border BackgroundColor="{StaticResource White}" Stroke="{StaticResource Gray}" StrokeThickness="1" StrokeShape="RoundRectangle 8" Padding="15" >
+                                <Grid ColumnSpacing="15">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
 
-                <Border.Shadow>
-                    <Shadow Brush="#212326" Offset="0, 0" Radius="30" Opacity="0.1" />
-                </Border.Shadow>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
 
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="Case_Tapped"/>
-                </Border.GestureRecognizers>
-            </Border>
-        </VerticalStackLayout>
+                                    <Border Grid.Column="0" Grid.RowSpan="2" BackgroundColor="{StaticResource Gray}" StrokeThickness="0" StrokeShape="RoundRectangle 100" HeightRequest="40" WidthRequest="40" HorizontalOptions="Center" VerticalOptions="Center" Padding="5">
+                                        <Label Text="&#xE4EC;" TextColor="{StaticResource Black}" FontSize="Medium" FontFamily="FluentSystemIconsRegular" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    </Border>
 
-        <Border x:Name="MoreButtonFlyoutMenu" Grid.RowSpan="2" BackgroundColor="{StaticResource White}" Stroke="{StaticResource Gray}" StrokeThickness="1" HorizontalOptions="End" VerticalOptions="Start" StrokeShape="RoundRectangle 8, 8, 8, 8" Margin="0, -15, 0, 0" IsVisible="False">
+                                    <Label Grid.Column="1" Grid.Row="0" Text="{Binding Title, Mode=OneWay}" TextColor="{StaticResource Gray900}" FontSize="Small" FontFamily="InterSemiBold"/>
+                                    <Label Grid.Column="2" Grid.Row="0" Text="{Binding DateCreated, Mode=OneWay, StringFormat='{0:dd. MMM yyyy}'}" TextColor="{StaticResource Gray400}" FontSize="Caption" FontFamily="InterRegular"/>
+
+                                    <Label Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Text="{Binding CaseNumber, Mode=OneWay, StringFormat='Sagsnummer: {0}'}" TextColor="{StaticResource Gray600}" FontSize="Caption" FontFamily="InterRegular"/>
+                                </Grid>
+
+                                <Border.Shadow>
+                                    <Shadow Brush="#212326" Offset="0, 0" Radius="30" Opacity="0.1" />
+                                </Border.Shadow>
+
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding OpenCaseCommand, Mode=OneTime, Source={RelativeSource AncestorType={x:Type ViewModels:CasesPageViewModel}}}" CommandParameter="{Binding Mode=OneWay}"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </ScrollView>
+        </RefreshView>
+
+        <Border x:Name="MoreButtonFlyoutMenu" Grid.RowSpan="2" BackgroundColor="{StaticResource White}" Stroke="{StaticResource Gray}" StrokeThickness="1" HorizontalOptions="End" VerticalOptions="Start" StrokeShape="RoundRectangle 8, 8, 8, 8" Margin="15, 0" IsVisible="False">
             <VerticalStackLayout WidthRequest="175">
-                <Button x:Name="ArchivedCasesButton" Text="Arkiverede sager" Style="{StaticResource FlyoutButton}"/>
+                <Button Text="Arkiverede sager" Clicked="FlyoutButton_Clicked" Style="{StaticResource FlyoutButton}"/>
             </VerticalStackLayout>
 
             <Border.Shadow>
                 <Shadow Brush="#212326" Offset="20, 20" Radius="50" Opacity="0.1" />
             </Border.Shadow>
         </Border>
+
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Tapped="Page_Tapped"/>
+        </Grid.GestureRecognizers>
     </Grid>
 </ContentPage>

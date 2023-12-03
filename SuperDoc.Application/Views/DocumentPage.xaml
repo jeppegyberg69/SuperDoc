@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage 
+    x:Class="SuperDoc.Application.Views.DocumentPage"
+    x:DataType="ViewModels:DocumentPageViewModel"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:Helpers="clr-namespace:SuperDoc.Application.Helpers"
+    xmlns:Controls="clr-namespace:SuperDoc.Application.Controls"
+    xmlns:ViewModels="clr-namespace:SuperDoc.Shared.ViewModels.Pages;assembly=SuperDoc.Shared"
+    xmlns:Wrappers="clr-namespace:SuperDoc.Shared.ViewModels.Wrappers;assembly=SuperDoc.Shared"
+    xmlns:CommunityToolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:PdfViewer="clr-namespace:Syncfusion.Maui.PdfViewer;assembly=Syncfusion.Maui.PdfViewer"
+    xmlns:SignaturePad="clr-namespace:Syncfusion.Maui.SignaturePad;assembly=Syncfusion.Maui.SignaturePad"
+    Helpers:ViewModelLocator.InitializeViewModel="True">
+
+    <ContentPage.Resources>
+        <CommunityToolkit:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
+        <CommunityToolkit:IsNotNullConverter x:Key="IsNotNullConverter"/>
+    </ContentPage.Resources>
+
+    <Shell.TitleView>
+        <Grid ColumnSpacing="10" Padding="0, 0, 15, 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0" Text="{Binding Document.Title, Mode=OneWay}" FontSize="Large" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" Style="{StaticResource PageHeader}"/>
+
+            <Border Grid.Column="1" BackgroundColor="{StaticResource Gray}" StrokeThickness="0" StrokeShape="RoundRectangle 100" VerticalOptions="Center" Padding="15, 0">
+                <Picker Title="Revisioner" ItemsSource="{Binding Revisions, Mode=OneWay}" SelectedItem="{Binding SelectedRevision, Mode=TwoWay}" ItemDisplayBinding="{Binding RevisionName, Mode=OneWay}" IsEnabled="{Binding LoadDocumentCommand.IsRunning, Mode=OneWay, Converter={StaticResource InvertedBoolConverter}}"/>
+            </Border>
+
+            <Button x:Name="MoreButton" Grid.Column="2" Text="&#xE825;" IsEnabled="{Binding LoadDocumentCommand.IsRunning, Mode=OneWay, Converter={StaticResource InvertedBoolConverter}}" Style="{StaticResource ActionButton}" Clicked="MoreButton_Clicked"/>
+
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Tapped="Page_Tapped"/>
+            </Grid.GestureRecognizers>
+        </Grid>
+    </Shell.TitleView>
+
+    <Grid RowSpacing="10" Padding="15, 0, 15, 15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" BackgroundColor="{StaticResource Gray}" Stroke="{StaticResource Gray}" StrokeThickness="1" StrokeShape="RoundRectangle 8">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Controls:LoadingIndicator Grid.Row="0" Text="Indlæser dokument..." VerticalOptions="Center" IsVisible="{Binding LoadDocumentCommand.IsRunning, Mode=OneWay}" Margin="0, -75, 0, 0"/>
+
+                <PdfViewer:SfPdfViewer Grid.Row="0" DocumentSource="{Binding DocumentStream, Mode=OneWay}" BackgroundColor="{StaticResource Gray}" Padding="10" IsVisible="{Binding LoadDocumentCommand.IsRunning, Mode=OneWay, Converter={StaticResource InvertedBoolConverter}}">
+                    <PdfViewer:SfPdfViewer.Resources>
+                        <Style TargetType="ActivityIndicator" ApplyToDerivedTypes="True">
+                            <Setter Property="Color" Value="{StaticResource Primary}"/>
+                        </Style>
+                    </PdfViewer:SfPdfViewer.Resources>
+                </PdfViewer:SfPdfViewer>
+
+                <Grid Grid.Row="1" RowSpacing="4" IsVisible="{Binding IsSignatureRequired, Mode=OneWay}" Padding="10, 0, 10, 10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="125"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" Text="Underskrift" Margin="4, 0"/>
+
+                    <Border Grid.Row="1" BackgroundColor="{StaticResource White}" StrokeShape="RoundRectangle 8">
+                        <SignaturePad:SfSignaturePad x:Name="DocumentSignaturePad" StrokeColor="{StaticResource Primary}" />
+                    </Border>
+
+                    <Label Grid.Row="1" Text="{Binding AuthenticatedUser.FullName, Mode=OneWay}" TextColor="{StaticResource Gray600}" FontSize="Caption" HorizontalOptions="Start" VerticalOptions="End" Margin="12, 8"/>
+
+                    <Button Grid.Row="1" Text="&#xE5E5;" HorizontalOptions="End" VerticalOptions="End" Margin="8" Style="{StaticResource ActionButton}" Clicked="EraseSignatureButton_Clicked"/>
+                </Grid>
+            </Grid>
+
+            <Border.Shadow>
+                <Shadow Brush="#212326" Offset="0, 0" Radius="30" Opacity="0.1" />
+            </Border.Shadow>
+        </Border>
+
+        <Button Grid.Row="1" Text="Underskriv dokument" Clicked="SignDocumentButton_Clicked" Command="{Binding SignDocumentCommand, Mode=OneWay}" IsVisible="{Binding IsSignatureRequired, Mode=OneWay}"/>
+
+        <Label Grid.Row="1" Text="{Binding DocumentSignature.DateSigned, Mode=OneWay, StringFormat='Du har underskrevet denne revision {0:dddd} den {0:dd}. {0:MMMM} kl. {0:HH:mm}'}" TextColor="{StaticResource Gray600}" FontSize="Caption" IsVisible="{Binding DocumentSignature, Mode=OneWay, Converter={StaticResource IsNotNullConverter}}" Margin="4, 0"/>
+
+        <Border x:Name="MoreButtonFlyoutMenu" Grid.RowSpan="2" BackgroundColor="{StaticResource White}" Stroke="{StaticResource Gray}" StrokeThickness="1" HorizontalOptions="End" VerticalOptions="Start" StrokeShape="RoundRectangle 8" IsVisible="False">
+            <VerticalStackLayout WidthRequest="200">
+                <Button Text="Dokumentoplysninger" Clicked="FlyoutButton_Clicked" Command="{Binding ShowDocumentInformationCommand, Mode=OneTime}" Style="{StaticResource FlyoutButton}"/>
+                <Button Text="Underskrivere" Clicked="FlyoutButton_Clicked" Command="{Binding ShowSignatoriesCommand, Mode=OneTime}" IsVisible="{Binding RevisionHasSignatures, Mode=OneWay}" Style="{StaticResource FlyoutButton}"/>
+                <Button Text="Kommentarer" Clicked="FlyoutButton_Clicked" Style="{StaticResource FlyoutButton}"/>
+            </VerticalStackLayout>
+
+            <Border.Shadow>
+                <Shadow Brush="#212326" Offset="20, 20" Radius="50" Opacity="0.1" />
+            </Border.Shadow>
+        </Border>
+
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Tapped="Page_Tapped"/>
+        </Grid.GestureRecognizers>
+    </Grid>
+</ContentPage>

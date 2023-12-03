@@ -23,11 +23,8 @@
 
         <Label Grid.Row="0" Text="SuperDoc" FontFamily="InterBold" HorizontalTextAlignment="Center" Style="{StaticResource Headline}"/>
 
-        <VerticalStackLayout Grid.Row="1" Spacing="10" HorizontalOptions="Center" VerticalOptions="Start" IsVisible="{Binding ValidateAuthenticationTokenCommand.IsRunning, Mode=OneWay}" Margin="0, 75, 0, 0">
-            <ActivityIndicator IsRunning="True"/>
-            <Label Text="Checking Authentication..." FontSize="Caption"/>
-        </VerticalStackLayout>
-
+        <Controls:LoadingIndicator Grid.Row="1" Text="Kontrollerer godkendelse..."  IsVisible="{Binding ValidateAuthenticationTokenCommand.IsRunning, Mode=OneWay}"/>
+        
         <VerticalStackLayout Grid.Row="1" Spacing="20" IsVisible="{Binding ValidateAuthenticationTokenCommand.IsRunning, Mode=OneWay, Converter={StaticResource InvertedBoolConverter}}">
             <Border Background="#FDE7E9" StrokeShape="RoundRectangle 8" StrokeThickness="0" Padding="14, 10" IsVisible="{Binding IsInvalidLogin, Mode=OneWay}">
                 <Grid ColumnSpacing="10">

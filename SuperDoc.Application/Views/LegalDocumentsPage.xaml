@@ -7,8 +7,9 @@
     <Shell.TitleView>
         <Label Text="Oversigt" FontSize="Large" VerticalTextAlignment="Center" Style="{StaticResource PageHeader}"/>
     </Shell.TitleView>
-    
-    <VerticalStackLayout>
 
+    <VerticalStackLayout Spacing="8" HorizontalOptions="Center" WidthRequest="275" Margin="0, 75, 0, 0">
+        <Label Text="&#xF3AF;" TextColor="{StaticResource Primary}" FontSize="64" FontFamily="FluentSystemIconsRegular" HorizontalOptions="Center"/>
+        <Label Text="Vi kunne ikke finde nogen dokumenter der mangler din underskrift." TextColor="{StaticResource Gray600}" FontSize="Small" HorizontalTextAlignment="Center"/>
     </VerticalStackLayout>
 </ContentPage>

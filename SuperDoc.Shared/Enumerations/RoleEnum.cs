@@ -2,6 +2,9 @@
 
 namespace SuperDoc.Shared.Enumerations;
 
+/// <summary>
+/// Different roles in the system, each associated with a specific level of access and responsibility.
+/// </summary>
 public enum Role
 {
     [Display(Name = "Ekstern Bruger")]
