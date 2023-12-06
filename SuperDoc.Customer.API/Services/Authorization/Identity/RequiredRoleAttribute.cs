@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using SuperDoc.Customer.Repositories.Entities.Users;
 
-namespace SuperDoc.Customer.API.Authorization.Identity
+namespace SuperDoc.Customer.API.Services.Authorization.Identity
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class RequiredRoleAttribute : Attribute, IAuthorizationFilter

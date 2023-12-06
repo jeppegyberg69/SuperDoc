@@ -2,12 +2,12 @@
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using SuperDoc.Customer.API.Authorization.Factories;
-using SuperDoc.Customer.API.Authorization.Identity;
+using SuperDoc.Customer.API.Services.Authorization.Factories;
+using SuperDoc.Customer.API.Services.Authorization.Identity;
 using SuperDoc.Customer.Repositories.Entities.Users;
 using SuperDoc.Shared.Models.Users;
 
-namespace SuperDoc.Customer.API.Authorization
+namespace SuperDoc.Customer.API.Services.Authorization
 {
     public class LoginService : ILoginService
     {
