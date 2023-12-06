@@ -5,8 +5,6 @@ import { PageHeader } from "@/common/page-layout/page-header";
 import { DetailsBanner } from "../details-banner/details-banner";
 import { useGetCaseDetails } from "@/services/case-service";
 import { DetailsSidebar } from "../details-sidebar/details-sidebar";
-import { getWebSession } from "@/common/session-context/session-context";
-import { Roles } from "@/common/access-control/access-control";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons/faAngleLeft";
 import { Button } from "@/components/ui/button";
@@ -17,7 +15,6 @@ import { toast } from "@/components/ui/use-toast";
 export default function DetailsLayout({ params, children }: { params: { id: any }, children: any }) {
   const router = useRouter();
   const { data, error } = useGetCaseDetails(params.id);
-  const session = getWebSession();
 
   if (error) {
     toast({

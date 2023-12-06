@@ -24,7 +24,6 @@ export function BannerItemLayout(props: BannerLabelValueLayoutProps) {
   );
 }
 
-
 export type BannerItemProps = {
   label: React.ReactNode;
   value: React.ReactNode;

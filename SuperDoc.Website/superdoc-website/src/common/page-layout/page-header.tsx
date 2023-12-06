@@ -76,7 +76,7 @@ export function PageHeader(props: PageHeaderProps) {
 
   const avatar = (
     <Avatar>
-      <AvatarFallback className="bg-slate-500 text-primary-foreground ">
+      <AvatarFallback className="bg-slate-500 text-primary-foreground">
         {session && userInitials && (userInitials ?? '')}
       </AvatarFallback>
     </Avatar>

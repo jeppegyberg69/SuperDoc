@@ -93,7 +93,7 @@ public partial class CaseDetailsPageViewModel(ICaseService caseService, IAuthent
     [RelayCommand(AllowConcurrentExecutions = false)]
     private async Task ShowCaseInformationAsync()
     {
-        await dialogService.DisplayAlertAsync("Sagsoplysninger", $"Titel: {Case?.Title}\n\nAnsvarlig sagsbehandler: {Case?.ResponsibleCaseManager?.FullName}\n\nSagsbehandlere: {string.Join(", ", Case?.CaseManagers?.Select(x => x.FullName) ?? Enumerable.Empty<string>())}\n\nBeskrivelse: {Case?.Description}", "OK");
+        await dialogService.DisplayAlertAsync("Sagsoplysninger", $"Sagsnummer: {Case?.CaseNumber}\n\nTitel: {Case?.Title}\n\nAnsvarlig sagsbehandler: {Case?.ResponsibleCaseManager?.FullName}\n\nSagsbehandlere: {string.Join(", ", Case?.CaseManagers?.Select(x => x.FullName) ?? Enumerable.Empty<string>())}\n\nBeskrivelse: {Case?.Description}", "OK");
     }
 
     /// <summary>

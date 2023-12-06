@@ -1,6 +1,6 @@
 "use client"
 import { cn } from '@/lib/utils';
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 
 export type PdfViewerProps = {
   url: string;

@@ -37,12 +37,7 @@ export function DocumentTabs({ caseDocument }: DocumentTabsProps) {
     queryClient.invalidateQueries({ queryKey: [DocumentServiceQueryKeys.getDocumentRevisions, caseDocument.caseId] });
   }
 
-  // const documentRevisionsData = useMemo(() => {
-  //   return revisionsData;
-  // }, [revisionsData])
-
   useEffect(() => {
-    console.log('revisionData', isFetched)
     if (revisionData && isFetched) {
       setRevision(revisionData[0])
     }
