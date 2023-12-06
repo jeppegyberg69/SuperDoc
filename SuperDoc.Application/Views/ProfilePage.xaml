@@ -35,7 +35,7 @@
         </Grid.RowDefinitions>
 
         <VerticalStackLayout Grid.Row="0" Spacing="10" HorizontalOptions="Center" Margin="0, 30, 0, 0">
-            <Border Grid.Row="0" WidthRequest="96" HeightRequest="96" BackgroundColor="{StaticResource Gray}" StrokeThickness="0" StrokeShape="RoundRectangle 100">
+            <Border WidthRequest="96" HeightRequest="96" BackgroundColor="{StaticResource Gray}" StrokeThickness="0" StrokeShape="RoundRectangle 100">
                 <Label Text="&#xF5C8;" TextColor="{StaticResource Gray400}" FontSize="64" FontFamily="FluentSystemIconsFilled" HorizontalOptions="Center" VerticalOptions="Center"/>
             </Border>
 
