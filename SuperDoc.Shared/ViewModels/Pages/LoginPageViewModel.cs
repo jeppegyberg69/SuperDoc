@@ -11,7 +11,7 @@ namespace SuperDoc.Shared.ViewModels.Pages;
 public partial class LoginPageViewModel(IAuthenticationService authenticationService, INavigationService navigationService, IDialogService dialogService) : BaseViewModel
 {
     private string _emailAddress = string.Empty;
-    [EmailAddress(ErrorMessage = "Indtast en gyldig email adresse")]
+    [EmailAddress(ErrorMessage = "Indtast en gyldig e-mailadresse")]
     public string EmailAddress
     {
         get => _emailAddress;

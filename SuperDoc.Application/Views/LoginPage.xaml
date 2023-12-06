@@ -4,9 +4,9 @@
     x:DataType="ViewModels:LoginPageViewModel"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:Helpers="clr-namespace:SuperDoc.Application.Helpers"
     xmlns:Controls="clr-namespace:SuperDoc.Application.Controls"
     xmlns:ViewModels="clr-namespace:SuperDoc.Shared.ViewModels.Pages;assembly=SuperDoc.Shared"
+    xmlns:Helpers="clr-namespace:SuperDoc.Application.Helpers"
     xmlns:CommunityToolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     Helpers:ViewModelLocator.InitializeViewModel="True">
 
@@ -34,7 +34,7 @@
                     </Grid.ColumnDefinitions>
 
                     <Label Grid.Column="0" Text="&#xF3F1;" TextColor="#C42B1C" FontSize="Medium" FontFamily="FluentSystemIconsFilled" VerticalOptions="Center"/>
-                    <Label Grid.Column="1" Text="Email adresse og adgangskode stemmer ikke overens. Prøv venligst igen." FontSize="Caption" HorizontalTextAlignment="Start"/>
+                    <Label Grid.Column="1" Text="E-mailadresse og adgangskode stemmer ikke overens. Prøv venligst igen." FontSize="Caption" HorizontalTextAlignment="Start"/>
                 </Grid>
             </Border>
 
