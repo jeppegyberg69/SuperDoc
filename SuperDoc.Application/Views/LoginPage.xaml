@@ -38,7 +38,7 @@
                 </Grid>
             </Border>
 
-            <Controls:ValidationEntry Header="Email adresse" Text="{Binding EmailAddress, Mode=TwoWay}" Keyboard="Email" ValidationPropertyName="EmailAddress"/>
+            <Controls:ValidationEntry Header="E-mailadresse" Text="{Binding EmailAddress, Mode=TwoWay}" Keyboard="Email" ValidationPropertyName="EmailAddress"/>
 
             <Controls:ValidationEntry Header="Adgangskode" Text="{Binding Password, Mode=TwoWay}" IsPassword="True" ValidationPropertyName="Password"/>
 
