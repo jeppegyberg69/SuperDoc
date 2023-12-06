@@ -1,4 +1,4 @@
-﻿namespace SuperDoc.Customer.API.Authorization.Identity
+﻿namespace SuperDoc.Customer.API.Services.Authorization.Identity
 {
     public class IdentityData
     {

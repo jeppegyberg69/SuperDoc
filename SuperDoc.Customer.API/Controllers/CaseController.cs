@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SuperDoc.Customer.API.Authorization;
-using SuperDoc.Customer.API.Authorization.Identity;
+using SuperDoc.Customer.API.Services.Authorization;
+using SuperDoc.Customer.API.Services.Authorization.Identity;
 using SuperDoc.Customer.Repositories.Entities.Cases;
 using SuperDoc.Customer.Repositories.Entities.Users;
 using SuperDoc.Customer.Services.Cases;

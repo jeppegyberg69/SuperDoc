@@ -1,7 +1,7 @@
 ﻿using SuperDoc.Customer.Repositories.Entities.Users;
 using SuperDoc.Shared.Models.Users;
 
-namespace SuperDoc.Customer.API.Authorization.Factories
+namespace SuperDoc.Customer.API.Services.Authorization.Factories
 {
     public class LoginDtoFactory : ILoginDtoFactory
     {

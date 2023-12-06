@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SuperDoc.Customer.API.Authorization;
+using SuperDoc.Customer.API.Services.Authorization;
 using SuperDoc.Customer.Repositories.Entities.Users;
 using SuperDoc.Customer.Services.Users;
 using SuperDoc.Shared.Models.Users;
