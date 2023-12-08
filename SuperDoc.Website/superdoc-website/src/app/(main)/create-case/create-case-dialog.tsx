@@ -1,8 +1,7 @@
 "use client"
-import React, { useState } from 'react';
+import React from 'react';
 import { CreateCaseForm } from './create-case-form';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog"
-import { Button } from '@/components/ui/button';
 
 export type CreateCaseDialogProps = {
   isDialogOpen: boolean;

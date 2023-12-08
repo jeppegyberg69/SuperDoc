@@ -12,7 +12,6 @@ import { useRouter } from 'next/navigation'
 import { setWebSession } from '@/common/session-context/session-context';
 import { useToast } from '@/components/ui/use-toast';
 
-
 const formSchema = z.object({
   email: z.string().min(2, {
     message: "email adressen skal mindst være 2 karakter langt.",

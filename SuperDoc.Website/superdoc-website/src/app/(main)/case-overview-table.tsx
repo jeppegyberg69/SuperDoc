@@ -14,6 +14,9 @@ import { Roles } from '@/common/access-control/access-control';
 
 export type CaseOverviewTableProps = {};
 
+
+// the cell block is on every column object. 
+//  this is due to the fact that i want to set a class on to the html tag, so i can modify the width of the column
 export const columns: ColumnDef<Case, any>[] = [{
   id: "id",
   accessorKey: nameof<Case>('caseNumber'),
@@ -50,6 +53,7 @@ export const columns: ColumnDef<Case, any>[] = [{
   accessorKey: nameof<Case>('caseManagers'),
   header: () => <span className='data-column-casemanagers'>Sagsbehandlere</span>,
   cell(props) {
+    // get the initials of the case-managers on the case
     const caseManagers =
       props.getValue()
         .map(cm => {

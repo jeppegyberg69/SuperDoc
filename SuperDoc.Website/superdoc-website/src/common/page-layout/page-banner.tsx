@@ -18,7 +18,6 @@ export type BannerLabelValueLayoutProps = {
 };
 
 export function BannerItemLayout(props: BannerLabelValueLayoutProps) {
-
   return (
     <div className="banner-label-value-layout">{props.children}</div>
   );

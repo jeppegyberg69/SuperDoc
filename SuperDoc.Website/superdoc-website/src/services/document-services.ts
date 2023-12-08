@@ -196,13 +196,11 @@ export function getRevisionFile(revisionId: string): Promise<any> {
 
   let params = "";
   params += `revisionId=${revisionId}`;
-  // params += `access_token=${getWebSession().token}`;
 
   return fetch(`${buildConfig.API}/api/Revision/DownloadRevision?${params}`, requestOptions)
     .then(async (response): Promise<WebserviceResponse> => {
       if (response.ok) {
         const respArrayBuffer = await response.arrayBuffer()
-
 
         return {
           status: response.status,

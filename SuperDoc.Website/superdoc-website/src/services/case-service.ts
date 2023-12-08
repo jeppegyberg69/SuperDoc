@@ -24,6 +24,7 @@ export function getCases() {
     method: 'GET',
     headers: myHeaders,
     redirect: 'follow',
+    // make sure not to cache any data, as this can make loading data look odd
     cache: "no-store"
   };
 
@@ -37,7 +38,6 @@ export function getCases() {
           data: resp// this wont error because we made sure that the response is ok earlier, so response.json is always an actual json value.
         }
       }
-
     })
     .then(transformGetCases)
 }
@@ -48,7 +48,7 @@ function transformGetCases(response: WebserviceResponse): Case[] {
     caseNumber: v.caseNumber,
     title: v.title,
     description: v.description,
-    caseManagers: v.caseManagers.map((cm): CaseManagers => ({ // skal ændres ti "CaseManagers", der er stavefejl i nuværrende webservice
+    caseManagers: v.caseManagers.map((cm): CaseManagers => ({
       id: cm.userId,
       emailAddress: cm.emailAddress,
       firstName: cm.firstName,
